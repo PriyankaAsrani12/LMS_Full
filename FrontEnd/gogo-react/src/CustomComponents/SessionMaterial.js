@@ -159,11 +159,12 @@ export default class SessionMaterial extends Component {
       this.props.history.push('/app/dashboard/default');
     axiosInstance
       .get(
-        `/sessions/FindSessionById/${this.props.location.state.uniquesessionid}`
+        `/libraryItems/recorded/${this.props.location.state.uniquesessionid}`
       )
       .then((response) => {
+        console.log(response);
         if (response.data.success) {
-          const session = response.data.session;
+          const session = response.data.sessionData;
           console.log(
             //   session.session_start_time,
             //   typeof session.session_start_time,
@@ -188,6 +189,7 @@ export default class SessionMaterial extends Component {
                 : '0',
               Trainer: this.state.data.Trainer,
             },
+            SessionMaterial: response.data.SessionMaterial,
           });
         }
       })
@@ -901,6 +903,9 @@ export default class SessionMaterial extends Component {
                                 <Input
                                   type="text"
                                   name="learning"
+                                  value={
+                                    this.state.SessionMaterial[index].learning
+                                  }
                                   style={{ height: '70px' }}
                                   onChange={(e) => {
                                     const newArr = this.state.SessionMaterial;
