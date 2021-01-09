@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import {
-  Breadcrumb,
-  BreadcrumbItem,
   Button,
   Card,
   CardBody,
@@ -16,19 +14,15 @@ import {
   FormGroup,
   Label,
   Input,
-  CardText,
-  Collapse,
   Col,
 } from 'reactstrap';
 import Switch from 'rc-switch';
-import { iconsmind, simplelineicons } from '../data/icons';
+import { iconsmind } from '../data/icons';
 import 'rc-switch/assets/index.css';
-import { Colxx, Separator } from '../components/common/CustomBootstrap';
-import Editable from './Editable';
+import { Colxx } from '../components/common/CustomBootstrap';
 import './Customcss.css';
-import { Link, BrowserRouter as Router, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { MDBInput } from 'mdbreact';
-import { useCounter } from './useCounter';
 import Avatar from './avatarnew.png';
 import { FaPlayCircle } from 'react-icons/fa';
 import { RiAttachmentLine } from 'react-icons/ri';
@@ -36,12 +30,9 @@ import { BsQuestionDiamond } from 'react-icons/bs';
 import { BsPlusCircle } from 'react-icons/bs';
 import { FaRegNewspaper } from 'react-icons/fa';
 import { BiChevronDown } from 'react-icons/bi';
-import { BsCaretDownFill } from 'react-icons/bs';
 import { FiUpload } from 'react-icons/fi';
 import { IoMdRemoveCircleOutline } from 'react-icons/io';
 import { VscLibrary } from 'react-icons/vsc';
-import ScrollBar from 'react-perfect-scrollbar';
-import { Scrollbars } from 'react-custom-scrollbars';
 import Make_modal from './Make_modal';
 import axiosInstance from '../helpers/axiosInstance';
 import NotificationManager from '../components/common/react-notifications/NotificationManager';
@@ -72,10 +63,12 @@ export default class SessionMaterial extends Component {
       /* textv : '', */
       SessionMaterial: [
         {
+          chapter_id: '',
           name: 'Chapter 1',
           learning: '',
           lesson: [
             {
+              lesson_id: '',
               id: 'theid',
               name: 'xyz',
               video: '',
@@ -155,8 +148,12 @@ export default class SessionMaterial extends Component {
     }
   }
   componentDidMount() {
-    if (!this.props.location.state.uniquesessionid)
+    try {
+      if (!this.props.location.state.uniquesessionid)
+        this.props.history.push('/app/dashboard/default');
+    } catch (e) {
       this.props.history.push('/app/dashboard/default');
+    }
     axiosInstance
       .get(
         `/libraryItems/recorded/${this.props.location.state.uniquesessionid}`
@@ -235,14 +232,16 @@ export default class SessionMaterial extends Component {
         this.state.SessionMaterial.forEach((doc, index) => {
           console.log(doc, index);
           const chapter = {
+            chapter_id: doc.chapter_id,
             name: doc.name,
             learning: doc.learning,
             lessions: [],
           };
           doc.lesson.forEach((element, lessonindex) => {
-            console.log('lessonindex ', element, lessonindex);
+            // console.log('lessonindex ', element, lessonindex);
             const lession = {
               name: element.name,
+              lesson_id: element.lesson_id,
             };
             if (element.video) {
               formData.append(
@@ -351,6 +350,7 @@ export default class SessionMaterial extends Component {
     const newlesson = {
       id: `hello${lessonlength + 1}`,
       name: `lesson ${lessonlength + 1}`,
+      lesson_id: '',
       video: '',
       assignment: '',
       notes: '',
@@ -377,6 +377,7 @@ export default class SessionMaterial extends Component {
     const newarray = this.state.SessionMaterial;
     const arraysize = newarray.length;
     const newChapter = {
+      chapter_id: arraysize + 1,
       name: `chapter ${arraysize + 1}`,
       lesson: [
         {
@@ -903,7 +904,7 @@ export default class SessionMaterial extends Component {
                                 <Input
                                   type="text"
                                   name="learning"
-                                  value={
+                                  defaultValue={
                                     this.state.SessionMaterial[index].learning
                                   }
                                   style={{ height: '70px' }}
@@ -929,7 +930,7 @@ export default class SessionMaterial extends Component {
                           </Row>
 
                           {item.lesson.map((lessonitem, lessonindex) => {
-                            console.log(lessonindex);
+                            // console.log(lessonindex);
                             return (
                               <div key={lessonindex}>
                                 <div>
