@@ -331,6 +331,12 @@ Router.post('/', auth, async (req, res) => {
       return -1;
     };
 
+    const isChapterPresent = (arr, doc) => {
+      if (!doc.chapter_id) return -1;
+      for (let i = 0; i < arr.length; i++)
+        if (arr[i].chapter_id == doc.chapter_id) return 1;
+      return -1;
+    };
     const isLessonPresent = (arr, doc) => {
       if (!doc.lesson_id) return -1;
       for (let i = 0; i < arr.length; i++)
@@ -374,15 +380,11 @@ Router.post('/', auth, async (req, res) => {
     ans.forEach((doc) =>
       doc.lesson.sort((a, b) => a.lesson_number - b.lesson_number)
     );
-    console.log(ans);
-    // return res.json({
-    //   ans,
-    // });
 
     chapterData.forEach(async (doc, index) => {
-      if (getIndex(doc) >= 0) {
+      if (isChapterPresent(ans, doc) >= 0) {
         // Update Query
-        console.log(getIndex(doc));
+        console.log('update chapter');
         const updateChapter = await ChapterTable.update(
           {
             chapter_name: doc.name,
@@ -402,7 +404,8 @@ Router.post('/', auth, async (req, res) => {
         doc.lessions.forEach(async (l, i) => {
           if (isLessonPresent(doc.lessions, l)) {
             //  Update Lesson here
-            console.log('updating lesson ', l.lesson_id);
+            console.log('updating lesson ', JSON.parse(l));
+            const currentLesson = JSON.parse(l);
             const updatedLesson = await LessonTable.update(
               {
                 lesson_name: JSON.parse(l).name,
@@ -418,6 +421,17 @@ Router.post('/', auth, async (req, res) => {
                 },
               }
             );
+            // const updatedLesson = await db.query(`UPDATE lesson_tables
+            // SET
+            //   lesson_name=${currentLesson.name},
+            //   lesson_number= ${i + 1},
+            //     lesson_video_id= ${0},
+            //     lesson_assignment_id= ${0},
+            //     lesson_quiz_id= ${0},
+            //     lesson_handouts_id= ${0}
+            //   WHERE lesson_id=${currentLesson.lesson_id}
+            // `);
+            console.log(updatedLesson);
             if (!updatedLesson)
               return res.status(400).json({
                 success: 0,
@@ -425,6 +439,7 @@ Router.post('/', auth, async (req, res) => {
               });
           } else {
             // Create Lesson here
+            console.log('creatnig lesson in update chapter');
             try {
               const savedLesson = await LessonTable.create({
                 session_id,
@@ -457,6 +472,7 @@ Router.post('/', auth, async (req, res) => {
         });
       } else {
         // Create Query
+        console.log('create new chapter');
         const savedChapter = await ChapterTable.create({
           session_id,
           customer_id: req.user.customer_id,
@@ -476,6 +492,7 @@ Router.post('/', auth, async (req, res) => {
         //save lessons data here
         doc.lessions.forEach(async (d, i) => {
           try {
+            console.log('create new chapter new lesson');
             const savedLesson = await LessonTable.create({
               session_id,
               customer_id: req.user.customer_id,
