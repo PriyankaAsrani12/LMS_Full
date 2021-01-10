@@ -536,4 +536,54 @@ Router.post('/', auth, async (req, res) => {
   }
 });
 
+Router.delete('/deleteChapter/:id', auth, async (req, res) => {
+  try {
+    if (!req.params.id)
+      return res.status(400).json({
+        success: 0,
+        error: 'Please provide chapter id',
+      });
+    const deletedChapter = await ChapterTable.destroy({
+      where: { chapter_id: req.params.id },
+    });
+    const deletedLessons = await LessonTable.destroy({
+      where: { chapter_id: req.params.id },
+    });
+    console.log(deletedChapter, deletedLessons);
+    return res.status(200).json({
+      success: 1,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({
+      success: 0,
+      error: 'can not delete chapter data',
+      errorReturned: JSON.stringify(err),
+    });
+  }
+});
+
+Router.delete('/deleteLesson/:id', auth, async (req, res) => {
+  try {
+    if (!req.params.id)
+      return res.status(400).json({
+        success: 0,
+        error: 'Please provide chapter id',
+      });
+    const deletedLessons = await LessonTable.destroy({
+      where: { lesson_id: req.params.id },
+    });
+    console.log(deletedLessons);
+    return res.status(200).json({
+      success: 1,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({
+      success: 0,
+      error: 'can not delete Lesson data',
+      errorReturned: JSON.stringify(err),
+    });
+  }
+});
 module.exports = Router;

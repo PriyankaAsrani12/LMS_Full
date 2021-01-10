@@ -363,21 +363,41 @@ export default class SessionMaterial extends Component {
       console.log(this.state.SessionMaterial)
     );
   }
-  deleteTask(lessonindex) {
-    alert('Are you sure to delete this?');
-    console.log(lessonindex);
-    let lesson = this.state.SessionMaterial;
-    lesson.splice(lessonindex, 1);
-    this.setState({
-      lesson,
-    });
+  async deleteTask(lessonindex, chapter_id) {
+    if (window.confirm('Are you sure to delete this?')) {
+      try {
+        if (chapter_id) {
+          const result = await axiosInstance.delete(
+            `/libraryItems/recorded/deleteChapter/${chapter_id}`
+          );
+          console.log(result);
+        }
+        let lesson = this.state.SessionMaterial;
+        lesson.splice(lessonindex, 1);
+        this.setState({
+          lesson,
+        });
+      } catch (err) {
+        try {
+          this.setState({
+            ...this.state,
+            error: err.response.data.error,
+          });
+        } catch (e) {
+          this.setState({
+            ...this.state,
+            error: 'Unable to delete Chapter ',
+          });
+        }
+      }
+    }
   }
 
   addChapter() {
     const newarray = this.state.SessionMaterial;
     const arraysize = newarray.length;
     const newChapter = {
-      chapter_id: arraysize + 1,
+      chapter_id: '',
       name: `chapter ${arraysize + 1}`,
       lesson: [
         {
@@ -400,17 +420,34 @@ export default class SessionMaterial extends Component {
     this.setState({ modal: true });
   }
   removeItem() {
-    alert('Are you sure to delete this?');
-    const lesson = this.state.SessionMaterial;
-    lesson.splice(lesson.index, 1);
-    this.setState({ lesson: lesson });
+    if (window.confirm('Are you sure to delete this?')) {
+      const lesson = this.state.SessionMaterial;
+      lesson.splice(lesson.index, 1);
+      this.setState({ lesson: lesson });
+    }
   }
-  handleRemoveClick(index) {
-    alert('Are you sure to delete this?');
-    let lesson = this.state.SessionMaterial;
-    let list = lesson[index].lesson;
-    list.splice(list[index], 1);
-    this.setState({ list });
+  async handleRemoveClick(index, lessonIndex, lesson_id) {
+    if (window.confirm('Are you sure to delete this ?')) {
+      try {
+        if (lesson_id) {
+          const result = await axiosInstance.delete(
+            `/libraryItems/recorded/deleteLesson/${lesson_id}`
+          );
+          console.log(result);
+        }
+        const newArray = this.state.SessionMaterial;
+        newArray[index].lesson.splice(lessonIndex, 1);
+        this.setState({
+          ...this.state,
+          SessionMaterial: newArray,
+        });
+      } catch (e) {
+        this.setState({
+          ...this.state,
+          error: 'Unable to delete Chapter ',
+        });
+      }
+    }
   }
 
   changeChapterAttribute(props, index) {
@@ -861,6 +898,7 @@ export default class SessionMaterial extends Component {
           <Card className="p-4">
             <CardBody>
               {this.state.SessionMaterial.map((item, index) => {
+                const togglerId = `toggle${index + 1}`;
                 return (
                   <div
                     className="mb-2"
@@ -868,7 +906,8 @@ export default class SessionMaterial extends Component {
                   >
                     {/* <h3 className="mt-4 text-center font-weight-bold">{item.name}</h3> */}
                     <Card
-                      id="toggle2"
+                      // id="toggle2"
+                      id={togglerId}
                       className="text-center my-2"
                       style={{ cursor: 'pointer', boxShadow: 'none' }}
                     >
@@ -880,7 +919,7 @@ export default class SessionMaterial extends Component {
                         />
                       </Row>
                     </Card>
-                    <UncontrolledCollapse toggler="#toggle2">
+                    <UncontrolledCollapse toggler={togglerId}>
                       <Card style={{ boxShadow: 'none' }}>
                         <CardBody>
                           <Row>
@@ -920,7 +959,7 @@ export default class SessionMaterial extends Component {
                               <button
                                 onClick={(evt) => {
                                   evt.stopPropagation();
-                                  this.deleteTask(index);
+                                  this.deleteTask(index, item.chapter_id);
                                 }}
                                 className="delete"
                               >
@@ -938,7 +977,11 @@ export default class SessionMaterial extends Component {
                                   <button
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      this.handleRemoveClick(lessonindex);
+                                      this.handleRemoveClick(
+                                        index,
+                                        lessonindex,
+                                        lessonitem.lesson_id
+                                      );
                                     }}
                                     className="d-flex mt-4 ml-auto delete2 text-center"
                                   >
@@ -1139,7 +1182,6 @@ export default class SessionMaterial extends Component {
                                                             lessonindex
                                                           ].video =
                                                             e.target.files[0];
-
                                                           // newArr[index].lesson[
                                                           //   lessonindex
                                                           // ].video.name = `chapter${index} lesson${lessonindex} video ${e.target.files[0].name}`;
