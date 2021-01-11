@@ -14,6 +14,7 @@ import {
   FormGroup,
   Label,
   Input,
+  Progress,
   Col,
 } from 'reactstrap';
 import Switch from 'rc-switch';
@@ -38,7 +39,6 @@ import Make_modal from './Make_modal';
 import axiosInstance from '../helpers/axiosInstance';
 import NotificationManager from '../components/common/react-notifications/NotificationManager';
 import ProgressBar from './ProgressBar';
-
 export default class SessionMaterial extends Component {
   constructor(props) {
     // console.log(props.location.state.uniquesessionid);

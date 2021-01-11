@@ -89,10 +89,10 @@ Router.get('/:id', auth, async (req, res) => {
           id: doc.lesson_number,
           lesson_id: doc.lesson_id,
           name: doc.lesson_name,
-          video: doc.lesson_video_id,
-          assignment: doc.lesson_assignment_id,
+          video: getItemName(doc.lesson_video_id),
+          assignment: getItemName(doc.lesson_assignment_id),
           quiz: doc.lesson_quiz_id,
-          thumbnail: doc.lesson_handouts_id,
+          thumbnail: getItemName(doc.lesson_handouts_id),
         });
       }
     });
@@ -207,10 +207,10 @@ Router.post('/', auth, async (req, res) => {
           id: doc.lesson_number,
           lesson_id: doc.lesson_id,
           name: doc.lesson_name,
-          video: doc.lesson_video_id,
-          assignment: doc.lesson_assignment_id,
+          video: getItemName(doc.lesson_video_id),
+          assignment: getItemName(doc.lesson_assignment_id),
           quiz: doc.lesson_quiz_id,
-          thumbnail: doc.lesson_handouts_id,
+          thumbnail: getItemName(doc.lesson_handouts_id),
         });
       }
     });
