@@ -17,13 +17,9 @@ import {
   Col,
 } from 'reactstrap';
 import Switch from 'rc-switch';
-import { iconsmind } from '../data/icons';
 import 'rc-switch/assets/index.css';
-import { Colxx } from '../components/common/CustomBootstrap';
-import './Customcss.css';
 import { Link } from 'react-router-dom';
 import { MDBInput } from 'mdbreact';
-import Avatar from './avatarnew.png';
 import { FaPlayCircle } from 'react-icons/fa';
 import { RiAttachmentLine } from 'react-icons/ri';
 import { BsQuestionDiamond } from 'react-icons/bs';
@@ -33,11 +29,15 @@ import { BiChevronDown } from 'react-icons/bi';
 import { FiUpload } from 'react-icons/fi';
 import { IoMdRemoveCircleOutline } from 'react-icons/io';
 import { VscLibrary } from 'react-icons/vsc';
+
+import './Customcss.css';
+import { Colxx } from '../components/common/CustomBootstrap';
+import { iconsmind } from '../data/icons';
+import Avatar from './avatarnew.png';
 import Make_modal from './Make_modal';
 import axiosInstance from '../helpers/axiosInstance';
 import NotificationManager from '../components/common/react-notifications/NotificationManager';
-
-//import {ContentEditable} from 'react-contenteditable'
+import ProgressBar from './ProgressBar';
 
 export default class SessionMaterial extends Component {
   constructor(props) {
@@ -46,6 +46,7 @@ export default class SessionMaterial extends Component {
     this.deleteTask = this.deleteTask.bind(this);
     this.state = {
       error: null,
+      uploadPercentage: 0,
       displayThumbnail: '',
       session_thumbnail: '',
       success: null,
@@ -73,7 +74,7 @@ export default class SessionMaterial extends Component {
               name: 'xyz',
               video: '',
               assignment: '',
-              notes: '',
+              handouts: '',
               thumbnail: '',
               quiz: '',
             },
@@ -122,7 +123,9 @@ export default class SessionMaterial extends Component {
     this.addChapter = this.addChapter.bind(this);
 
     this.fileUploadButton = this.fileUploadButton.bind(this);
+    this.uploadLessonMaterial = this.uploadLessonMaterial.bind(this);
   }
+
   componentDidUpdate() {
     if (this.state.error) {
       NotificationManager.warning(
@@ -227,61 +230,14 @@ export default class SessionMaterial extends Component {
       else if (!this.validateLessonNames(this.state.SessionMaterial))
         this.setState({ error: 'please provide lesson name' });
       else {
-        const formData = new FormData();
-        const chapterData = [];
-        this.state.SessionMaterial.forEach((doc, index) => {
-          console.log(doc, index);
-          const chapter = {
-            chapter_id: doc.chapter_id,
-            name: doc.name,
-            learning: doc.learning,
-            lessions: [],
-          };
-          doc.lesson.forEach((element, lessonindex) => {
-            // console.log('lessonindex ', element, lessonindex);
-            const lession = {
-              name: element.name,
-              lesson_id: element.lesson_id,
-            };
-            if (element.video) {
-              formData.append(
-                `chapter ${index} lesson ${lessonindex} video ${element.video.name}`,
-                element.video
-              );
-              lession.video = element.video;
-            }
-
-            if (element.assignment) {
-              formData.append(
-                `chapter ${index} lesson ${lessonindex} assignment ${element.assignment.name}`,
-                element.assignment
-              );
-              lession.assignment = element.assignment;
-            }
-
-            if (element.thumbnail) {
-              formData.append(
-                `chapter ${index} lesson ${lessonindex} thumbnail ${element.thumbnail.name}`,
-                element.thumbnail
-              );
-              lession.thumbnail = element.thumbnail;
-            }
-            chapter.lessions.push(JSON.stringify(lession));
-          });
-          chapterData.push(chapter);
+        const values = {
+          session_id: this.props.location.state.uniquesessionid,
+          SessionMaterial: this.state.SessionMaterial,
+        };
+        console.log(values);
+        const result = await axiosInstance.post('/libraryItems/recorded', {
+          values,
         });
-        formData.append('bodyPart', JSON.stringify(chapterData));
-        console.log(formData);
-
-        formData.append(
-          'session_id',
-          this.props.location.state.uniquesessionid
-        );
-
-        const result = await axiosInstance.post(
-          '/libraryItems/recorded',
-          formData
-        );
         console.log(result);
         if (result.data.success)
           this.setState({ success: 'Material Uploaded Successfully' });
@@ -449,7 +405,114 @@ export default class SessionMaterial extends Component {
       }
     }
   }
+  validateFileAccordingToType = (file, type) => {
+    const fileName = file.name;
+    const ext = fileName.slice(fileName.lastIndexOf('.') + 1);
+    if (type == 'video') {
+      if (ext !== 'mp4' && ext !== 'ogg' && ext !== 'mkv' && ext !== 'mov')
+        return false;
+    } else if (type == 'assignment') {
+      if (ext !== 'pdf' && ext !== 'docx' && ext !== 'doc' && ext !== 'word')
+        return false;
+    } else if (type == 'quiz') {
+    } else if (type == 'handouts') {
+      if (ext !== 'pdf' && ext !== 'word' && ext !== 'docx' && ext !== 'doc')
+        return false;
+    }
+    return true;
+  };
+  async uploadLessonMaterial(e, type, index, lessonindex) {
+    try {
+      e.persist();
+      console.log(type, index, lessonindex);
+      if (!this.validateFileAccordingToType(e.target.files[0], type))
+        this.setState({
+          error: 'Only Specified File Formats are Allowed',
+        });
+      else {
+        const formData = new FormData();
 
+        formData.append('file', e.target.files[0]);
+        formData.append(
+          'session_id',
+          this.props.location.state.uniquesessionid
+        );
+        const lesson_id =
+          this.state.SessionMaterial[index].lesson[lessonindex].lesson_id ||
+          'unknown_lesson_id';
+        console.log(lesson_id);
+        formData.append('lesson_id', lesson_id);
+
+        formData.append('fileType', type);
+        const result = await axiosInstance.post(
+          '/libraryItems/recorded/lessonMaterial',
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            onUploadProgress: (progressEvent) => {
+              this.setState({
+                ...this.state,
+                uploadPercentage: parseInt(
+                  Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                ),
+              });
+              // Clear percentage
+              setTimeout(
+                () =>
+                  this.setState({
+                    ...this.state,
+                    uploadPercentage: 0,
+                  }),
+                4000
+              );
+            },
+          }
+        );
+        console.log(result);
+
+        if (result.data.success) {
+          const newSessionMaterial = this.state.SessionMaterial;
+          newSessionMaterial[index].lesson[lessonindex][type] =
+            result.data.item_id;
+
+          this.setState({
+            ...this.state,
+            success: 'Video Uploaded Successfully',
+            SessionMaterial: newSessionMaterial,
+          });
+        } else {
+          try {
+            this.setState({
+              ...this.state,
+              error: result.data.error,
+            });
+          } catch (e) {
+            console.log(e);
+            this.setState({
+              ...this.state,
+              error: 'Could not upload video',
+            });
+          }
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      try {
+        this.setState({
+          ...this.state,
+          error: err.response.data.error,
+        });
+      } catch (e) {
+        console.log(e);
+        this.setState({
+          ...this.state,
+          error: 'Could not upload video',
+        });
+      }
+    }
+  }
   changeChapterAttribute(props, index) {
     const newarray = this.state.SessionMaterial;
     newarray[index].name = props.target.value;
@@ -1020,28 +1083,8 @@ export default class SessionMaterial extends Component {
                                             )
                                           }
                                         />
-                                        {/* <Input
-                                          type="text"
-                                          name="name"
-                                          placeholder="Write a Lesson name"
-                                          value=""
-                                          onChange={(e) => {
-                                            // console.log(e);
-                                            this.changeLessonattribute(
-                                              e,
-                                              lessonindex
-                                            );
-                                          }}
-                                          className="mt-4"
-                                        /> */}
 
                                         <Row className="mt-4">
-                                          {/*           <Colxx  md="4">
-          <Input value="First Lesson" onChange={onLessonnameChange}/> 
-          
-
-          </Colxx> */}
-
                                           <Colxx md="12">
                                             <Row className="mt-4 text-center">
                                               <div className="design">
@@ -1149,49 +1192,34 @@ export default class SessionMaterial extends Component {
                                                   Videos must be in the .mp4,
                                                   .ogg or .mkv file.
                                                 </p>
+                                                <Row className="center">
+                                                  <ProgressBar
+                                                    percentage={
+                                                      this.state
+                                                        .uploadPercentage
+                                                    }
+                                                  />
+                                                </Row>
                                                 <Row className="text-center">
                                                   <label className="input-label-1">
                                                     <input
                                                       type="file"
                                                       accept=".mp4,.ogg,.mkv,.mov"
-                                                      onChange={(e) => {
-                                                        const fileName =
-                                                          e.target.files[0]
-                                                            .name;
-                                                        const ext = fileName.slice(
-                                                          fileName.lastIndexOf(
-                                                            '.'
-                                                          ) + 1
-                                                        );
-                                                        if (
-                                                          ext !== 'mp4' &&
-                                                          ext !== 'ogg' &&
-                                                          ext !== 'mkv' &&
-                                                          ext !== 'mov'
+                                                      onChange={(e) =>
+                                                        this.uploadLessonMaterial(
+                                                          e,
+                                                          'video',
+                                                          index,
+                                                          lessonindex
                                                         )
-                                                          this.setState({
-                                                            error:
-                                                              'Only Specified File Formats are Allowed',
-                                                          });
-                                                        else {
-                                                          const newArr = this
-                                                            .state
-                                                            .SessionMaterial;
-
-                                                          newArr[index].lesson[
-                                                            lessonindex
-                                                          ].video =
-                                                            e.target.files[0];
-                                                          // newArr[index].lesson[
-                                                          //   lessonindex
-                                                          // ].video.name = `chapter${index} lesson${lessonindex} video ${e.target.files[0].name}`;
-                                                        }
-                                                      }}
+                                                      }
                                                     />
+
                                                     <FiUpload />
                                                     <p id="ufd">
                                                       Upload from device
                                                     </p>
+                                                    <p>{lessonitem.video}</p>
                                                   </label>
                                                   <label className="input-label-2">
                                                     <input type="file" />
@@ -1212,50 +1240,35 @@ export default class SessionMaterial extends Component {
                                                 >
                                                   The Attachment must be in .pdf
                                                   or .word format.
-                                                </p>
+                                                </p>{' '}
+                                                <Row className="center">
+                                                  <ProgressBar
+                                                    percentage={
+                                                      this.state
+                                                        .uploadPercentage
+                                                    }
+                                                  />
+                                                </Row>
                                                 <Row className="text-center">
                                                   <label className="input-label-1">
                                                     <input
                                                       type="file"
                                                       accept=".pdf,.word"
-                                                      onChange={(e) => {
-                                                        const fileName =
-                                                          e.target.files[0]
-                                                            .name;
-                                                        const ext = fileName.slice(
-                                                          fileName.lastIndexOf(
-                                                            '.'
-                                                          ) + 1
-                                                        );
-                                                        if (
-                                                          ext !== 'pdf' &&
-                                                          ext !== 'docx' &&
-                                                          ext !== 'doc' &&
-                                                          ext !== 'word'
+                                                      onChange={(e) =>
+                                                        this.uploadLessonMaterial(
+                                                          e,
+                                                          'assignment',
+                                                          index,
+                                                          lessonindex
                                                         )
-                                                          this.setState({
-                                                            error:
-                                                              'Only Specified File Formats are allowed',
-                                                          });
-                                                        else {
-                                                          const newArr = this
-                                                            .state
-                                                            .SessionMaterial;
-
-                                                          newArr[index].lesson[
-                                                            lessonindex
-                                                          ].assignment =
-                                                            e.target.files[0];
-
-                                                          // newArr[index].lesson[
-                                                          //   lessonindex
-                                                          // ].assignment.name = `chapter${index} lesson${lessonindex} assignment ${e.target.files[0].name}`;
-                                                        }
-                                                      }}
+                                                      }
                                                     />
                                                     <FiUpload />
                                                     <p id="ufd">
                                                       Upload from device
+                                                    </p>
+                                                    <p>
+                                                      {lessonitem.assignment}
                                                     </p>
                                                   </label>
                                                   <label className="input-label-2">
@@ -1428,51 +1441,35 @@ export default class SessionMaterial extends Component {
                                                   The Attachment must be in
                                                   .word format and scanned
                                                   clearly.
-                                                </p>
+                                                </p>{' '}
+                                                <Row className="center">
+                                                  <ProgressBar
+                                                    percentage={
+                                                      this.state
+                                                        .uploadPercentage
+                                                    }
+                                                  />
+                                                </Row>
                                                 <Row className="text-center">
                                                   <label className="input-label-1">
                                                     <input
                                                       type="file"
                                                       accept=".pdf,.word"
-                                                      onChange={(e) => {
-                                                        const fileName =
-                                                          e.target.files[0]
-                                                            .name;
-                                                        const ext = fileName.slice(
-                                                          fileName.lastIndexOf(
-                                                            '.'
-                                                          ) + 1
-                                                        );
-                                                        if (
-                                                          ext !== 'pdf' &&
-                                                          ext !== 'word' &&
-                                                          ext !== 'docx' &&
-                                                          ext !== 'doc'
+                                                      onChange={(e) =>
+                                                        this.uploadLessonMaterial(
+                                                          e,
+                                                          'handouts',
+                                                          index,
+                                                          lessonindex
                                                         )
-                                                          this.setState({
-                                                            error:
-                                                              'Only Specified File Formats Are Allowed',
-                                                          });
-                                                        else {
-                                                          const newArr = this
-                                                            .state
-                                                            .SessionMaterial;
-
-                                                          newArr[index].lesson[
-                                                            lessonindex
-                                                          ].thumbnail =
-                                                            e.target.files[0];
-
-                                                          // newArr[index].lesson[
-                                                          //   lessonindex
-                                                          // ].thumbnail.name = `chapter${index} lesson${lessonindex} ${e.target.files[0].name}`;
-                                                        }
-                                                      }}
+                                                      }
                                                     />
+
                                                     <FiUpload />
                                                     <p id="ufd">
                                                       Upload from device
                                                     </p>
+                                                    <p>{lessonitem.handouts}</p>
                                                   </label>
                                                   <label className="input-label-2">
                                                     <input type="file" />
