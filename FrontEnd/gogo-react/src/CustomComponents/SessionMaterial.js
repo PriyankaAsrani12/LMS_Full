@@ -1213,40 +1213,14 @@ export default class SessionMaterial extends Component {
                                                   .ogg or .mkv file.
                                                 </p>
                                                 <Row>
-                                                  {/* <ProgressBar
+                                                  <ProgressBar
                                                     percentage={
                                                       this.state
                                                         .SessionMaterial[index]
                                                         .lesson[lessonindex]
                                                         .videoUploadPercentage
                                                     }
-                                                  /> */}
-                                                  <div
-                                                    style={{
-                                                      paddingLeft: '40%',
-                                                    }}
-                                                  >
-                                                    <Progress
-                                                      animated
-                                                      bar
-                                                      color="success"
-                                                      value={
-                                                        this.state
-                                                          .SessionMaterial[
-                                                          index
-                                                        ].lesson[lessonindex]
-                                                          .videoUploadPercentage
-                                                      }
-                                                    >
-                                                      {
-                                                        this.state
-                                                          .SessionMaterial[
-                                                          index
-                                                        ].lesson[lessonindex]
-                                                          .videoUploadPercentage
-                                                      }
-                                                    </Progress>
-                                                  </div>
+                                                  />
                                                 </Row>
                                                 <Row className="text-center">
                                                   <label className="input-label-1">
