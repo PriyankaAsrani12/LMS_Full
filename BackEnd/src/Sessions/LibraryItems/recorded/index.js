@@ -56,7 +56,6 @@ Router.get('/:id', auth, async (req, res) => {
     };
 
     const getItemName = (item_id) => {
-      console.log('up ', item_id);
       for (let i = 0; i < LibraryItems.length; i++)
         if (LibraryItems[i].item_id == item_id) {
           console.log(LibraryItems[i], LibraryItems[i].item_name);
@@ -97,6 +96,8 @@ Router.get('/:id', auth, async (req, res) => {
       }
     });
 
+    //sort chapters
+    ans.sort((a, b) => a.chapter_number - b.chapter_number);
     // Sort lessons
     ans.forEach((doc) => doc.lesson.sort((a, b) => a.id - b.id));
 
@@ -215,6 +216,8 @@ Router.post('/', auth, async (req, res) => {
       }
     });
 
+    //sort chapters
+    ans.sort((a, b) => a.chapter_number - b.chapter_number);
     // Sort lessons
     ans.forEach((doc) =>
       doc.lesson.sort((a, b) => a.lesson_number - b.lesson_number)
@@ -417,6 +420,7 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
     return res.status(200).json({
       success: 1,
       item_id: savedItem.dataValues.item_id,
+      item_name: savedItem.dataValues.item_name,
     });
   } catch (err) {
     console.log(err);

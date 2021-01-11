@@ -39,6 +39,7 @@ import Make_modal from './Make_modal';
 import axiosInstance from '../helpers/axiosInstance';
 import NotificationManager from '../components/common/react-notifications/NotificationManager';
 import ProgressBar from './ProgressBar';
+
 export default class SessionMaterial extends Component {
   constructor(props) {
     // console.log(props.location.state.uniquesessionid);
@@ -77,6 +78,9 @@ export default class SessionMaterial extends Component {
               handouts: '',
               thumbnail: '',
               quiz: '',
+              tmpvideoName: '',
+              tmpassignmentname: '',
+              tmphandoutsname: '',
             },
           ],
         },
@@ -477,11 +481,14 @@ export default class SessionMaterial extends Component {
           newSessionMaterial[index].lesson[lessonindex][type] =
             result.data.item_id;
 
+          newSessionMaterial[index].lesson[lessonindex][`tmp${type}name`] =
+            result.data.item_name;
           this.setState({
             ...this.state,
             success: 'Video Uploaded Successfully',
             SessionMaterial: newSessionMaterial,
           });
+          console.log(this.state.SessionMaterial);
         } else {
           try {
             this.setState({
@@ -1033,6 +1040,7 @@ export default class SessionMaterial extends Component {
 
                           {item.lesson.map((lessonitem, lessonindex) => {
                             // console.log(lessonindex);
+                            const lessonTogglerId = `toggler${lessonindex + 1}`;
                             return (
                               <div key={lessonindex}>
                                 <div>
@@ -1051,7 +1059,7 @@ export default class SessionMaterial extends Component {
                                     Delete Lesson
                                   </button>
                                   <Card
-                                    id="toggler"
+                                    id={lessonTogglerId}
                                     className="text-center mt-4"
                                     style={{
                                       width: '100%',
@@ -1068,7 +1076,9 @@ export default class SessionMaterial extends Component {
                                       />
                                     </Row>
                                   </Card>
-                                  <UncontrolledCollapse toggler="#toggler">
+                                  <UncontrolledCollapse
+                                    toggler={lessonTogglerId}
+                                  >
                                     <Card style={{ boxShadow: 'none' }}>
                                       <CardBody>
                                         <MDBInput
@@ -1219,7 +1229,11 @@ export default class SessionMaterial extends Component {
                                                     <p id="ufd">
                                                       Upload from device
                                                     </p>
-                                                    <p>{lessonitem.video}</p>
+                                                    <p>
+                                                      {lessonitem.tmpvideoname
+                                                        ? lessonitem.tmpvideoname
+                                                        : lessonitem.video}
+                                                    </p>
                                                   </label>
                                                   <label className="input-label-2">
                                                     <input type="file" />
@@ -1268,7 +1282,9 @@ export default class SessionMaterial extends Component {
                                                       Upload from device
                                                     </p>
                                                     <p>
-                                                      {lessonitem.assignment}
+                                                      {lessonitem.tmpassignmentname
+                                                        ? lessonitem.tmpassignmentname
+                                                        : lessonitem.assignment}
                                                     </p>
                                                   </label>
                                                   <label className="input-label-2">
@@ -1469,7 +1485,11 @@ export default class SessionMaterial extends Component {
                                                     <p id="ufd">
                                                       Upload from device
                                                     </p>
-                                                    <p>{lessonitem.handouts}</p>
+                                                    <p>
+                                                      {lessonitem.tmphandoutsname
+                                                        ? lessonitem.tmphandoutsname
+                                                        : lessonitem.handouts}
+                                                    </p>
                                                   </label>
                                                   <label className="input-label-2">
                                                     <input type="file" />
