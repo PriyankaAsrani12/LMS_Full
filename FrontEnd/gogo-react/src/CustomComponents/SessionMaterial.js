@@ -81,6 +81,9 @@ export default class SessionMaterial extends Component {
               tmpvideoName: '',
               tmpassignmentname: '',
               tmphandoutsname: '',
+              videoUploadPercentage: '',
+              assignmentUploadPercentage: '',
+              handoutsUploadPercentage: '',
             },
           ],
         },
@@ -456,21 +459,28 @@ export default class SessionMaterial extends Component {
               'Content-Type': 'multipart/form-data',
             },
             onUploadProgress: (progressEvent) => {
+              const newArr = this.state.SessionMaterial;
+              newArr[index].lesson[lessonindex][
+                `${type}UploadPercentage`
+              ] = parseInt(
+                Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              );
               this.setState({
                 ...this.state,
-                uploadPercentage: parseInt(
-                  Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                ),
+                SessionMaterial: newArr,
               });
+
               // Clear percentage
-              setTimeout(
-                () =>
-                  this.setState({
-                    ...this.state,
-                    uploadPercentage: 0,
-                  }),
-                4000
-              );
+              setTimeout(() => {
+                const newArr = this.state.SessionMaterial;
+                newArr[index].lesson[lessonindex][
+                  `${type}UploadPercentage`
+                ] = 0;
+                this.setState({
+                  ...this.state,
+                  SessionMaterial: newArr,
+                });
+              }, 4000);
             },
           }
         );
@@ -1202,13 +1212,41 @@ export default class SessionMaterial extends Component {
                                                   Videos must be in the .mp4,
                                                   .ogg or .mkv file.
                                                 </p>
-                                                <Row className="center">
-                                                  <ProgressBar
+                                                <Row>
+                                                  {/* <ProgressBar
                                                     percentage={
                                                       this.state
-                                                        .uploadPercentage
+                                                        .SessionMaterial[index]
+                                                        .lesson[lessonindex]
+                                                        .videoUploadPercentage
                                                     }
-                                                  />
+                                                  /> */}
+                                                  <div
+                                                    style={{
+                                                      paddingLeft: '40%',
+                                                    }}
+                                                  >
+                                                    <Progress
+                                                      animated
+                                                      bar
+                                                      color="success"
+                                                      value={
+                                                        this.state
+                                                          .SessionMaterial[
+                                                          index
+                                                        ].lesson[lessonindex]
+                                                          .videoUploadPercentage
+                                                      }
+                                                    >
+                                                      {
+                                                        this.state
+                                                          .SessionMaterial[
+                                                          index
+                                                        ].lesson[lessonindex]
+                                                          .videoUploadPercentage
+                                                      }
+                                                    </Progress>
+                                                  </div>
                                                 </Row>
                                                 <Row className="text-center">
                                                   <label className="input-label-1">
@@ -1255,11 +1293,13 @@ export default class SessionMaterial extends Component {
                                                   The Attachment must be in .pdf
                                                   or .word format.
                                                 </p>{' '}
-                                                <Row className="center">
+                                                <Row>
                                                   <ProgressBar
                                                     percentage={
                                                       this.state
-                                                        .uploadPercentage
+                                                        .SessionMaterial[index]
+                                                        .lesson[lessonindex]
+                                                        .assignmentUploadPercentage
                                                     }
                                                   />
                                                 </Row>
@@ -1458,11 +1498,13 @@ export default class SessionMaterial extends Component {
                                                   .word format and scanned
                                                   clearly.
                                                 </p>{' '}
-                                                <Row className="center">
+                                                <Row>
                                                   <ProgressBar
                                                     percentage={
                                                       this.state
-                                                        .uploadPercentage
+                                                        .SessionMaterial[index]
+                                                        .lesson[lessonindex]
+                                                        .handoutsUploadPercentage
                                                     }
                                                   />
                                                 </Row>
