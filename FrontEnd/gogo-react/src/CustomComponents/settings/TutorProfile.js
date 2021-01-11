@@ -88,7 +88,7 @@ const TutorProfile = () => {
       formData.append('profile_picture', userProfile.customer_profile_picture);
       formData.append('values', JSON.stringify(values));
       const result = await axiosInstance.put('/users', formData);
-
+      console.log(result);
       if (result.data.success) {
         setSuccess('Profile Updated Scuuessfully');
         setUserProfile(result.data.user);
@@ -166,27 +166,31 @@ const TutorProfile = () => {
                     <input
                       type="file"
                       name="customer_profile_picture"
-                      accept=".jpg,.jpeg,.png"
+                      accept=".jpg,.jpeg,.png,.webp"
                       onChange={(e) => {
                         console.log(e.target.files[0]);
                         const file = URL.createObjectURL(e.target.files[0]);
                         const currentImage = e.target.files[0];
+                        console.log(
+                          currentImage.name.substr(
+                            currentImage.name.lastIndexOf('.') + 1
+                          )
+                        );
                         if (
                           currentImage.type != 'image/jpg' &&
                           currentImage.type != 'image/jpeg' &&
-                          currentImage.type != 'image/png'
+                          currentImage.type != 'image/png' &&
+                          currentImage.type != 'image/webp'
                         )
-                          setError('only jpg,jpeg,png formats are allowed');
+                          setError(
+                            'only jpg,jpeg,png,webp formats are allowed'
+                          );
                         else {
-                          if (currentImage.size > 2048000)
-                            setError('max image size limit is 2MB');
-                          else {
-                            setUserProfile((prevState) => ({
-                              ...prevState,
-                              ['customer_profile_picture']: currentImage,
-                            }));
-                            setDisplayProfileImage(file);
-                          }
+                          setUserProfile((prevState) => ({
+                            ...prevState,
+                            ['customer_profile_picture']: currentImage,
+                          }));
+                          setDisplayProfileImage(file);
                         }
                       }}
                     />

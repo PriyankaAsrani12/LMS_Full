@@ -823,7 +823,7 @@ export default class SessionMaterial extends Component {
                 <input
                   type="file"
                   name="thumbnail"
-                  accept=".jpg,.jpeg,.png"
+                  accept=".jpg,.jpeg,.png,.webp"
                   onChange={(e) => {
                     console.log(e.target.files[0]);
                     const file = URL.createObjectURL(e.target.files[0]);
@@ -831,18 +831,15 @@ export default class SessionMaterial extends Component {
                     if (
                       currentImage.type != 'image/jpg' &&
                       currentImage.type != 'image/jpeg' &&
-                      currentImage.type != 'image/png'
+                      currentImage.type != 'image/png' &&
+                      currentImage.type != 'image/webp'
                     )
                       this.setState({
-                        error: 'only jpg,jpeg,png formats are allowed',
+                        error: 'only jpg,jpeg,png,webp formats are allowed',
                       });
                     else {
-                      if (currentImage.size > 2048000)
-                        this.setState({ error: 'max image size limit is 2MB' });
-                      else {
-                        this.setState({ displayThumbnail: file });
-                        this.uploadThumbnail(currentImage);
-                      }
+                      this.setState({ displayThumbnail: file });
+                      this.uploadThumbnail(currentImage);
                     }
                   }}
                 />

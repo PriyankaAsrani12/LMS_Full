@@ -30,8 +30,9 @@
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
     "sequelize": "^6.3.5",
-    "sharp": "^0.26.2",
+    "sharp": "^0.27.0",
     "shortid": "^2.2.16",
-    "validator": "^13.1.17"
+    "validator": "^13.1.17",
+    "webp-converter": "^2.3.1"
   }
 }
