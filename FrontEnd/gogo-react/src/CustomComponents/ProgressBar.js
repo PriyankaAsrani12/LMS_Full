@@ -5,17 +5,21 @@ const ProgressBar = ({ percentage }) => {
   return (
     <div
       style={{
-        height: '50px',
+        height: '30px',
         paddingLeft: '40%',
       }}
     >
-      <div
-        className="progress-bar progress-bar-striped bg-success"
-        role="progressbar"
-        style={{ width: `${percentage}%` }}
-      >
-        {percentage}%
-      </div>
+      {percentage ? (
+        <div
+          className="progress-bar progress-bar-striped bg-success"
+          role="progressbar"
+          // style={{ width: `${percentage}%` }}
+        >
+          {percentage}%
+        </div>
+      ) : (
+        ''
+      )}
     </div>
   );
 };
