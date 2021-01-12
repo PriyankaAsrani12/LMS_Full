@@ -55,4 +55,5 @@ router.use(
 router.use('/trainer', require('./Trainer'));
 router.use('/invite/trainer', require('./inviteTrainer'));
 router.use('/stats', require('./stats'));
+router.use('/certificates', require('./certificates/server'));
 module.exports = router;

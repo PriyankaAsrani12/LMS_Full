@@ -2,8 +2,9 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const mongoose = require("mongoose");
+const morgan = require('morgan')
 // const url = "mongodb://localhost/db";
-const url ="mongodb+srv://admin:rUfn8zyboxYjpzYY@cluster0.gynnv.mongodb.net/sampledb?retryWrites=true&w=majority";
+const url ="mongodb://localhost:27017/certificate";
 mongoose.connect(url, { useNewUrlParser: true });
 
 // app.set("view engine", "ejs");
@@ -12,6 +13,8 @@ mongoose.connect(url, { useNewUrlParser: true });
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
+
 
 const con = mongoose.connection;
 con.on("open", () => {

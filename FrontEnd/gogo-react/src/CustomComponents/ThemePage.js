@@ -226,6 +226,21 @@ const Themepage = () => {
               <h6>Third party integrations</h6>
             </NavLink>
           </NavItem>
+          <NavItem>
+            <NavLink
+              to="#"
+              location={{}}
+              className={classnames({
+                active: activeFirstTab3 === '37',
+                'nav-link': true,
+              })}
+              onClick={() => {
+                window.open('http://localhost:5000/tutor/certificates');
+              }}
+            >
+              <h6>Certificates</h6>
+            </NavLink>
+          </NavItem>
         </Nav>
       </Row>
       <TabContent activeTab={activeFirstTab3}>
