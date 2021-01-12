@@ -235,7 +235,7 @@ const Themepage = () => {
                 'nav-link': true,
               })}
               onClick={() => {
-                window.open('http://localhost:5000/tutor/certificates');
+                window.open('http://35.154.109.203:5000/tutor/certificates');
               }}
             >
               <h6>Certificates</h6>
