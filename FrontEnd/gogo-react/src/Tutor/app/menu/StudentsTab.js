@@ -112,7 +112,7 @@ const StudentsTab = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const result = await axiosInstance.get('/stats/students');
+        const result = await axiosInstance.get('/tutor/stats/students');
         console.log(result);
         const data = result.data.result.map((doc) => {
           return {

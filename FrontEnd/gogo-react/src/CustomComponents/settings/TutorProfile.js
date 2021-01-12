@@ -87,7 +87,7 @@ const TutorProfile = () => {
       const formData = new FormData();
       formData.append('profile_picture', userProfile.customer_profile_picture);
       formData.append('values', JSON.stringify(values));
-      const result = await axiosInstance.put('/users', formData);
+      const result = await axiosInstance.put('/tutor/users', formData);
       console.log(result);
       if (result.data.success) {
         setSuccess('Profile Updated Scuuessfully');
@@ -112,7 +112,7 @@ const TutorProfile = () => {
     const getUser = async () => {
       try {
         setIsLoaded(false);
-        const result = await axiosInstance.get('/user');
+        const result = await axiosInstance.get('/tutor/user');
         console.log(result);
         if (result.data.success) {
           try {

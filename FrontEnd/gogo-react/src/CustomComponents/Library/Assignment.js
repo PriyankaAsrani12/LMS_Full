@@ -25,7 +25,7 @@ const Assignment = ({ columns }) => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const result = await axiosInstance.get('/library/assignments');
+        const result = await axiosInstance.get('/tutor/library/assignments');
         console.log('assignment', result);
         if (result.data.success) {
           const data = result.data.result.map((doc) => {

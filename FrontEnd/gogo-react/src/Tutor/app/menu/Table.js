@@ -23,7 +23,6 @@ const Table = ({ columns, data }) => {
     useSortBy,
     usePagination
   );
-
   return (
     <>
       <table {...getTableProps()} className="r-table table">

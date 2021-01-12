@@ -25,7 +25,7 @@ const Quiz = ({ columns }) => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const result = await axiosInstance.get('/library/quizs');
+        const result = await axiosInstance.get('/tutor/library/quizs');
         console.log(result);
         if (result.data.success) {
           const data = result.data.result.map((doc) => {

@@ -243,7 +243,7 @@ const RemoteSession = ({ closeModal, propHandle }) => {
     if (!isValid.success) setError(isValid.error);
     else {
       axiosInstance
-        .post('/sessions/createLiveSession', { values })
+        .post('/tutor/sessions/createLiveSession', { values })
         .then((response) => {
           console.log(response);
           if (response.data.success) {

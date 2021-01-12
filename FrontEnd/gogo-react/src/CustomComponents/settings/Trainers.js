@@ -47,6 +47,7 @@ const Trainer = () => {
 
   const [inputList1, setInputList1] = useState([
     {
+      trainer_id: null,
       displayProfileImage: '',
       profile_picture: '',
       occupation: '',
@@ -80,10 +81,11 @@ const Trainer = () => {
     const getTrainers = async () => {
       try {
         setIsLoaded(false);
-        const result = await axiosInstance.get('/trainer');
+        const result = await axiosInstance.get('/tutor/trainer');
         console.log(result);
         if (result.data.success) {
           const list = result.data.trainers.map((doc) => ({
+            trainer_id: doc.trainer_id,
             profile_picture: doc.trainer_image_url,
             occupation: doc.trainer_occupation,
             fullname: doc.trainer_full_name,
@@ -185,7 +187,7 @@ const Trainer = () => {
       try {
         formData.append('values', JSON.stringify(inputList1));
         console.log(formData);
-        const result = await axiosInstance.post('/trainer', formData);
+        const result = await axiosInstance.post('/tutor/trainer', formData);
         console.log(result);
         if (result.data.success)
           setSuccess('Trainer information uploaded successfully');
@@ -219,6 +221,7 @@ const Trainer = () => {
     setInputList1([
       ...inputList1,
       {
+        trainer_id: null,
         fullname: '',
         phone: '',
         email: '',
@@ -268,20 +271,10 @@ const Trainer = () => {
                           )
                             setError('only jpg,jpeg,png formats are allowed');
                           else {
-                            if (currentImage.size > 2048000)
-                              setError('max image size limit is 2MB');
-                            else {
-                              const list = [...inputList1];
-                              list[i]['profile_picture'] = currentImage;
-                              list[i]['displayProfileImage'] = file;
-                              setInputList1(list);
-
-                              // setUserProfile((prevState) => ({
-                              //   ...prevState,
-                              //   ['customer_profile_picture']: currentImage,
-                              // }));
-                              //   setDisplayProfileImage(file);
-                            }
+                            const list = [...inputList1];
+                            list[i]['profile_picture'] = currentImage;
+                            list[i]['displayProfileImage'] = file;
+                            setInputList1(list);
                           }
                         }}
                       />

@@ -55,7 +55,7 @@ const PaymentDetails = () => {
   useEffect(() => {
     const getPaymentDetails = async () => {
       try {
-        const result = await axiosInstance.get('/user/payment/details');
+        const result = await axiosInstance.get('/tutor/user/payment/details');
         if (result.data.success) setPaymentDetails(result.data.paymentDetails);
         else {
           try {
@@ -89,7 +89,7 @@ const PaymentDetails = () => {
       } else {
         const values = Object.assign(paymentDetails);
         console.log(values);
-        const result = await axiosInstance.post('/user/payment/details', {
+        const result = await axiosInstance.post('/tutor/user/payment/details', {
           values,
         });
         if (result.data.success)

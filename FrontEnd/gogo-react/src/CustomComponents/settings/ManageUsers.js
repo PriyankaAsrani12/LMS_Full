@@ -65,9 +65,12 @@ const ManageUsers = () => {
       //do a network request
       try {
         const values = Object.assign(inviteUser);
-        const result = await axiosInstance.post('/invite/trainer/invite', {
-          values,
-        });
+        const result = await axiosInstance.post(
+          '/tutor/invite/trainer/invite',
+          {
+            values,
+          }
+        );
         console.log(result);
         if (result.data.success) setSuccess('Invitation Sent');
         else setError(result.data.error);
@@ -107,7 +110,7 @@ const ManageUsers = () => {
   useEffect(() => {
     const getInvitedUsers = async () => {
       try {
-        const result = await axiosInstance.get('/invite/trainer');
+        const result = await axiosInstance.get('/tutor/invite/trainer');
         console.log(result);
         if (result.data.success) setData(result.data.tutors);
         else {
@@ -183,7 +186,7 @@ const ManageUsers = () => {
   const handleDelete = async (data) => {
     try {
       const values = { invited_user_email: data.email };
-      const result = await axiosInstance.post('/invite/trainer/delete', {
+      const result = await axiosInstance.post('/tutor/invite/trainer/delete', {
         values,
       });
       console.log(result);

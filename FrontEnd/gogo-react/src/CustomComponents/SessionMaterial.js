@@ -166,7 +166,7 @@ export default class SessionMaterial extends Component {
     }
     axiosInstance
       .get(
-        `/libraryItems/recorded/${this.props.location.state.uniquesessionid}`
+        `/tutor/libraryItems/recorded/${this.props.location.state.uniquesessionid}`
       )
       .then((response) => {
         console.log(response);
@@ -242,9 +242,12 @@ export default class SessionMaterial extends Component {
           SessionMaterial: this.state.SessionMaterial,
         };
         console.log(values);
-        const result = await axiosInstance.post('/libraryItems/recorded', {
-          values,
-        });
+        const result = await axiosInstance.post(
+          '/tutor/libraryItems/recorded',
+          {
+            values,
+          }
+        );
         console.log(result);
         if (result.data.success)
           this.setState({ success: 'Material Uploaded Successfully' });
@@ -331,7 +334,7 @@ export default class SessionMaterial extends Component {
       try {
         if (chapter_id) {
           const result = await axiosInstance.delete(
-            `/libraryItems/recorded/deleteChapter/${chapter_id}`
+            `/tutor/libraryItems/recorded/deleteChapter/${chapter_id}`
           );
           console.log(result);
         }
@@ -394,7 +397,7 @@ export default class SessionMaterial extends Component {
       try {
         if (lesson_id) {
           const result = await axiosInstance.delete(
-            `/libraryItems/recorded/deleteLesson/${lesson_id}`
+            `/tutor/libraryItems/recorded/deleteLesson/${lesson_id}`
           );
           console.log(result);
         }
@@ -452,7 +455,7 @@ export default class SessionMaterial extends Component {
 
         formData.append('fileType', type);
         const result = await axiosInstance.post(
-          '/libraryItems/recorded/lessonMaterial',
+          '/tutor/libraryItems/recorded/lessonMaterial',
           formData,
           {
             headers: {
@@ -633,7 +636,7 @@ export default class SessionMaterial extends Component {
       formData.append('thumbnail', currentImage);
       formData.append('session_id', this.props.location.state.uniquesessionid);
       const result = await axiosInstance.post(
-        '/sessions/upload/thumbnail',
+        '/tutor/sessions/upload/thumbnail',
         formData
       );
       console.log(result);

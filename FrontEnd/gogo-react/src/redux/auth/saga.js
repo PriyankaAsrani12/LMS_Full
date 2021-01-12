@@ -19,7 +19,7 @@ import {
   resetPasswordError,
 } from './actions';
 
-import { adminRoot, currentUser } from "../../constants/defaultValues"
+import { adminRoot, currentUser } from '../../constants/defaultValues';
 import { setCurrentUser } from '../../helpers/Utils';
 import axiosInstance from '../../helpers/axiosInstance';
 
@@ -27,10 +27,14 @@ export function* watchLoginUser() {
   yield takeEvery(LOGIN_USER, loginWithEmailPassword);
 }
 
-const loginWithEmailPasswordAsync = async (customer_email, customer_password,using_google) =>{
+const loginWithEmailPasswordAsync = async (
+  customer_email,
+  customer_password,
+  using_google
+) => {
   try {
-    const values = { customer_email, customer_password,using_google };
-    const result=await axiosInstance.post('/users/login', {values})
+    const values = { customer_email, customer_password, using_google };
+    const result = await axiosInstance.post('/tutor/users/login', { values });
     return result.data;
   } catch (err) {
     try {
@@ -40,14 +44,23 @@ const loginWithEmailPasswordAsync = async (customer_email, customer_password,usi
       return error;
     }
   }
-}
+};
 
 function* loginWithEmailPassword({ payload }) {
-  const { customer_email, customer_password='',using_google=false } = payload.user.values;
+  const {
+    customer_email,
+    customer_password = '',
+    using_google = false,
+  } = payload.user.values;
   const { history } = payload.user;
   // console.log(payload);
   try {
-    const loginUser = yield call(loginWithEmailPasswordAsync, customer_email, customer_password,using_google);
+    const loginUser = yield call(
+      loginWithEmailPasswordAsync,
+      customer_email,
+      customer_password,
+      using_google
+    );
     console.log(loginUser);
     if (loginUser.success) {
       const item = { uid: loginUser.token, user: loginUser.user };
@@ -58,7 +71,11 @@ function* loginWithEmailPassword({ payload }) {
       yield put(loginUserError(loginUser.error));
     }
   } catch (error) {
-    yield put(loginUserError(JSON.stringify(error) || 'Unable to proceed..Please Try Again'));
+    yield put(
+      loginUserError(
+        JSON.stringify(error) || 'Unable to proceed..Please Try Again'
+      )
+    );
   }
 }
 
@@ -68,7 +85,7 @@ export function* watchRegisterUser() {
 
 const registerWithEmailPasswordAsync = async (values) => {
   try {
-    const result = await axiosInstance.post('/users', { values });
+    const result = await axiosInstance.post('/tutor/users', { values });
     return result.data;
   } catch (error) {
     try {
@@ -78,7 +95,7 @@ const registerWithEmailPasswordAsync = async (values) => {
       return err;
     }
   }
-}
+};
 
 function* registerWithEmailPassword({ payload }) {
   // const { email, password } = payload.user;
@@ -86,10 +103,7 @@ function* registerWithEmailPassword({ payload }) {
   // console.log(payload);
   try {
     const values = payload.user.values;
-    const registerUser = yield call(
-      registerWithEmailPasswordAsync,
-      values
-    );
+    const registerUser = yield call(registerWithEmailPasswordAsync, values);
     // console.log(registerUser)
     if (registerUser.success) {
       const item = { uid: registerUser.token, user: registerUser.user };
@@ -100,8 +114,12 @@ function* registerWithEmailPassword({ payload }) {
       yield put(registerUserError(registerUser.error));
     }
   } catch (error) {
-    console.log(error,typeof error,error.message,JSON.stringify(error));
-    yield put(registerUserError(JSON.stringify(error) || 'Unable to proceed..Please Try Again'));
+    console.log(error, typeof error, error.message, JSON.stringify(error));
+    yield put(
+      registerUserError(
+        JSON.stringify(error) || 'Unable to proceed..Please Try Again'
+      )
+    );
   }
 }
 
@@ -128,10 +146,11 @@ export function* watchForgotPassword() {
 }
 
 const forgotPasswordAsync = async (email) => {
-  
   try {
     const values = { email };
-    const result = await axiosInstance.post('/users/forgotPassword', { values });
+    const result = await axiosInstance.post('/tutor/users/forgotPassword', {
+      values,
+    });
     return result.data;
   } catch (error) {
     try {
@@ -139,9 +158,9 @@ const forgotPasswordAsync = async (email) => {
       return result;
     } catch (err) {
       return err;
-    }    
+    }
   }
-  
+
   // return await auth
   //   .sendPasswordResetEmail(email)
   //   .then((user) => user)
@@ -153,14 +172,18 @@ function* forgotPassword({ payload }) {
   // console.log(payload)
   try {
     const forgotPasswordStatus = yield call(forgotPasswordAsync, email);
-    console.log(forgotPasswordStatus)
+    console.log(forgotPasswordStatus);
     if (forgotPasswordStatus.success) {
       yield put(forgotPasswordSuccess('success'));
     } else {
       yield put(forgotPasswordError(forgotPasswordStatus.data.error));
     }
   } catch (error) {
-    yield put(forgotPasswordError(JSON.stringify(error) || 'Unable to proceed..Please Try Again'));
+    yield put(
+      forgotPasswordError(
+        JSON.stringify(error) || 'Unable to proceed..Please Try Again'
+      )
+    );
   }
 }
 
@@ -169,10 +192,11 @@ export function* watchResetPassword() {
 }
 
 const resetPasswordAsync = async (resetPasswordCode, newPassword) => {
-  
   try {
     const values = { email: resetPasswordCode, newPassword };
-    const result = await axiosInstance.post('/users/reset-password', { values });
+    const result = await axiosInstance.post('/tutor/users/reset-password', {
+      values,
+    });
     return result.data;
   } catch (error) {
     try {
@@ -204,7 +228,11 @@ function* resetPassword({ payload }) {
       yield put(resetPasswordError(resetPasswordStatus.data.error));
     }
   } catch (error) {
-    yield put(resetPasswordError(JSON.stringify(error) || 'Unable to proceed..Please Try Again'));
+    yield put(
+      resetPasswordError(
+        JSON.stringify(error) || 'Unable to proceed..Please Try Again'
+      )
+    );
   }
 }
 

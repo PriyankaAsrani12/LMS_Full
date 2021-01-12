@@ -102,7 +102,7 @@ const OndemandSession = ({ closeModal, propHandle }) => {
       setTimeout(() => {
         //here makerequest fr your session creation
         axiosInstance
-          .post('/sessions/createRecordedSession', { values })
+          .post('/tutor/sessions/createRecordedSession', { values })
           .then((response) => {
             console.log(response);
             if (response.data.success) {

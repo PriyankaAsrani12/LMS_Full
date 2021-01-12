@@ -3,23 +3,14 @@ import { Button } from 'reactstrap';
 import { useTable, usePagination, useSortBy } from 'react-table';
 import classnames from 'classnames';
 import CreateSession from './CreateSessions';
-import Library from './Library';
 import './Customcss.css';
 import PopoverItem from '../components/common/PopoverItem';
 import { Link } from 'react-router-dom';
 import { adminRoot } from '../constants/defaultValues';
-import Counter from './useCounter';
-import useCounter from './useCounter';
-import produtcs from '../data/products';
 import axiosInstance from '../helpers/axiosInstance';
 import { DropDownContext } from '../context/DropdownContext';
 
-function Table({
-  columns,
-  data,
-  divided = false,
-  defaultPageSize = data.length,
-}) {
+function Table({ columns, data, divided = false }) {
   let {
     getTableProps,
     getTableBodyProps,
@@ -36,7 +27,7 @@ function Table({
     {
       columns,
       data,
-      initialState: { pageIndex: 0, pageSize: defaultPageSize },
+      initialState: { pageIndex: 0, pageSize: data.length },
     },
     useSortBy,
     usePagination
@@ -287,7 +278,7 @@ export const TabularData = () => {
     // console.log(route, sortFilter, search);
     axiosInstance
       .get(
-        `/sessions/FindAllSession?route=${route}&sort=${sortFilter}&search=${searchSession}`
+        `/tutor/sessions/FindAllSession?route=${route}&sort=${sortFilter}&search=${searchSession}`
       )
       .then((response) => {
         console.log(response, response.data.sessions.length);

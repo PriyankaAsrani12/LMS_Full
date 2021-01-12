@@ -34,7 +34,7 @@ const ThirdPartyIntegration = () => {
   useEffect(() => {
     const getThirdPartyDetails = async () => {
       try {
-        const result = await axiosInstance.get('/user/zoom/token');
+        const result = await axiosInstance.get('/tutor/user/zoom/token');
         console.log(result);
         if (result.data.success) {
           setCustomer_zoom_email(result.data.customer_zoom_email);
@@ -70,7 +70,9 @@ const ThirdPartyIntegration = () => {
       setError('Invalid Email');
     else {
       try {
-        const result = await axiosInstance.put('/user/zoom/token', { values });
+        const result = await axiosInstance.put('/tutor/user/zoom/token', {
+          values,
+        });
         if (result.data.success) setSuccess('Details updated successfully');
         else {
           try {

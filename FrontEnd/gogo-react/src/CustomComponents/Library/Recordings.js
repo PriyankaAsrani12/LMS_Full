@@ -24,7 +24,7 @@ const Recordings = ({ columns }) => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const result = await axiosInstance.get('/library/recordings');
+        const result = await axiosInstance.get('/tutor/library/recordings');
         console.log(result);
         if (result.data.success) {
           const data = result.data.result.map((doc) => {

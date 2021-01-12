@@ -54,7 +54,7 @@ const Remotelook = (props) => {
     //call your data from backend with uniquesessionid and store in data
     //setData(result);
     axiosInstance
-      .get(`/sessions/FindSessionById/${uniquesessionid}`)
+      .get(`/tutor/sessions/FindSessionById/${uniquesessionid}`)
       .then((response) => {
         console.log(response);
         if (response.data.success) setData(response.data.session);
@@ -131,7 +131,7 @@ const Remotelook = (props) => {
           formData.append('item_type', 'Session Material');
           try {
             const res = await axiosInstance.post(
-              '/libraryItems/upload',
+              '/tutor/libraryItems/upload',
               formData,
               {
                 headers: {
@@ -195,7 +195,7 @@ const Remotelook = (props) => {
       formData.append('thumbnail', currentImage);
       formData.append('session_id', uniquesessionid);
       const result = await axiosInstance.post(
-        '/sessions/upload/thumbnail',
+        '/tutor/sessions/upload/thumbnail',
         formData
       );
       console.log(result);

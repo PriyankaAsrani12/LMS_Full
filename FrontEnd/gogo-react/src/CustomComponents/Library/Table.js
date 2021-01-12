@@ -4,7 +4,7 @@ import { useTable, usePagination, useSortBy } from 'react-table';
 import classnames from 'classnames';
 import PopoverItem from '../../components/common/PopoverItem';
 
-const Table = ({ columns, data, divided = false, defaultPageSize = 6 }) => {
+const Table = ({ columns, data, divided = false }) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -21,7 +21,7 @@ const Table = ({ columns, data, divided = false, defaultPageSize = 6 }) => {
     {
       columns,
       data,
-      initialState: { pageIndex: 0, pageSize: defaultPageSize },
+      initialState: { pageIndex: 0, pageSize: data.length },
     },
     useSortBy,
     usePagination

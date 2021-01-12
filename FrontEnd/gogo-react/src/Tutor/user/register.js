@@ -109,7 +109,9 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
         values.customer_id = queryString.parse(
           props.location.search
         ).customer_id;
-        const result = await axiosInstance.post('/invite/trainer', { values });
+        const result = await axiosInstance.post('/tutor/invite/trainer', {
+          values,
+        });
         console.log(result);
         if (result.data.success) history.push('/app/dashboard');
         else {

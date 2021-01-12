@@ -80,7 +80,7 @@ const CourseTab = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const result = await axiosInstance.get('/stats');
+        const result = await axiosInstance.get('/tutor/stats');
         console.log(result);
         let live = 0;
         const data = result.data.result.map((doc) => {

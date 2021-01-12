@@ -58,7 +58,7 @@ const Library = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const result = await axiosInstance.get('/library');
+        const result = await axiosInstance.get('/tutor/library');
         console.log(result);
         if (result.data.success) {
           const data = result.data.result.map((doc) => {
