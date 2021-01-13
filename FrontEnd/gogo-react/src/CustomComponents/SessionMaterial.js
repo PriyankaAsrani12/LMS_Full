@@ -431,18 +431,18 @@ export default class SessionMaterial extends Component {
     }
     return true;
   };
-  async uploadLessonMaterial(e, type, index, lessonindex) {
+  async uploadLessonMaterial(file, type, index, lessonindex) {
     try {
-      e.persist();
+      // e.persist();
       console.log(type, index, lessonindex);
-      if (!this.validateFileAccordingToType(e.target.files[0], type))
+      if (!this.validateFileAccordingToType(file, type))
         this.setState({
           error: 'Only Specified File Formats are Allowed',
         });
       else {
         const formData = new FormData();
 
-        formData.append('file', e.target.files[0]);
+        formData.append('file', file);
         formData.append(
           'session_id',
           this.props.location.state.uniquesessionid
@@ -494,8 +494,8 @@ export default class SessionMaterial extends Component {
           newSessionMaterial[index].lesson[lessonindex][type] =
             result.data.item_id;
 
-          newSessionMaterial[index].lesson[lessonindex][`tmp${type}name`] =
-            result.data.item_name;
+          // newSessionMaterial[index].lesson[lessonindex][`tmp${type}name`] =
+          //   result.data.item_name;
           this.setState({
             ...this.state,
             success: 'Video Uploaded Successfully',
@@ -1213,39 +1213,120 @@ export default class SessionMaterial extends Component {
                                                   .ogg or .mkv file.
                                                 </p>
                                                 <Row>
-                                                  <ProgressBar
+                                                  <div
+                                                    style={{
+                                                      height: '30px',
+                                                      paddingLeft: '20%',
+                                                    }}
+                                                  >
+                                                    <div
+                                                      className="progress-bar progress-bar-striped bg-success"
+                                                      role="progressbar"
+                                                      style={{
+                                                        width: `${
+                                                          this.state
+                                                            .SessionMaterial[
+                                                            index
+                                                          ].lesson[lessonindex]
+                                                            .videoUploadPercentage *
+                                                          3
+                                                        }px`,
+                                                      }}
+                                                    >
+                                                      {
+                                                        this.state
+                                                          .SessionMaterial[
+                                                          index
+                                                        ].lesson[lessonindex]
+                                                          .videoUploadPercentage
+                                                      }
+                                                    </div>
+                                                  </div>
+                                                  {/* <ProgressBar
                                                     percentage={
                                                       this.state
                                                         .SessionMaterial[index]
                                                         .lesson[lessonindex]
                                                         .videoUploadPercentage
                                                     }
-                                                  />
+                                                  /> */}
                                                 </Row>
                                                 <Row className="text-center">
                                                   <label className="input-label-1">
                                                     <input
                                                       type="file"
                                                       accept=".mp4,.ogg,.mkv,.mov"
-                                                      onChange={(e) =>
-                                                        this.uploadLessonMaterial(
-                                                          e,
-                                                          'video',
-                                                          index,
-                                                          lessonindex
+                                                      onChange={(e) => {
+                                                        const videoFile =
+                                                          e.target.files[0];
+                                                        if (
+                                                          !this.validateFileAccordingToType(
+                                                            e.target.files[0],
+                                                            'video'
+                                                          )
                                                         )
-                                                      }
+                                                          this.setState({
+                                                            error:
+                                                              'Only Specified File Formats are Allowed',
+                                                          });
+                                                        else {
+                                                          const newSessionMaterial = this
+                                                            .state
+                                                            .SessionMaterial;
+                                                          newSessionMaterial[
+                                                            index
+                                                          ].lesson[lessonindex][
+                                                            `tmpvideoname`
+                                                          ] = videoFile;
+                                                          this.setState({
+                                                            ...this.state,
+                                                            SessionMaterial: newSessionMaterial,
+                                                          });
+                                                        }
+                                                      }}
                                                     />
 
                                                     <FiUpload />
                                                     <p id="ufd">
                                                       Upload from device
                                                     </p>
+
                                                     <p>
                                                       {lessonitem.tmpvideoname
-                                                        ? lessonitem.tmpvideoname
+                                                        ? lessonitem
+                                                            .tmpvideoname.name
                                                         : lessonitem.video}
                                                     </p>
+                                                    {lessonitem.tmpvideoname ? (
+                                                      <>
+                                                        <Button
+                                                          onClick={(e) =>
+                                                            this.uploadLessonMaterial(
+                                                              this.state
+                                                                .SessionMaterial[
+                                                                index
+                                                              ].lesson[
+                                                                lessonindex
+                                                              ].tmpvideoname,
+                                                              'video',
+                                                              index,
+                                                              lessonindex
+                                                            )
+                                                          }
+                                                        >
+                                                          Submit
+                                                        </Button>
+                                                        <Button
+                                                          style={{
+                                                            marginLeft: '5px',
+                                                          }}
+                                                        >
+                                                          Cancel
+                                                        </Button>
+                                                      </>
+                                                    ) : (
+                                                      ''
+                                                    )}
                                                   </label>
                                                   <label className="input-label-2">
                                                     <input type="file" />
