@@ -6,6 +6,8 @@ let max_aspect_ratio,
   max_height,
   max_width = 1;
 let save_pending = false;
+let image_url = null;
+
 let state = {
   multiplier: 1,
   newbase: false,
@@ -1271,6 +1273,7 @@ async function save() {
   body.name = document.getElementById('temp-name').value;
   body.doctemp = document.getElementById('doc-temp-id').value;
   body.operations = JSON.stringify(temp_operations);
+  body.image_url = image_url;
   console.log('body-----------------------------------');
   console.log(body);
   let xhr = new XMLHttpRequest();
@@ -1333,6 +1336,7 @@ function xhrSendFile(file) {
           // console.log("finished filesend")
           try {
             let resp = JSON.parse(this.response);
+            image_url = resp.image_url;
             resolve(resp);
           } catch (err) {
             document.getElementById('user-msg').innerHTML =

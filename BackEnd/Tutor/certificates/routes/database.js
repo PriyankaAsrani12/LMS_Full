@@ -1,6 +1,5 @@
 const route = require('express').Router();
 const Template = require('../schema2');
-const auth = require('../../middleware/deepakAuth');
 
 route.get('/2', async (req, res) => {
   try {
@@ -14,9 +13,9 @@ route.get('/2', async (req, res) => {
 route.get('/2/:name', async (req, res) => {
   try {
     // const datavalue = await htmlthemes.findById(req.params.id);
-    const datavalue = await template2.find({
+    const datavalue = await Template.findOne({
       where: {
-        'temp.name': req.params.name,
+        certificate_id: req.params.name,
       },
     });
     res.json(datavalue);
@@ -41,20 +40,23 @@ route.post('/imageupload', async (req, res) => {
         error: 'Could not save image',
       });
     console.log('imaged saved successfully');
+    res
+      .status(200)
+      .send({ status: true, name: imgname, image_url: `Url of Certiimage` });
   });
-
-  res.send({ status: true, name: imgname });
 });
 
 //string opertaions image path and releveant things in template2 database
 route.post('/template', async (req, res) => {
   try {
     console.log(req.body);
-    const { name, doctemp, operations } = req.body;
+    const { name, doctemp, operations, image_url } = req.body;
     const value = await Template.create({
       name,
       doctemp,
       operations,
+      image_url,
+      customer_id: req.user.customer_id,
     });
     if (!value)
       return res.status(400).json({

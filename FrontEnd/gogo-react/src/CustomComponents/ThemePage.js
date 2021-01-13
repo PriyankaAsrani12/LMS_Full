@@ -36,6 +36,7 @@ import TutorProfile from './settings/TutorProfile';
 import ManageUsers from './settings/ManageUsers';
 import ThirdPartyIntegration from './settings/ThirdPartyIntegration';
 import Trainer from './settings/Trainers';
+import Certificates from './certificate/Index';
 
 const Themepage = () => {
   const [defaulttheme, setDefaulttheme] = useState(true);
@@ -235,7 +236,7 @@ const Themepage = () => {
                 'nav-link': true,
               })}
               onClick={() => {
-                window.open('http://35.154.109.203:5000/tutor/certificates');
+                setActiveFirstTab3('37');
               }}
             >
               <h6>Certificates</h6>
@@ -498,6 +499,9 @@ const Themepage = () => {
         <TabPane tabId="35">Hi, i am manage subscription</TabPane>
         <TabPane tabId="36">
           <ThirdPartyIntegration />
+        </TabPane>
+        <TabPane tabId="37">
+          <Certificates />
         </TabPane>
       </TabContent>
       <br />

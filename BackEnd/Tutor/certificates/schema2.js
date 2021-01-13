@@ -16,7 +16,14 @@ const Template = db.define('certificates', {
     autoIncrement: true,
     primaryKey: true,
   },
-
+  customer_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'customer_tables',
+      key: 'customer_id',
+    },
+  },
   name: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -27,6 +34,10 @@ const Template = db.define('certificates', {
   },
   operations: {
     type: DataTypes.TEXT('long'),
+    allowNull: false,
+  },
+  image_url: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
 });
