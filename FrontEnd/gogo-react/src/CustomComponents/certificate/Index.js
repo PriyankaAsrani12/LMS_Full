@@ -64,7 +64,9 @@ const Index = () => {
       <Button
         id="default"
         className="font-weight-bold"
-        onClick={() => window.open('http://localhost:5000/tutor/certificates')}
+        onClick={() =>
+          window.open('http://35.154.109.203:5000/tutor/certificates')
+        }
       >
         Create A Certificate Template
       </Button>
@@ -104,7 +106,7 @@ const Index = () => {
                         onClick={() => {
                           console.log('edit ');
                           window.open(
-                            `http://localhost:5000/tutor/certificates/api/database/2/${doc.certificate_id}`
+                            `http://35.154.109.203:5000/tutor/certificates/api/database/2/${doc.certificate_id}`
                           );
                         }}
                       >
