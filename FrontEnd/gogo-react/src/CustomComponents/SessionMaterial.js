@@ -475,16 +475,21 @@ export default class SessionMaterial extends Component {
               });
 
               // Clear percentage
-              setTimeout(() => {
-                const newArr = this.state.SessionMaterial;
-                newArr[index].lesson[lessonindex][
+              if (
+                this.state.SessionMaterial[index].lesson[lessonindex][
                   `${type}UploadPercentage`
-                ] = 0;
-                this.setState({
-                  ...this.state,
-                  SessionMaterial: newArr,
-                });
-              }, 4000);
+                ] == 100
+              )
+                setTimeout(() => {
+                  const newArr = this.state.SessionMaterial;
+                  newArr[index].lesson[lessonindex][
+                    `${type}UploadPercentage`
+                  ] = 0;
+                  this.setState({
+                    ...this.state,
+                    SessionMaterial: newArr,
+                  });
+                }, 4000);
             },
           }
         );
