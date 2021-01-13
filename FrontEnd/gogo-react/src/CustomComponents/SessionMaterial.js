@@ -1320,11 +1320,25 @@ export default class SessionMaterial extends Component {
                                                             )
                                                           }
                                                         >
-                                                          Submit
+                                                          Upload
                                                         </Button>
                                                         <Button
                                                           style={{
                                                             marginLeft: '5px',
+                                                          }}
+                                                          onClick={() => {
+                                                            const newArr = this
+                                                              .state
+                                                              .SessionMaterial;
+                                                            newArr[
+                                                              index
+                                                            ].lesson[
+                                                              lessonindex
+                                                            ].tmpvideoname = '';
+                                                            this.setState({
+                                                              ...this.state,
+                                                              SessionMaterial: newArr,
+                                                            });
                                                           }}
                                                         >
                                                           Cancel
@@ -1355,28 +1369,69 @@ export default class SessionMaterial extends Component {
                                                   or .word format.
                                                 </p>{' '}
                                                 <Row>
-                                                  <ProgressBar
-                                                    percentage={
-                                                      this.state
-                                                        .SessionMaterial[index]
-                                                        .lesson[lessonindex]
-                                                        .assignmentUploadPercentage
-                                                    }
-                                                  />
+                                                  <div
+                                                    style={{
+                                                      height: '30px',
+                                                      paddingLeft: '20%',
+                                                    }}
+                                                  >
+                                                    <div
+                                                      className="progress-bar progress-bar-striped bg-success"
+                                                      role="progressbar"
+                                                      style={{
+                                                        width: `${
+                                                          this.state
+                                                            .SessionMaterial[
+                                                            index
+                                                          ].lesson[lessonindex]
+                                                            .assignmentUploadPercentage *
+                                                          3
+                                                        }px`,
+                                                      }}
+                                                    >
+                                                      {
+                                                        this.state
+                                                          .SessionMaterial[
+                                                          index
+                                                        ].lesson[lessonindex]
+                                                          .assignmentUploadPercentage
+                                                      }
+                                                    </div>
+                                                  </div>
                                                 </Row>
                                                 <Row className="text-center">
                                                   <label className="input-label-1">
                                                     <input
                                                       type="file"
                                                       accept=".pdf,.word"
-                                                      onChange={(e) =>
-                                                        this.uploadLessonMaterial(
-                                                          e,
-                                                          'assignment',
-                                                          index,
-                                                          lessonindex
+                                                      onChange={(e) => {
+                                                        const assignmentFile =
+                                                          e.target.files[0];
+                                                        if (
+                                                          !this.validateFileAccordingToType(
+                                                            e.target.files[0],
+                                                            'assignment'
+                                                          )
                                                         )
-                                                      }
+                                                          this.setState({
+                                                            error:
+                                                              'Only Specified File Formats are Allowed',
+                                                          });
+                                                        else {
+                                                          const newSessionMaterial = this
+                                                            .state
+                                                            .SessionMaterial;
+                                                          newSessionMaterial[
+                                                            index
+                                                          ].lesson[lessonindex][
+                                                            `tmpassignmentname`
+                                                          ] = assignmentFile;
+                                                          this.setState({
+                                                            ...this.state,
+                                                            SessionMaterial: newSessionMaterial,
+                                                          });
+                                                        }
+                                                      }}
                                                     />
                                                     <FiUpload />
                                                     <p id="ufd">
@@ -1384,9 +1439,57 @@ export default class SessionMaterial extends Component {
                                                     </p>
                                                     <p>
                                                       {lessonitem.tmpassignmentname
-                                                        ? lessonitem.tmpassignmentname
+                                                        ? lessonitem
+                                                            .tmpassignmentname
+                                                            .name
                                                         : lessonitem.assignment}
                                                     </p>
+                                                    {lessonitem.tmpassignmentname ? (
+                                                      <>
+                                                        <Button
+                                                          onClick={(e) =>
+                                                            this.uploadLessonMaterial(
+                                                              this.state
+                                                                .SessionMaterial[
+                                                                index
+                                                              ].lesson[
+                                                                lessonindex
+                                                              ]
+                                                                .tmpassignmentname,
+                                                              'assignment',
+                                                              index,
+                                                              lessonindex
+                                                            )
+                                                          }
+                                                        >
+                                                          Upload
+                                                        </Button>
+                                                        <Button
+                                                          style={{
+                                                            marginLeft: '5px',
+                                                          }}
+                                                          onClick={() => {
+                                                            const newArr = this
+                                                              .state
+                                                              .SessionMaterial;
+                                                            newArr[
+                                                              index
+                                                            ].lesson[
+                                                              lessonindex
+                                                            ].tmpassignmentname =
+                                                              '';
+                                                            this.setState({
+                                                              ...this.state,
+                                                              SessionMaterial: newArr,
+                                                            });
+                                                          }}
+                                                        >
+                                                          Cancel
+                                                        </Button>
+                                                      </>
+                                                    ) : (
+                                                      ''
+                                                    )}
                                                   </label>
                                                   <label className="input-label-2">
                                                     <input type="file" />
@@ -1560,28 +1663,69 @@ export default class SessionMaterial extends Component {
                                                   clearly.
                                                 </p>{' '}
                                                 <Row>
-                                                  <ProgressBar
-                                                    percentage={
-                                                      this.state
-                                                        .SessionMaterial[index]
-                                                        .lesson[lessonindex]
-                                                        .handoutsUploadPercentage
-                                                    }
-                                                  />
+                                                  <div
+                                                    style={{
+                                                      height: '30px',
+                                                      paddingLeft: '20%',
+                                                    }}
+                                                  >
+                                                    <div
+                                                      className="progress-bar progress-bar-striped bg-success"
+                                                      role="progressbar"
+                                                      style={{
+                                                        width: `${
+                                                          this.state
+                                                            .SessionMaterial[
+                                                            index
+                                                          ].lesson[lessonindex]
+                                                            .handoutsUploadPercentage *
+                                                          3
+                                                        }px`,
+                                                      }}
+                                                    >
+                                                      {
+                                                        this.state
+                                                          .SessionMaterial[
+                                                          index
+                                                        ].lesson[lessonindex]
+                                                          .handoutsUploadPercentage
+                                                      }
+                                                    </div>
+                                                  </div>
                                                 </Row>
                                                 <Row className="text-center">
                                                   <label className="input-label-1">
                                                     <input
                                                       type="file"
                                                       accept=".pdf,.word"
-                                                      onChange={(e) =>
-                                                        this.uploadLessonMaterial(
-                                                          e,
-                                                          'handouts',
-                                                          index,
-                                                          lessonindex
+                                                      onChange={(e) => {
+                                                        const handoutsFile =
+                                                          e.target.files[0];
+                                                        if (
+                                                          !this.validateFileAccordingToType(
+                                                            handoutsFile,
+                                                            'handouts'
+                                                          )
                                                         )
-                                                      }
+                                                          this.setState({
+                                                            error:
+                                                              'Only Specified File Formats are Allowed',
+                                                          });
+                                                        else {
+                                                          const newSessionMaterial = this
+                                                            .state
+                                                            .SessionMaterial;
+                                                          newSessionMaterial[
+                                                            index
+                                                          ].lesson[lessonindex][
+                                                            `tmphandoutsname`
+                                                          ] = handoutsFile;
+                                                          this.setState({
+                                                            ...this.state,
+                                                            SessionMaterial: newSessionMaterial,
+                                                          });
+                                                        }
+                                                      }}
                                                     />
 
                                                     <FiUpload />
@@ -1590,9 +1734,56 @@ export default class SessionMaterial extends Component {
                                                     </p>
                                                     <p>
                                                       {lessonitem.tmphandoutsname
-                                                        ? lessonitem.tmphandoutsname
+                                                        ? lessonitem
+                                                            .tmphandoutsname
+                                                            .name
                                                         : lessonitem.handouts}
                                                     </p>
+                                                    {lessonitem.tmphandoutsname ? (
+                                                      <>
+                                                        <Button
+                                                          onClick={(e) =>
+                                                            this.uploadLessonMaterial(
+                                                              this.state
+                                                                .SessionMaterial[
+                                                                index
+                                                              ].lesson[
+                                                                lessonindex
+                                                              ].tmphandoutsname,
+                                                              'handouts',
+                                                              index,
+                                                              lessonindex
+                                                            )
+                                                          }
+                                                        >
+                                                          Upload
+                                                        </Button>
+                                                        <Button
+                                                          style={{
+                                                            marginLeft: '5px',
+                                                          }}
+                                                          onClick={() => {
+                                                            const newArr = this
+                                                              .state
+                                                              .SessionMaterial;
+                                                            newArr[
+                                                              index
+                                                            ].lesson[
+                                                              lessonindex
+                                                            ].tmphandoutsname =
+                                                              '';
+                                                            this.setState({
+                                                              ...this.state,
+                                                              SessionMaterial: newArr,
+                                                            });
+                                                          }}
+                                                        >
+                                                          Cancel
+                                                        </Button>
+                                                      </>
+                                                    ) : (
+                                                      ''
+                                                    )}
                                                   </label>
                                                   <label className="input-label-2">
                                                     <input type="file" />
