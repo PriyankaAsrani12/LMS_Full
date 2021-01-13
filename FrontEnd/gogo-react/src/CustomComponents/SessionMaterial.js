@@ -463,11 +463,12 @@ export default class SessionMaterial extends Component {
             },
             onUploadProgress: (progressEvent) => {
               const newArr = this.state.SessionMaterial;
-              newArr[index].lesson[lessonindex][
-                `${type}UploadPercentage`
-              ] = parseInt(
+              const percentage = parseInt(
                 Math.round((progressEvent.loaded * 100) / progressEvent.total)
               );
+              newArr[index].lesson[lessonindex][
+                `${type}UploadPercentage`
+              ] = percentage;
               this.setState({
                 ...this.state,
                 SessionMaterial: newArr,
