@@ -54,6 +54,7 @@ const ResetPassword = ({
     if (!loading) {
       const params = new URLSearchParams(location.search);
       const oobCode = params.get('oobCode');
+      console.log(oobCode);
       if (oobCode) {
         if (values.newPassword !== '') {
           resetPasswordAction({
@@ -86,7 +87,7 @@ const ResetPassword = ({
             <p className="white mb-0">
               Please use your e-mail to reset your password. <br />
               If you are not a member, please{' '}
-              <NavLink to="/register" className="white">
+              <NavLink to="/Tutor/user/register" className="white">
                 register
               </NavLink>
               .

@@ -240,7 +240,7 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
       <Colxx xxs="12" md="10" className="mx-auto my-auto">
         <Card className="auth-card">
           <div className="position-relative image-side ">
-            <p className="text-white h2"> Ed - tech startup </p>
+            <p className="text-white h2"> Oyesters Training</p>
             <p className="white mb-0">
               Please use this form to register. <br />
               If you are a member, please
@@ -418,7 +418,9 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
                     ) : null}
                   </FormGroup>
                   <div className="d-flex justify-content-between align-items-center">
-                    <NavLink to="/user/login">Already Registered?</NavLink>
+                    <NavLink to="/Tutor/user/login">
+                      Already Registered?
+                    </NavLink>
                     <Button color="primary" type="submit" className="register">
                       Register
                     </Button>
@@ -439,14 +441,14 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
                   <img src={Google} className="logo" />
                   <span>Continue with Google</span>
                 </Button>
-                <Button
+                {/* <Button
                   outline
                   color="secondary"
                   className="mb-2 d-flex align-items-center p-3 registerug"
                 >
                   <img src={Apple} className="logo2" />
                   <span>Continue with Apple</span>
-                </Button>
+                </Button> */}
               </div>{' '}
             </Row>
           </div>

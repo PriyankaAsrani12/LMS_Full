@@ -1,4 +1,5 @@
 const http = require('https');
+const crypto = require('crypto');
 
 const sendWelcomeEmail = (email, name) => {
   var options = {
@@ -79,7 +80,7 @@ const sendCancelationEmail = (email, name) => {
   req.end();
 };
 
-const sendPasswordResetEmail = (email) => {
+const sendPasswordResetEmail = (email, encryptedData) => {
   var options = {
     method: 'POST',
     hostname: 'api.transmail.com',
@@ -115,7 +116,7 @@ const sendPasswordResetEmail = (email) => {
       subject: 'Welcome!!!!!!',
       htmlbody: `nice to have you here ${email}
             <h2>Reset Your Password</h2>
-            <a href="http://35.154.109.203:3000/Tutor/user/reset-password?oobCode=${email}">Reset</a>
+            <a href="http://35.154.109.203:3000/Tutor/user/reset-password?oobCode=${encryptedData}">Reset</a>
   `,
     })
   );

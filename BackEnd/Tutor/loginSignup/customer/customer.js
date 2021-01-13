@@ -3,6 +3,7 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const webp = require('webp-converter');
+var CryptoJS = require('crypto-js');
 
 const auth = require('../../middleware/deepakAuth');
 const {
@@ -212,7 +213,17 @@ router.post('/users/forgotPassword', async (req, res) => {
       console.log('success', sqlCheck.dataValues);
 
       //Change it to customer email and customer name
-      let temp = await sendPasswordResetEmail(email);
+
+      const encryptedData = jwt.sign(
+        { email, valid: Date.now() },
+        process.env.JWT_KEY,
+        {
+          expiresIn: '1d',
+        }
+      );
+      console.log(encryptedData);
+
+      let temp = await sendPasswordResetEmail(email, encryptedData);
       console.log('🚀', temp);
 
       return res.status(200).json({
@@ -233,24 +244,40 @@ router.post('/users/forgotPassword', async (req, res) => {
 // handle reset password
 router.post('/users/reset-password', async (req, res) => {
   try {
+    console.log(req.body);
     const { email, newPassword } = req.body.values;
-    const salt = bcrypt.genSaltSync(10);
-    new_hashed_password = await bcrypt.hashSync(newPassword, salt);
 
-    const sqlCheck = await User.update(
-      { customer_password: new_hashed_password },
-      { where: { customer_email: email } }
-    );
-    console.log('data values are', sqlCheck);
-    if (sqlCheck == 0)
-      return res.status(400).json({
-        success: 0,
-        error: 'Mail not registered',
+    jwt.verify(email, process.env.JWT_KEY, async (err, decoded) => {
+      if (err)
+        return res.status(400).json({
+          success: 0,
+          error: 'Invalid Code',
+        });
+      console.log(decoded);
+
+      if (Date.now() - decoded.valid > 86400000)
+        return res.status(400).json({
+          success: 0,
+          error: 'The link is expired',
+        });
+      const salt = bcrypt.genSaltSync(10);
+      new_hashed_password = await bcrypt.hashSync(newPassword, salt);
+
+      const sqlCheck = await User.update(
+        { customer_password: new_hashed_password },
+        { where: { customer_email: decoded.email } }
+      );
+      console.log('data values are', sqlCheck);
+      if (sqlCheck == 0)
+        return res.status(400).json({
+          success: 0,
+          error: 'Mail not registered',
+        });
+
+      return res.status(200).json({
+        success: 1,
+        error: '',
       });
-
-    return res.status(200).json({
-      success: 1,
-      error: '',
     });
   } catch (err) {
     console.log('final err', err);

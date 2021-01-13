@@ -131,7 +131,7 @@ const Login = ({ loading, error, loginUserAction }) => {
       <Colxx xxs="12" md="10" className="mx-auto my-auto">
         <Card className="auth-card">
           <div className="position-relative image-side ">
-            <p className="text-white h2">Ed-tech Startup</p>
+            <p className="text-white h2">Oyesters Training</p>
             <p className="white mb-0">
               Please use your credentials to login.
               <br />
@@ -223,14 +223,14 @@ const Login = ({ loading, error, loginUserAction }) => {
                   <img src={Google} className="logo" />
                   <span id="text">Continue with Google</span>
                 </Button>
-                <Button
+                {/* <Button
                   outline
                   color="secondary"
                   className="mb-2 d-flex align-items-center p-3 registerug"
                 >
                   <img src={Apple} className="logo2" />
                   <span id="text">Continue with Apple</span>
-                </Button>
+                </Button> */}
               </div>{' '}
             </Row>
           </div>
