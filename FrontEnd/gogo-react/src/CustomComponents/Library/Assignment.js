@@ -67,9 +67,9 @@ const Assignment = ({ columns }) => {
     getData();
   }, [handleReloadTable]);
 
-  if (!isLoaded) return <NoDataFound />;
+  if (!isLoaded) return <Loader />;
 
-  if (!data.length) return <Loader />;
+  if (!data.length) return <NoDataFound />;
   return (
     <Table
       columns={columns}

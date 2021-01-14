@@ -57,8 +57,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import my_table_courses from '../../../data/my_table_courses';
 import Communication_table2 from '../../../data/Communication_table2';
 import Communication_table3 from '../../../data/Communication_table3';
-import posts1 from '../../../data/posts1';
-import posts2 from '../../../data/posts2';
+
 import affiliate2 from '../../../data/affiliate2';
 import { Line } from 'react-chartjs-2';
 import linkTraking from '../../../data/linkTraking';
@@ -71,6 +70,7 @@ import { NotificationManager } from '../../../components/common/react-notificati
 import { BsTypeStrikethrough } from 'react-icons/bs';
 import CourseTab from './CourseTab';
 import StudentsTab from './StudentsTab';
+import Blog from './Blog';
 
 const MenuTypes = ({
   match,
@@ -178,36 +178,7 @@ const MenuTypes = ({
       sortType: 'basic',
     },
   ];
-  const cols12 = [
-    {
-      Header: 'Blog Name',
-      accessor: 'name',
-      cellClass: 'text-muted w-30',
-      Cell: (props) => <p className="ml-2">{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Blogger Name',
-      accessor: 'b_name',
-      cellClass: 'text-muted w-25',
-      Cell: (props) => <p className="ml-4 mr-4">{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Comments',
-      accessor: 'comments',
-      cellClass: 'text-muted w-20',
-      Cell: (props) => <p className="ml-4">{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Like',
-      accessor: 'like',
-      cellClass: 'text-muted w-20',
-      Cell: (props) => <p className="ml-4">{props.value}</p>,
-      sortType: 'basic',
-    },
-  ];
+
   const cols16 = [
     {
       Header: 'Blog Name',
@@ -238,36 +209,7 @@ const MenuTypes = ({
       sortType: 'basic',
     },
   ];
-  const cols13 = [
-    {
-      Header: 'Blogger Name',
-      accessor: 'b_name',
-      cellClass: 'text-muted w-20',
-      Cell: (props) => <p className="ml-2">{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Total number of Blogs',
-      accessor: 'tnbp',
-      cellClass: 'text-muted w-25',
-      Cell: (props) => <p className="ml-4 mr-4">{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Total number of Comments',
-      accessor: 'comments',
-      cellClass: 'text-muted w-20',
-      Cell: (props) => <p className="ml-4">{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Total Likes',
-      accessor: 'like',
-      cellClass: 'text-muted w-20',
-      Cell: (props) => <p className="ml-4">{props.value}</p>,
-      sortType: 'basic',
-    },
-  ];
+
   const cols15 = [
     {
       Header: 'Course Name',
@@ -1674,151 +1616,7 @@ const MenuTypes = ({
             <br />
           </TabPane>
           <TabPane tabId="6">
-            <Row>
-              <Col sm="3" xs="12" className="mb-3">
-                <Card
-                  body
-                  id="crd"
-                  className="text-center"
-                  style={{ backgroundColor: '#0984e3' }}
-                >
-                  <Row>
-                    <Col md="6" xs="6">
-                      <FaBlog id="myicon" className="text-light" />
-                    </Col>
-                    <Col md="6" xs="6">
-                      <CardText className="font-weight-bold head text-light">
-                        12
-                      </CardText>
-                      <CardText className="font-weight-bold para text-light">
-                        Total Blogs
-                      </CardText>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-              <Col sm="3" xs="12" className="mb-3">
-                <Card
-                  body
-                  id="crd"
-                  className="text-center"
-                  style={{ backgroundColor: '#6c5ce7' }}
-                >
-                  <Row>
-                    <Col md="6" xs="6">
-                      <FaComments id="myicon" className="text-light" />
-                    </Col>
-                    <Col md="6" xs="6">
-                      <CardText className="font-weight-bold head text-light">
-                        22
-                      </CardText>
-                      <CardText className="font-weight-bold para text-light">
-                        Total Comments
-                      </CardText>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-              <Col sm="3" xs="12" className="mb-3">
-                <Card
-                  body
-                  id="crd"
-                  className="text-center"
-                  style={{ backgroundColor: '#e17055' }}
-                >
-                  <Row>
-                    <Col md="6" xs="6">
-                      <BiCheckDouble id="myicon" className="text-light" />
-                    </Col>
-                    <Col md="6" xs="6" className="mb-3">
-                      <CardText
-                        className="font-weight-bold head text-light" /*  style={{fontSize:'30px', marginTop:'30px'}} */
-                      >
-                        143
-                      </CardText>
-                      <CardText className="font-weight-bold para text-light">
-                        Total Page Views
-                      </CardText>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-              <Col sm="3" xs="12" className="mb-3">
-                <Card
-                  body
-                  id="crd"
-                  className="text-center"
-                  style={{ backgroundColor: '#e84393' }}
-                >
-                  <Row>
-                    <Col md="6" xs="6">
-                      <AiOutlineExclamation
-                        id="myicon"
-                        className="text-light"
-                      />
-                    </Col>
-                    <Col md="6" xs="6" className="mb-3">
-                      <CardText className="font-weight-bold head text-light">
-                        60
-                      </CardText>
-                      <CardText className="font-weight-bold para text-light">
-                        Unique Pageviews
-                      </CardText>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-            </Row>
-            <Row>
-              <Col md="12" xs="12">
-                <Card className="h-100  ">
-                  <Scrollbars style={{ width: '100%', height: 400 }}>
-                    <CardBody>
-                      <Nav tabs className="card-header-tabs mb-3">
-                        <NavItem>
-                          <NavLink
-                            to="#"
-                            location={{}}
-                            className={classnames({
-                              active: activeFirstTab2 === '13',
-                              'nav-link': true,
-                            })}
-                            onClick={() => {
-                              setActiveFirstTab2('13');
-                            }}
-                          >
-                            <h6>Blogs</h6>
-                          </NavLink>
-                        </NavItem>
-                        <NavItem>
-                          <NavLink
-                            to="#"
-                            location={{}}
-                            className={classnames({
-                              active: activeFirstTab2 === '14',
-                              'nav-link': true,
-                            })}
-                            onClick={() => {
-                              setActiveFirstTab2('14');
-                            }}
-                          >
-                            <h6>Blogger</h6>
-                          </NavLink>
-                        </NavItem>
-                      </Nav>
-                      <TabContent activeTab={activeFirstTab2}>
-                        <TabPane tabId="13">
-                          <Table columns={cols12} data={posts1} />
-                        </TabPane>
-                        <TabPane tabId="14">
-                          <Table columns={cols13} data={posts2} />
-                        </TabPane>
-                      </TabContent>
-                    </CardBody>
-                  </Scrollbars>
-                </Card>
-              </Col>
-            </Row>
+            <Blog />
             <br />
             <br />
           </TabPane>

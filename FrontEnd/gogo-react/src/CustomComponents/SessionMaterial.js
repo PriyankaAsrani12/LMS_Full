@@ -1223,36 +1223,45 @@ export default class SessionMaterial extends Component {
                                                   .ogg or .mkv file.
                                                 </p>
                                                 <Row>
-                                                  <div
-                                                    style={{
-                                                      height: '30px',
-                                                      paddingLeft: '20%',
-                                                    }}
-                                                  >
+                                                  {this.state.SessionMaterial[
+                                                    index
+                                                  ].lesson[lessonindex]
+                                                    .videoUploadPercentage ? (
                                                     <div
-                                                      className="progress-bar progress-bar-striped bg-success"
-                                                      role="progressbar"
                                                       style={{
-                                                        width: `${
+                                                        height: '30px',
+                                                        paddingLeft: '20%',
+                                                      }}
+                                                    >
+                                                      <div
+                                                        className="progress-bar progress-bar-striped bg-success"
+                                                        role="progressbar"
+                                                        style={{
+                                                          width: `${
+                                                            this.state
+                                                              .SessionMaterial[
+                                                              index
+                                                            ].lesson[
+                                                              lessonindex
+                                                            ]
+                                                              .videoUploadPercentage *
+                                                            3
+                                                          }px`,
+                                                        }}
+                                                      >
+                                                        {
                                                           this.state
                                                             .SessionMaterial[
                                                             index
                                                           ].lesson[lessonindex]
-                                                            .videoUploadPercentage *
-                                                          3
-                                                        }px`,
-                                                      }}
-                                                    >
-                                                      {
-                                                        this.state
-                                                          .SessionMaterial[
-                                                          index
-                                                        ].lesson[lessonindex]
-                                                          .videoUploadPercentage
-                                                      }
-                                                      %
+                                                            .videoUploadPercentage
+                                                        }
+                                                        %
+                                                      </div>
                                                     </div>
-                                                  </div>
+                                                  ) : (
+                                                    ''
+                                                  )}
                                                   {/* <ProgressBar
                                                     percentage={
                                                       this.state
@@ -1374,36 +1383,45 @@ export default class SessionMaterial extends Component {
                                                   or .word format.
                                                 </p>{' '}
                                                 <Row>
-                                                  <div
-                                                    style={{
-                                                      height: '30px',
-                                                      paddingLeft: '20%',
-                                                    }}
-                                                  >
+                                                  {this.state.SessionMaterial[
+                                                    index
+                                                  ].lesson[lessonindex]
+                                                    .assignmentUploadPercentage ? (
                                                     <div
-                                                      className="progress-bar progress-bar-striped bg-success"
-                                                      role="progressbar"
                                                       style={{
-                                                        width: `${
+                                                        height: '30px',
+                                                        paddingLeft: '20%',
+                                                      }}
+                                                    >
+                                                      <div
+                                                        className="progress-bar progress-bar-striped bg-success"
+                                                        role="progressbar"
+                                                        style={{
+                                                          width: `${
+                                                            this.state
+                                                              .SessionMaterial[
+                                                              index
+                                                            ].lesson[
+                                                              lessonindex
+                                                            ]
+                                                              .assignmentUploadPercentage *
+                                                            3
+                                                          }px`,
+                                                        }}
+                                                      >
+                                                        {
                                                           this.state
                                                             .SessionMaterial[
                                                             index
                                                           ].lesson[lessonindex]
-                                                            .assignmentUploadPercentage *
-                                                          3
-                                                        }px`,
-                                                      }}
-                                                    >
-                                                      {
-                                                        this.state
-                                                          .SessionMaterial[
-                                                          index
-                                                        ].lesson[lessonindex]
-                                                          .assignmentUploadPercentage
-                                                      }
-                                                      %
+                                                            .assignmentUploadPercentage
+                                                        }
+                                                        %
+                                                      </div>
                                                     </div>
-                                                  </div>
+                                                  ) : (
+                                                    ''
+                                                  )}
                                                 </Row>
                                                 <Row className="text-center">
                                                   <label className="input-label-1">
@@ -1669,36 +1687,45 @@ export default class SessionMaterial extends Component {
                                                   clearly.
                                                 </p>{' '}
                                                 <Row>
-                                                  <div
-                                                    style={{
-                                                      height: '30px',
-                                                      paddingLeft: '20%',
-                                                    }}
-                                                  >
+                                                  {this.state.SessionMaterial[
+                                                    index
+                                                  ].lesson[lessonindex]
+                                                    .handoutsUploadPercentage ? (
                                                     <div
-                                                      className="progress-bar progress-bar-striped bg-success"
-                                                      role="progressbar"
                                                       style={{
-                                                        width: `${
+                                                        height: '30px',
+                                                        paddingLeft: '20%',
+                                                      }}
+                                                    >
+                                                      <div
+                                                        className="progress-bar progress-bar-striped bg-success"
+                                                        role="progressbar"
+                                                        style={{
+                                                          width: `${
+                                                            this.state
+                                                              .SessionMaterial[
+                                                              index
+                                                            ].lesson[
+                                                              lessonindex
+                                                            ]
+                                                              .handoutsUploadPercentage *
+                                                            3
+                                                          }px`,
+                                                        }}
+                                                      >
+                                                        {
                                                           this.state
                                                             .SessionMaterial[
                                                             index
                                                           ].lesson[lessonindex]
-                                                            .handoutsUploadPercentage *
-                                                          3
-                                                        }px`,
-                                                      }}
-                                                    >
-                                                      {
-                                                        this.state
-                                                          .SessionMaterial[
-                                                          index
-                                                        ].lesson[lessonindex]
-                                                          .handoutsUploadPercentage
-                                                      }
-                                                      %
+                                                            .handoutsUploadPercentage
+                                                        }
+                                                        %
+                                                      </div>
                                                     </div>
-                                                  </div>
+                                                  ) : (
+                                                    ''
+                                                  )}
                                                 </Row>
                                                 <Row className="text-center">
                                                   <label className="input-label-1">
