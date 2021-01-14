@@ -23,6 +23,7 @@ import { VscLibrary } from 'react-icons/vsc';
 import axiosInstance from '../helpers/axiosInstance';
 import { useHistory } from 'react-router-dom';
 import NotificationManager from '../components/common/react-notifications/NotificationManager';
+import Loader from './settings/Loader';
 
 const isValidFileFormat = (ext) => {
   const arr = [
@@ -41,32 +42,48 @@ const isValidFileFormat = (ext) => {
 
 const Remotelook = (props) => {
   const history = useHistory();
-  const { uniquesessionid } = props.location.state;
-  // console.log(uniquesessionid);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [data, setData] = useState([]);
   const [file, setFile] = useState('');
   const [displayThumbnail, setDisplayThumbnail] = useState(null);
+  const [trainer, setTrainer] = useState({});
+  const [loaded, setLoaded] = useState(false);
 
+  const createMarkup = (data) => {
+    return { __html: data };
+  };
   useEffect(() => {
-    //call your data from backend with uniquesessionid and store in data
-    //setData(result);
-    axiosInstance
-      .get(`/tutor/sessions/FindSessionById/${uniquesessionid}`)
-      .then((response) => {
+    const getData = async () => {
+      try {
+        if (
+          !props.location.state.uniquesessionid ||
+          !props.location.state.trainer_id
+        )
+          props.history.push('/app/dashboard/default');
+        const { uniquesessionid, trainer_id } = props.location.state;
+
+        const response = await axiosInstance.get(
+          `/tutor/sessions/FindSessionById/${uniquesessionid}/trainer_id/${trainer_id}`
+        );
+
         console.log(response);
-        if (response.data.success) setData(response.data.session);
-        else {
+        if (response.data.success) {
+          setData(response.data.session);
+          setTrainer(response.data.trainerData);
+        } else {
           console.log('err occured');
           history.push('/app/dashboard/default');
         }
-      })
-      .catch((err) => {
+      } catch (err) {
         console.log(err);
         history.push('/app/dashboard/default');
-      });
+      } finally {
+        setLoaded(true);
+      }
+    };
+    getData();
     return () => {
       //do what you want you do when component unmounts
     };
@@ -126,7 +143,7 @@ const Remotelook = (props) => {
         else {
           const formData = new FormData();
           formData.append('file', file);
-          formData.append('session_id', uniquesessionid);
+          formData.append('session_id', props.location.state.uniquesessionid);
           formData.append('session_type', 'Live Session');
           formData.append('item_type', 'Session Material');
           try {
@@ -160,7 +177,7 @@ const Remotelook = (props) => {
     setModal(!modal);
     const values = {
       session_description: document.getElementById('exampleText2').value,
-      session_id: uniquesessionid,
+      session_id: props.location.state.uniquesessionid,
     };
     if (!values.session_description) setError('provide session description');
     else {
@@ -193,7 +210,7 @@ const Remotelook = (props) => {
     try {
       const formData = new FormData();
       formData.append('thumbnail', currentImage);
-      formData.append('session_id', uniquesessionid);
+      formData.append('session_id', props.location.state.uniquesessionid);
       const result = await axiosInstance.post(
         '/tutor/sessions/upload/thumbnail',
         formData
@@ -215,6 +232,7 @@ const Remotelook = (props) => {
       }
     }
   };
+  if (!loaded) return <Loader />;
   return (
     <section style={{ marginLeft: '7%', marginRight: '7%' }}>
       <Link to="/app/dashboard/default">
@@ -469,11 +487,10 @@ const Remotelook = (props) => {
                 className="cardseparations text-center font-weight-bold"
               >
                 <h3 className="font-weight-bold" style={{ fontSize: '1.1rem' }}>
-                  Vedant
+                  {trainer.trainer_full_name}
                 </h3>
                 <img src={Avatar} alt="..." id="avatar" />
-                <p>Web developer, IBM, bengaluru</p>
-                <p>2017 to present</p>
+                <p>{trainer.trainer_occupation}</p>
                 <Button outline color="secondary">
                   Edit Profile
                 </Button>
@@ -486,18 +503,13 @@ const Remotelook = (props) => {
                   Career summary
                 </h5>
 
-                <p className="text-center" style={{ fontSize: '15px' }}>
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry's
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took a galley of type and scrambled it to make a type
-                  specimen book. It has survived not only five centuries, but
-                  also the leap into electronic typesetting, remaining
-                  essentially unchanged. It was popularised in the 1960s with
-                  the release of Letraset sheets containing Lorem Ipsum
-                  passages, and more recently with desktop publishing software
-                  like Aldus PageMaker including versions of Lorem Ipsum.
-                </p>
+                <p
+                  className="text-center"
+                  style={{ fontSize: '15px' }}
+                  dangerouslySetInnerHTML={createMarkup(
+                    trainer.trainer_career_summary
+                  )}
+                ></p>
               </Colxx>
               <Colxx md="4" xs="12">
                 <h5
@@ -508,18 +520,13 @@ const Remotelook = (props) => {
                 </h5>
 
                 <div className="">
-                  <p className="text-center" style={{ fontSize: '15px' }}>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry. Lorem Ipsum has been the industry's
-                    standard dummy text ever since the 1500s, when an unknown
-                    printer took a galley of type and scrambled it to make a
-                    type specimen book. It has survived not only five centuries,
-                    but also the leap into electronic typesetting, remaining
-                    essentially unchanged. It was popularised in the 1960s with
-                    the release of Letraset sheets containing Lorem Ipsum
-                    passages, and more recently with desktop publishing software
-                    like Aldus PageMaker including versions of Lorem Ipsum.
-                  </p>
+                  <p
+                    className="text-center"
+                    style={{ fontSize: '15px' }}
+                    dangerouslySetInnerHTML={createMarkup(
+                      trainer.trainer_experience
+                    )}
+                  ></p>
                 </div>
               </Colxx>
             </Row>

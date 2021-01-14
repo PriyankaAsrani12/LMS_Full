@@ -125,7 +125,7 @@ const Trainer = () => {
     // setTimeout(() => {
     getTrainers();
     // }, 1500);
-  }, [success, setSuccess]);
+  }, []);
 
   const handleInputChange1 = (e, index) => {
     const { name, value } = e.target;

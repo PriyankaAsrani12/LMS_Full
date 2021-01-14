@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import Table from './Table';
 
+import Table from './Table';
 import NotificationManager from '../../components/common/react-notifications/NotificationManager';
 import axiosInstance from '../../helpers/axiosInstance';
 import Loader from '../settings/Loader';
+import NoDataFound from '../NoDataFound';
+
 const Recordings = ({ columns }) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
@@ -65,8 +67,7 @@ const Recordings = ({ columns }) => {
   //backend team find a way to sort or filter data via this feature and show in tabs
   if (!isLoaded) return <Loader />;
 
-  if (!data.length)
-    return <div style={{ marginBottom: '25rem' }}>No Recording Data Found</div>;
+  if (!data.length) return <NoDataFound />;
   return <Table columns={columns} data={data} divided />;
 };
 export default Recordings;

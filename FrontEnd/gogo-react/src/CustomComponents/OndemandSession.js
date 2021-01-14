@@ -1,51 +1,25 @@
-import React, { useRef, useState, useEffect, useContext } from 'react';
-import {
-  Row,
-  Card,
-  CardBody,
-  FormGroup,
-  Label,
-  Button,
-  Input,
-  Col,
-} from 'reactstrap';
+import React, { useState, useEffect, useContext } from 'react';
+import { Row, FormGroup, Label, Button, Input, Col } from 'reactstrap';
 import { Formik, Form, Field } from 'formik';
 import { FormikReactSelect } from '../containers/form-validations/FormikFields';
-import { Colxx } from '../components/common/CustomBootstrap';
 import * as Yup from 'yup';
-import Switch from 'rc-switch';
 import 'rc-switch/assets/index.css';
-import RemoteSession from './RemoteSession';
 import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css';
-import Select from 'react-select';
 import axiosInstance from '../helpers/axiosInstance';
 import NotificationManager from '../components/common/react-notifications/NotificationManager';
-import { DropDownContext } from '../context/DropdownContext';
-
-const initialValues = {
-  trainer: [{ value: 'you', label: 'you' }],
-  session_name: '',
-  session_description: '',
-  session_fee: 0,
-  timeline: '',
-};
+import Loader from './settings/Loader';
 
 const CreatesessionSchema = Yup.object().shape({
-  trainer: Yup.array()
-    .min(1, 'select this')
-    .of(
-      Yup.object().shape({
-        label: Yup.string().required(),
-        value: Yup.string().required(),
-      })
-    ),
+  // trainer: Yup.object().shape({
+  //   label: Yup.string().required(),
+  //   value: Yup.string().required(),
+  // }),
   session_duration: Yup.number().required('Duration of course is required!'),
   session_name: Yup.string().required('Name of course is required!'),
   session_description: Yup.string().required('Description is required!'),
   session_fee: Yup.number().required('Fees is required'),
 });
-
 const options = [{ value: 'you', label: 'You' }];
 
 const OndemandSession = ({ closeModal, propHandle }) => {
@@ -54,7 +28,17 @@ const OndemandSession = ({ closeModal, propHandle }) => {
   let [select, setselect] = useState('');
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
-  const [handleReloadTable] = useContext(DropDownContext);
+  const [trainerSelect, setTrainerSelect] = useState('');
+  const [loaded, setLoaded] = useState(false);
+  const [trainerData, setTrainerData] = useState([]);
+
+  const initialValues = {
+    trainer: [],
+    session_name: '',
+    session_description: '',
+    session_fee: 0,
+    timeline: '',
+  };
 
   useEffect(() => {
     if (error) {
@@ -67,7 +51,11 @@ const OndemandSession = ({ closeModal, propHandle }) => {
         null,
         ''
       );
-    } else if (success) {
+    }
+  }, [error, setError]);
+
+  useEffect(() => {
+    if (success) {
       NotificationManager.success(
         'Session Created Successfully',
         'Create Ondemand Session',
@@ -77,18 +65,56 @@ const OndemandSession = ({ closeModal, propHandle }) => {
         ''
       );
     }
-  }, [success, error, setError, setSuccess]);
+  }, [success, setSuccess]);
+
+  useEffect(() => {
+    const getTrainerData = async () => {
+      try {
+        const result = await axiosInstance.get('/tutor/trainer/specific');
+        console.log(result);
+        if (result.data.success) {
+          const trainers = result.data.result.map((doc) => ({
+            value: doc.trainer_full_name,
+            label: doc.trainer_id,
+          }));
+          initialValues.trainer = trainers;
+          setTrainerData(trainers);
+          setTrainerSelect(trainers[0].value);
+        } else {
+          try {
+            setError(result.data.error);
+          } catch (error) {
+            setError('Unable to find trainer data');
+          }
+        }
+      } catch (e) {
+        console.log(e);
+        try {
+          setError(e.response.data.error);
+        } catch (err) {
+          setError('Unable to find trainer data');
+        }
+      } finally {
+        setLoaded(true);
+      }
+    };
+    getTrainerData();
+  }, []);
 
   const takeinput = (e) => {
     setselect((select = e.target.value));
   };
 
   const onSubmit = (values, { setSubmitting }) => {
-    console.log(handleReloadTable);
     values.session_tags = tagsLO.toString();
-    values.session_trainer_name = JSON.stringify(values.trainer);
+    values.session_trainer_name = trainerSelect;
     values.session_fee_type = select;
 
+    trainerData.forEach((doc) => {
+      if (doc.value === trainerSelect) values.session_trainer_id = doc.label;
+    });
+
+    console.log(values);
     if (select == 'Free for Course Enrolled Students') values.session_fee = 0;
     console.log(values);
     if (!select || select === 'Choose Something')
@@ -106,7 +132,6 @@ const OndemandSession = ({ closeModal, propHandle }) => {
           .then((response) => {
             console.log(response);
             if (response.data.success) {
-              setError(null);
               setSuccess(true);
               closeModal();
             } else {
@@ -130,6 +155,8 @@ const OndemandSession = ({ closeModal, propHandle }) => {
       }, 1000);
     }
   };
+
+  if (!loaded) return <Loader />;
 
   return (
     <Formik
@@ -171,8 +198,8 @@ const OndemandSession = ({ closeModal, propHandle }) => {
           </FormGroup>
 
           <FormGroup className="error-l-100">
-            <Label>Trainer </Label>
-            <FormikReactSelect
+            <Label>Trainer </Label> <br />
+            {/* <FormikReactSelect
               name="trainer"
               id="trainer"
               value={values.trainer}
@@ -183,7 +210,21 @@ const OndemandSession = ({ closeModal, propHandle }) => {
             />
             {errors.trainer && touched.trainer ? (
               <div className="invalid-feedback d-block">{errors.trainer}</div>
-            ) : null}
+            ) : null} */}
+            <Input
+              type="select"
+              name="trainerSelect"
+              id="exampleSelect2"
+              value={trainerSelect}
+              onChange={(e) => {
+                console.log(e.target.value);
+                setTrainerSelect(e.target.value);
+              }}
+            >
+              {trainerData.map((doc) => (
+                <option> {doc.value} </option>
+              ))}
+            </Input>
           </FormGroup>
           <FormGroup className="error-l-100">
             <Label>Seo Tags:</Label>

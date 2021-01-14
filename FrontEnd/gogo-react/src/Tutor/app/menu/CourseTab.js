@@ -9,6 +9,7 @@ import { FaUsers } from 'react-icons/fa';
 import Table from './Table';
 import axiosInstance from '../../../helpers/axiosInstance';
 import NotificationManager from '../../../components/common/react-notifications/NotificationManager';
+import NoDataFound from '../../../CustomComponents/NoDataFound';
 
 const CourseTab = () => {
   const [error, setError] = useState(false);
@@ -110,6 +111,7 @@ const CourseTab = () => {
     };
     getData();
   }, []);
+  if (!data.length) return <NoDataFound />;
   return (
     <>
       <Row>

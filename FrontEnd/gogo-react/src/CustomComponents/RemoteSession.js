@@ -1,55 +1,15 @@
-import React, { useRef, useState, useEffect, useContext } from 'react';
-import {
-  Row,
-  Col,
-  Card,
-  CardBody,
-  FormGroup,
-  Label,
-  Button,
-  Input,
-} from 'reactstrap';
-/* import { Formik, Form, Field } from 'formik'; */
-import { FormikReactSelect } from '../containers/form-validations/FormikFields';
+import React, { useState, useEffect, useContext } from 'react';
+import { Row, Col, FormGroup, Label, Button, Input } from 'reactstrap';
 import { Colxx } from '../components/common/CustomBootstrap';
-import * as Yup from 'yup';
-import Switch from 'rc-switch';
 import 'rc-switch/assets/index.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import Select from 'react-select';
-import DatePicker from 'react-datepicker';
 import { colourOptions } from '../data/data2';
+
 import axiosInstance from '../helpers/axiosInstance';
-import { useHistory } from 'react-router-dom';
 import NotificationManager from '../components/common/react-notifications/NotificationManager';
 import { DropDownContext } from '../context/DropdownContext';
-
-/* const initialValues = {
-    trainer: [{ value: 'you', label: 'you' }],
-    session_name:'',
-    session_description:'',
-    session_fee:0,
-    session_occurance:'',
-    session_duration:'',
-    session_associated_course:'',
-    enabled_registration:false,
-    time:'',
-    fee_select:''
-  } */
-/* const CreatesessionSchema = Yup.object().shape({   
-        session_name:Yup.string().required('Session name is required!'),
-        session_description:Yup.string().required('Session description is required!') ,
-        session_fee:Yup.number().required("Fees is required"),
-        session_duration:Yup.number()
-        .required("Session Duration is required")
-        .max(999, 'Too Long! Must be under 999'),
-        fee_select:Yup.string().required('Session description is required!') ,
-       // session_occurance:Yup.string().required('Session occurance is required!') ,
-        //time:Yup.string().required('Session time is required!') ,
-        session_associated_course:Yup.string().required('Session associated course is required!') ,
-
-    
-     }); */
+import Loader from './settings/Loader';
 
 const course = [
   { value: 'Option1', label: 'Option1' },
@@ -91,11 +51,8 @@ const correspondanceoption = [
 ];
 
 const RemoteSession = ({ closeModal, propHandle }) => {
-  let date = '';
   const [startDateRange, setStartDateRange] = useState('');
   const [time, setTime] = useState('');
-  const [days, setDays] = useState(0);
-  const [endDateRange, setEndDateRange] = useState('');
   const [duration, setDuration] = useState('');
   const [check, setcheck] = useState(false);
   let [state, setstate] = useState(
@@ -107,21 +64,41 @@ const RemoteSession = ({ closeModal, propHandle }) => {
   let [occurance, setOccurance] = useState('Once');
   let [session_name, setSession_name] = useState('');
   let [description, setDescription] = useState('');
-  let [trainer, setTrainer] = useState('You');
+  let [trainer, setTrainer] = useState('');
   let [session_fee, setSession_fee] = useState('');
   const [handleReloadTable] = useContext(DropDownContext);
+  const [trainerData, setTrainerData] = useState([]);
+  const [loaded, setLoaded] = useState(false);
 
-  const checkempty = () => {
-    if (!course) {
-      setdefval(!defval);
-    }
-  };
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
 
-  const checkdate = () => {
-    if (occurance == 'Daily') {
-      date = startDateRange + 7;
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      NotificationManager.warning(
+        error,
+        'Create Ondemand Session',
+        3000,
+        null,
+        null,
+        ''
+      );
     }
-  };
+  }, [error, setError]);
+
+  useEffect(() => {
+    if (success) {
+      NotificationManager.success(
+        'Session Created Successfully',
+        'Create Ondemand Session',
+        3000,
+        null,
+        null,
+        ''
+      );
+    }
+  }, [success, setSuccess]);
 
   const checkinp = () => {
     setcheck(!check);
@@ -132,38 +109,39 @@ const RemoteSession = ({ closeModal, propHandle }) => {
   const selectcheck2 = (e) => {
     setfees((fees = e.target.value));
   };
-  // const consolelog = (e) =>{
-  //   console.log(e.target.value)
-  // }
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
-
-  const calculateDate = (endDateRange, startDateRange) => {
-    days = setDays(endDateRange - startDateRange);
-  };
 
   useEffect(() => {
-    if (error) {
-      console.log(error);
-      NotificationManager.warning(
-        error,
-        'Create Live Session',
-        3000,
-        null,
-        null,
-        ''
-      );
-    } else if (success) {
-      NotificationManager.success(
-        'Session Created Successfully',
-        'Create Live Session',
-        3000,
-        null,
-        null,
-        ''
-      );
-    }
-  }, [success, error]);
+    const getTrainerData = async () => {
+      try {
+        const result = await axiosInstance.get('/tutor/trainer/specific');
+        console.log(result);
+        if (result.data.success) {
+          const trainers = result.data.result.map((doc) => ({
+            value: doc.trainer_full_name,
+            label: doc.trainer_id,
+          }));
+          setTrainerData(trainers);
+          setTrainer(trainers[0].value);
+        } else {
+          try {
+            setError(result.data.error);
+          } catch (error) {
+            setError('Unable to find trainer data');
+          }
+        }
+      } catch (e) {
+        console.log(e);
+        try {
+          setError(e.response.data.error);
+        } catch (err) {
+          setError('Unable to find trainer data');
+        }
+      } finally {
+        setLoaded(true);
+      }
+    };
+    getTrainerData();
+  }, []);
 
   const validateInput = (values) => {
     if ((check && state == 'Choose Something') || fees === 'Choose Something')
@@ -204,7 +182,6 @@ const RemoteSession = ({ closeModal, propHandle }) => {
     const values = {
       session_name,
       description,
-      trainer,
       occurance,
       startDateRange,
       duration,
@@ -214,6 +191,11 @@ const RemoteSession = ({ closeModal, propHandle }) => {
     values.session_fee_type = check ? state : fees;
     values.session_tags = course.map((doc) => doc.label).toString();
     values.session_enable_registration = check ? 1 : 0;
+    values.session_trainer_name = trainer;
+    trainerData.forEach((doc) => {
+      if (doc.value === trainer) values.session_trainer_id = doc.label;
+    });
+
     if (
       (!check && fees === 'Free for Course Enrolled Students') ||
       (check &&
@@ -223,23 +205,9 @@ const RemoteSession = ({ closeModal, propHandle }) => {
       values.session_fee = 0;
 
     console.log(state, values, fees);
-    // if (check) {
-    //   // console.log(state)
-    //   if (
-    //     state != 'Free for new Registrants + Free for Course Enrolled Students.'
-    //   )
-    //     values.fees = `${state} ${session_fee}`;
-    //   else values.fees = state;
-    //   values.session_registration = true;
-    //   // values.fees = null;
-    // } else if (fees !== 'Free for Course Enrolled Students') {
-    //   values.fees = `${fees} ${session_fee}`;
-    //   // values.state = null;
-    // } else values.fees = fees;
 
-    // console.log(values.fees)
     const isValid = validateInput(values);
-    // console.log(isValid)
+    console.log(values);
     if (!isValid.success) setError(isValid.error);
     else {
       axiosInstance
@@ -255,7 +223,6 @@ const RemoteSession = ({ closeModal, propHandle }) => {
         .catch((err) => {
           console.log(err);
           try {
-            // console.log(err.message, err.response.data.error);
             setError(err.response.data.error);
           } catch (error) {
             setError('Create Session Error');
@@ -264,7 +231,7 @@ const RemoteSession = ({ closeModal, propHandle }) => {
         .then(() => propHandle());
     }
   };
-
+  if (!loaded) return <Loader />;
   return (
     <>
       <FormGroup className="error-l-75">
@@ -275,28 +242,15 @@ const RemoteSession = ({ closeModal, propHandle }) => {
           onChange={(e) => setSession_name(e.target.value)}
           required
         />
-
-        {/*                     <div className="invalid-feedback d-block" style={{marginTop: '40px', marginLeft: '380px'}}>
-                      {errors.session_name}
-                    </div> */}
       </FormGroup>
       <FormGroup>
         <Label>Description</Label>
-        {/* <Field 
-                    className="form-control"
-                    name="session_description"
-                    component="textarea"
-                  /> */}
+
         <Input
           type="textarea"
           name="description"
           onChange={(e) => setDescription(e.target.value)}
         />
-        {/* {errors.session_description && touched.session_description ? (
-                    <div className="invalid-feedback d-block" style={{marginTop: '40px', marginLeft: '410px'}}>
-                      {errors.session_description}
-                    </div>
-                  ) : null} */}
       </FormGroup>
 
       <FormGroup className="error-l-100">
@@ -307,26 +261,14 @@ const RemoteSession = ({ closeModal, propHandle }) => {
           onChange={(e) => setTrainer(e.target.value)}
           id="exampleSelect"
         >
-          <option>You</option>
+          {trainerData.map((doc) => (
+            <option> {doc.value} </option>
+          ))}
         </Input>
-        {/* {errors.trainer && touched.trainer ? (
-                    <div className="invalid-feedback d-block">
-                      {errors.trainer}
-                    </div>
-                  ) : null} */}
       </FormGroup>
       <FormGroup className="error-l-100">
         <Label>Occurance </Label>
-        {/*                 <FormikReactSelect
-                    name="occurance"
-                    id="occur"
-                    value={values.session_occurance}
-                    
-                    options={occurance}
-                    onChange={(e) => setOccurance(e)}
-                    onBlur={setFieldTouched}
-                  /> */}{' '}
-        {/* {occurance} {date} */}
+
         <Input
           type="select"
           name="occurance"
@@ -339,26 +281,13 @@ const RemoteSession = ({ closeModal, propHandle }) => {
           <option>Monthly</option>
           <option>Yearly</option>
         </Input>
-        {/* {errors.session_occurance && touched.session_occurance ? (
-                    <div className="invalid-feedback d-block" style={{marginTop: '50px', marginLeft: '355px'}}>
-                      {errors.session_occurance}
-                    </div>
-                  ) : null} */}
       </FormGroup>
 
       <Row>
-        {/* {startDateRange}  */}
         <Colxx xxs="6">
           <FormGroup className="error-l-100">
             <Label>Start Date </Label>
-            {/* <DatePicker
-                  selected={startDateRange}
-                  selectsStart
-                  startDate={startDateRange}
-                  onChange={(e) => setStartDateRange(e.target.value)}
-                  name="session_start_date"
-                  placeholderText={['form-components.start']}
-                /> */}
+
             <Input
               type="date"
               name="date"
@@ -366,20 +295,6 @@ const RemoteSession = ({ closeModal, propHandle }) => {
               onChange={(e) => setStartDateRange(e.target.value)}
               placeholder="date"
             />
-
-            {/* </FormGroup> 
-                 </Colxx>
-                 <Colxx xxs="6">
-                 <FormGroup className="error-l-100">
-                  <Label>End Date </Label>
-                  <DatePicker
-                  selected={endDateRange}
-                  selectsStart
-                  startDate={endDateRange}
-                  onChange={setEndDateRange}
-                  name="session_end_date"
-                  placeholderText={['form-components.start']}
-                /> */}
           </FormGroup>
         </Colxx>
       </Row>
@@ -387,19 +302,13 @@ const RemoteSession = ({ closeModal, propHandle }) => {
         <Colxx xxs="6">
           <FormGroup className="error-l-100">
             <Label for="duration">Duration(in minutes)</Label>
-            {/*  <Field name="session_duration" id="duration" value={values.session_dur} onChange={setFieldValue}
-                    onBlur={setFieldTouched} /> */}
+
             <Input
               type="number"
               className="form-control"
               name="session_duration"
               onChange={(e) => setDuration(e.target.value)}
             />
-            {/* {errors.session_duration && touched.session_duration ? (
-                    <div className="invalid-feedback d-block" style={{marginTop: '45px', marginLeft: '115px'}}>
-                      {errors.session_duration}
-                    </div>
-                  ) : null} */}
           </FormGroup>
         </Colxx>
         <Colxx xxs="6">
@@ -413,12 +322,6 @@ const RemoteSession = ({ closeModal, propHandle }) => {
               placeholder="Time to start from"
               onChange={(e) => setTime(e.target.value)}
             />
-
-            {/* {errors.time && touched.time ? (
-                    <div className="invalid-feedback d-block" style={{marginTop: '50px', marginLeft: '115px'}}>
-                      {errors.time}
-                    </div>
-                  ) : null} */}
           </FormGroup>
         </Colxx>
       </Row>
@@ -437,25 +340,14 @@ const RemoteSession = ({ closeModal, propHandle }) => {
       <br />
       <FormGroup className="error-l-100">
         <Label>Associated with any Course </Label>
-        {/* <FormikReactSelect
-                    name="session_correspondance"
-                    id="session_associated_course"
-                    value={values.session_associated_course}
-                    
-                    options={course}
-                    onChange={setFieldValue}
-                    onBlur={setFieldTouched}
-                  /> */}
+
         <Select
-          /* defaultValue={[colourOptions[2], colourOptions[3]]} */
           isMulti
           name="session_associated_course"
           options={colourOptions}
-          // defaultValue={colourOptions[0]}
           className="basic-multi-select"
           classNamePrefix="select"
           onChange={(e) => setCourse(e)}
-          /*  onBlur={setFieldTouched}  */
         />
 
         {defval ? (
@@ -472,49 +364,11 @@ const RemoteSession = ({ closeModal, propHandle }) => {
       </FormGroup>
       {check ? (
         <>
-          {' '}
-          {/* <FormGroup className="error-l-100"> */}
-          {/* <Label>Associated with any Course </Label> */}
-          {/*                   <FormikReactSelect
-                    name="session_correspondance"
-                    id="session_associated_course"
-                    value={values.session_associated_course}
-                    
-                    options={course}
-                    onChange={setFieldValue}
-                    onBlur={setFieldTouched}
-                  /> */}
-          {/* <Select */}
-          {/*  defaultValue={} */}
-          {/* isMulti
-                      name="session_associated_course"
-                      options={colourOptions}
-                      value={values.session_associated_course}
-                      className="basic-multi-select"
-                      classNamePrefix="select"
-                      onChange={setFieldValue}
-                      onBlur={setFieldTouched}
-                    />
-                    
-                  {errors.session_associated_course && touched.session_associated_course ? (
-                    <div className="invalid-feedback d-block">
-                      {errors.session_associated_course}
-                    </div>
-                  ) : null}
-                </FormGroup> */}
           <Row>
             <Col md={6}>
               <FormGroup className="error-l-100">
                 <Label>Select fees </Label>
-                {/*                   <FormikReactSelect
-                    name="select"
-                    id="occur"
-                    
-                    
-                    options={fee2}
-                    onChange={(e) => selectcheck(e)}
-                    onBlur={setFieldTouched}
-                  /> */}
+
                 <Input
                   type="select"
                   name="select"
@@ -523,7 +377,6 @@ const RemoteSession = ({ closeModal, propHandle }) => {
                   placeholder="Choose Something"
                   required
                 >
-                  {/* <option>Choose Something</option> */}
                   <option>
                     Paid for new Registrants + Free for Course Enrolled
                     Students.
@@ -537,12 +390,6 @@ const RemoteSession = ({ closeModal, propHandle }) => {
                     Students.
                   </option>
                 </Input>
-
-                {/* {errors.session_fee && touched.session_fee ? (
-                    <div className="invalid-feedback d-block" style={{marginTop: '50px', marginLeft: '155px'}}>
-                      {errors.session_fee}
-                    </div>
-                  ) : null} */}
               </FormGroup>
             </Col>
             <Col md={6}>
@@ -564,11 +411,6 @@ const RemoteSession = ({ closeModal, propHandle }) => {
                     />
                   </>
                 )}
-                {/*  {errors.session_fee && touched.session_fee ? (
-          <div className="invalid-feedback d-block">
-            {errors.session_fee}
-          </div>
-        ) : null}  */}
               </FormGroup>
             </Col>
           </Row>{' '}
@@ -579,15 +421,7 @@ const RemoteSession = ({ closeModal, propHandle }) => {
             <Col md={6}>
               <FormGroup className="error-l-100">
                 <Label>Select fees </Label>
-                {/* <FormikReactSelect
-                    name="fee_select"
-                    id="occur"
-                    value={values.fee_select}
-                    
-                    options={fee}
-                    onChange={setFieldValue,selectcheck}
-                    onBlur={setFieldTouched}
-                  />  */}
+
                 <Input
                   type="select"
                   name="select"
@@ -596,16 +430,9 @@ const RemoteSession = ({ closeModal, propHandle }) => {
                   placeholder="Choose Something"
                   required
                 >
-                  {/* <option>Choose Something</option> */}
                   <option>Paid for Course Enrolled Students</option>
                   <option>Free for Course Enrolled Students</option>
                 </Input>
-
-                {/*  {errors.session_occurance && touched.session_occurance ? (
-                    <div className="invalid-feedback d-block" style={{marginTop: '50px', marginLeft: '355px'}}>
-                      {errors.session_occurance}
-                    </div>
-                  ) : null} */}
               </FormGroup>
             </Col>
             <Col md={6}>
@@ -622,52 +449,23 @@ const RemoteSession = ({ closeModal, propHandle }) => {
                     onChange={(e) => setSession_fee(e.target.value)}
                   />
                 )}
-
-                {/*      {errors.session_fee && touched.session_fee ? (
-          <div className="invalid-feedback d-block">
-            {errors.session_fee}
-          </div>
-        ) : null}  */}
               </FormGroup>
             </Col>
           </Row>
         </>
       )}
 
-      {/* <FormGroup className="error-l-100">
-                  <Label>Correspondance </Label>
-                  <FormikReactSelect
-                    name="correspondance"
-                    id="correspondance"
-                    value={values.correspondance}
-                    
-                    options={correspondanceoption}
-                    onChange={setFieldValue}
-                    onBlur={setFieldTouched}
-                  />
-                  {errors.correspondance && touched.correspondance ? (
-                    <div className="invalid-feedback d-block">
-                      {errors.correspondance}
-                    </div>
-                  ) : null}
-                </FormGroup> */}
-      <Button
-        color="primary"
-        type="submit"
-        onClick={onSubmit} /* onClick={checkempty} */
-      >
+      <Button color="primary" type="submit" onClick={onSubmit}>
         Submit
       </Button>
       <Button
         color="primary"
         type="cancel"
         style={{ marginLeft: '30px' }}
-        onClick={closeModal} /* onClick={checkempty} */
+        onClick={closeModal}
       >
         Cancel
       </Button>
-
-      {/* {console.log(initialValues.fee_select)} */}
     </>
   );
 };

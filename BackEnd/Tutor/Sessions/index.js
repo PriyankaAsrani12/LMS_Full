@@ -6,6 +6,8 @@ const router = require('express').Router();
 const auth = require('../middleware/deepakAuth');
 const { Op } = require('sequelize');
 const webp = require('webp-converter');
+const ChapterTable = require('./LibraryItems/recorded/chapter_table_model');
+const LessonTable = require('./LibraryItems/recorded/lesson_table_model');
 
 router.post('/createLiveSession', auth, async (req, res) => {
   console.log('❓', req.body);
@@ -19,13 +21,14 @@ router.post('/createLiveSession', auth, async (req, res) => {
       duration,
       session_tags,
       session_fee,
-      trainer,
+      session_trainer_name,
+      session_trainer_id,
       startDateRange,
       session_fee_type,
       // session_end_date,
       time,
       session_associated_course_id,
-      session_enable_registration,
+      session_enable_registration = 0,
     } = req.body.values;
 
     session_description = description;
@@ -33,16 +36,12 @@ router.post('/createLiveSession', auth, async (req, res) => {
     session_occurance = occurance;
     session_associated_course_id = '10';
     session_start_date = startDateRange;
-    session_trainer_name = trainer;
     session_start_time = time;
-
-    console.log('❓', session_name);
 
     // Find if session name already exists
     const sessionExist = await Session.findOne({
       where: { customer_id: req.user.customer_id, session_name },
     });
-    console.log(sessionExist);
     if (sessionExist)
       return res.status(400).json({
         success: 0,
@@ -106,7 +105,7 @@ router.post('/createLiveSession', auth, async (req, res) => {
       session_type: 'Live Session',
       session_name,
       session_description,
-      session_trainer_id: Zoom_res.host_id,
+      session_trainer_id,
       session_duration,
       session_fee,
       session_fee_type,
@@ -116,6 +115,7 @@ router.post('/createLiveSession', auth, async (req, res) => {
       session_uploaded_on: Zoom_res.created_at,
       session_occurance,
       session_start_date,
+      session_enable_registration,
       session_start_time,
       // session_registration,
       session_associated_course_id,
@@ -139,7 +139,6 @@ router.post('/createLiveSession', auth, async (req, res) => {
 });
 
 router.post('/createRecordedSession', auth, async (req, res) => {
-  console.log(req.user, req.body);
   try {
     let {
       session_name,
@@ -148,6 +147,7 @@ router.post('/createRecordedSession', auth, async (req, res) => {
       session_fee,
       session_tags,
       session_trainer_name,
+      session_trainer_id,
       session_fee_type,
       session_associated_course_id = '10',
     } = req.body.values;
@@ -198,7 +198,7 @@ router.post('/createRecordedSession', auth, async (req, res) => {
       session_type: 'Recorded Session',
       session_name,
       session_description,
-      session_trainer_id: Zoom_res.host_id,
+      session_trainer_id,
       session_duration,
       session_tags,
       session_fee,
@@ -261,6 +261,7 @@ router.get('/FindAllSession', auth, async (req, res) => {
         'session_fee',
         'session_registration',
         'session_trainer_name',
+        'session_trainer_id',
       ],
     });
 
@@ -290,6 +291,7 @@ router.get('/FindAllSession', auth, async (req, res) => {
         'session_fee',
         'session_registration',
         'session_trainer_name',
+        'session_trainer_id',
       ],
     });
 
@@ -319,6 +321,7 @@ router.get('/FindAllSession', auth, async (req, res) => {
         'session_fee',
         'session_registration',
         'session_trainer_name',
+        'session_trainer_id',
       ],
     });
 
@@ -365,27 +368,58 @@ router.get('/FindAllSession', auth, async (req, res) => {
   // }
 });
 
-router.get('/FindSessionById/:id', auth, async (req, res) => {
-  console.log(req.params);
-  // res.send(Session.findAll({where:{session_id:req.params.id}}));
-  const sqlCheck = await Session.findOne({
-    where: {
-      session_id: req.params.id,
-    },
-  });
+router.get(
+  '/FindSessionById/:id/trainer_id/:trainer_id',
+  auth,
+  async (req, res) => {
+    try {
+      if (!req.params.id)
+        return res.status(400).json({
+          success: 0,
+          error: 'Session id not provided',
+        });
+      if (!req.params.trainer_id)
+        return res.status(400).json({
+          success: 0,
+          error: 'Trainer id not provided',
+        });
 
-  console.log(sqlCheck, sqlCheck.dataValues);
-  if (!sqlCheck)
-    return res.status(400).json({
-      success: 0,
-      error: 'Could not find session',
-    });
+      const sqlCheck = await Session.findOne({
+        where: {
+          session_id: req.params.id,
+        },
+      });
 
-  return res.status(200).json({
-    success: 1,
-    session: sqlCheck,
-  });
-});
+      if (!sqlCheck)
+        return res.status(400).json({
+          success: 0,
+          error: 'Could not find session',
+        });
+
+      const sql = `SELECT  trainer_full_name,trainer_experience,trainer_career_summary,trainer_occupation   from trainer_profiles WHERE customer_id=${req.user.customer_id} AND trainer_id=${req.params.trainer_id}`;
+      const TrainerData = await db.query(sql, { type: db.QueryTypes.SELECT });
+
+      if (!TrainerData)
+        return res.status(400).json({
+          success: 0,
+          error: 'Unable to find trainer data',
+        });
+
+      return res.status(200).json({
+        success: 1,
+        session: sqlCheck,
+        trainerData: TrainerData[0],
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({
+        success: 0,
+        error: 'Unable to fetch details',
+        errorReturned: JSON.stringify(error),
+      });
+    }
+  }
+);
 
 router.post('/updateSession', auth, async (req, res) => {
   console.log(req.body);
@@ -505,14 +539,56 @@ router.post('/updateRecordedSession', auth, async (req, res) => {
   }
 });
 
-router.post('/deleteSession', async (req, res) => {
+router.delete('/deleteSession/:id', async (req, res) => {
   console.log(req.body);
-  const session = await Session.destroy({
-    where: {
-      firstName: 'Jane',
-    },
-  });
-  console.log('new Session created', session);
+  try {
+    if (!req.params.id)
+      return res.status(400).json({
+        success: 0,
+        error: 'Session id not provided',
+      });
+    const deletedChapters = await ChapterTable.destroy({
+      where: {
+        session_id: req.params.id,
+      },
+    });
+    if (!deletedChapters)
+      return res.status(400).json({
+        success: 0,
+        error: 'Unable to delete chapters',
+      });
+
+    const deletedLessons = await LessonTable.destroy({
+      where: {
+        session_id: req.params.id,
+      },
+    });
+    if (!deletedLessons)
+      return res.status(400).json({
+        success: 0,
+        error: 'Unable to delete lessons',
+      });
+    const result = await Session.destroy({
+      where: {
+        session_id: req.params.id,
+      },
+    });
+    if (!result)
+      return res.status(400).json({
+        success: 0,
+        error: 'Unable to delete session',
+      });
+    return res.status(200).json({
+      success: 1,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json({
+      success: 0,
+      error: 'Unable to delete session',
+      errorReturned: JSON.stringify(e),
+    });
+  }
 });
 
 router.post('/upload/thumbnail', auth, async (req, res) => {

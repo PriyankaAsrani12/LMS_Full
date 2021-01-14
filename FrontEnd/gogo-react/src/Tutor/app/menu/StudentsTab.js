@@ -5,6 +5,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import Table from './Table';
 import axiosInstance from '../../../helpers/axiosInstance';
 import NotificationManager from '../../../components/common/react-notifications/NotificationManager';
+import NoDataFound from '../../../CustomComponents/NoDataFound';
 
 const cols = [
   {
@@ -138,10 +139,7 @@ const StudentsTab = () => {
     };
     getData();
   }, []);
-  if (!data.length)
-    return (
-      <div style={{ marginBottom: '25rem' }}>No Students enrolled yet</div>
-    );
+  if (!data.length) return <NoDataFound />;
   return (
     <Card className="h-120 ">
       <Scrollbars style={{ width: '100%', height: 400 }}>

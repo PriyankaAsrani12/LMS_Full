@@ -4,13 +4,13 @@ import { useTable, usePagination, useSortBy } from 'react-table';
 import classnames from 'classnames';
 import CreateSession from './CreateSessions';
 import './Customcss.css';
-import PopoverItem from '../components/common/PopoverItem';
+import PopoverItem from './SessionPopOverItem';
 import { Link } from 'react-router-dom';
 import { adminRoot } from '../constants/defaultValues';
 import axiosInstance from '../helpers/axiosInstance';
 import { DropDownContext } from '../context/DropdownContext';
 
-function Table({ columns, data, divided = false }) {
+function Table({ columns, data, handleReloadTable, divided = false }) {
   let {
     getTableProps,
     getTableBodyProps,
@@ -37,18 +37,7 @@ function Table({ columns, data, divided = false }) {
   useEffect(() => {
     console.log(data.length, page, page.length);
   });
-  // console.log(page  )
-  /* let change = (e,props) => {
 
-      if(e == props){
-        setName(name = "Launched")
-      }
-    } */
-
-  // console.log(getTableBodyProps,"gettable------body----props")
-  // console.log(getTableProps,"gettable------props")
-  // console.log(prepareRow,"prepare------row")
-  // console.log(page,"----------------page")
   let clickHandlerTable = (e) => {
     for (let i = 0; i < data.length; i++) {
       if (e == page[i].cells[0].row.id) {
@@ -56,10 +45,8 @@ function Table({ columns, data, divided = false }) {
           .launched;
         setName(page[i].cells[0].row.original.launched ? 'Launched' : 'Launch');
       }
-      // console.log(e, page)
     }
   };
-  //const [name , ChangeName] = useCounter()
   const info = {
     name: 'Launched',
   };
@@ -70,36 +57,9 @@ function Table({ columns, data, divided = false }) {
         {...getTableProps()}
         className={`r-table table ${classnames({ 'table-divided': divided })}`}
       >
-        {/* <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column, columnIndex) => (
-                  <th
-                    key={`th_${columnIndex}`}
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className={
-                      column.isSorted
-                        ? column.isSortedDesc
-                          ? 'sorted-desc'
-                          : 'sorted-asc'
-                        : ''
-                    }
-                  >
-                    {column.render('Header')}
-                    {column.isSorted
-                        ? column.isSortedDesc
-                    ?'':''
-                    :''
-                    }
-                    <span />
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-   */}
         <tbody {...getTableBodyProps()}>
           {page.map((row) => {
+            console.log(row);
             prepareRow(row);
             return (
               <tr {...row.getRowProps()}>
@@ -110,21 +70,6 @@ function Table({ columns, data, divided = false }) {
                       className: cell.column.cellClass,
                     })}
                   >
-                    {/* {cellIndex!==0?(
-                    <Link to={{
-                        pathname: row.original.type==="Recorded"?`${adminRoot}/recordedsession`:`${adminRoot}/livesession`,
-                        state: {
-                          uniquesessionid:row.original.id 
-                        }
-                      }}
-                      id="link"
-                    >
-                      {cell.render('Cell')}
-                    </Link>
-
-                     ) 
-                     : cell.render('Cell')
-                   }  */}
                     {cellIndex === 0 ? (
                       <Link
                         to={{
@@ -134,6 +79,7 @@ function Table({ columns, data, divided = false }) {
                               : `${adminRoot}/livesession`,
                           state: {
                             uniquesessionid: row.original.id,
+                            trainer_id: row.original.trainer_id,
                           },
                         }}
                         id="link"
@@ -195,7 +141,10 @@ function Table({ columns, data, divided = false }) {
                         {/* 'Launched' */} {/* : 'Launch' */} Launch
                       </Button>
                     )}
-                    <PopoverItem id={row.id} item={row.original} />
+                    <PopoverItem
+                      id={row.original.id}
+                      handleReloadTable={handleReloadTable}
+                    />
                   </div>
                 </td>
               </tr>
@@ -293,6 +242,7 @@ export const TabularData = () => {
             tags: doc.session_trainer_name,
             fee: doc.session_fee,
             registrations: doc.session_registration,
+            trainer_id: doc.session_trainer_id,
           };
           try {
             session.tags = JSON.parse(session.tags)[0].label;
@@ -321,7 +271,12 @@ export const TabularData = () => {
   return (
     <div className="mb-4">
       {data.length > 0 ? (
-        <Table columns={cols} data={data} divided />
+        <Table
+          columns={cols}
+          data={data}
+          handleReloadTable={handleReloadTable}
+          divided
+        />
       ) : (
         <CreateSession />
       )}

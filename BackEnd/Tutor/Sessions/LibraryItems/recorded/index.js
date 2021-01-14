@@ -5,12 +5,17 @@ const { LibraryItem } = require('../model');
 const { ChapterTable } = require('./chapter_table_model');
 const { LessonTable } = require('./lesson_table_model');
 
-Router.get('/:id', auth, async (req, res) => {
+Router.get('/:id/trainer/:trainer_id', auth, async (req, res) => {
   try {
     if (!req.params.id)
       return res.status(400).json({
         success: 0,
         error: 'Session id not provided',
+      });
+    if (!req.params.trainer_id)
+      return res.status(400).json({
+        success: 0,
+        error: 'trainer id not provided',
       });
     const sql = `SELECT  
        c.chapter_id,
@@ -45,6 +50,15 @@ Router.get('/:id', auth, async (req, res) => {
       });
     const sql3 = `SELECT item_id,item_name,item_url from library_items WHERE session_id=${req.params.id} AND customer_id=${req.user.customer_id}`;
     const LibraryItems = await db.query(sql3, { type: db.QueryTypes.SELECT });
+
+    const sql4 = `SELECT  trainer_full_name,trainer_experience,trainer_career_summary,trainer_occupation   from trainer_profiles WHERE customer_id=${req.user.customer_id} AND trainer_id=${req.params.trainer_id}`;
+    const TrainerData = await db.query(sql4, { type: db.QueryTypes.SELECT });
+
+    if (!TrainerData)
+      return res.status(400).json({
+        success: 0,
+        error: 'Unable to find trainer data',
+      });
 
     const ans = [];
 
@@ -123,6 +137,7 @@ Router.get('/:id', auth, async (req, res) => {
       success: 1,
       sessionData: sessionData[0],
       SessionMaterial: ans,
+      trainerData: TrainerData[0],
     });
   } catch (err) {
     console.log(err);

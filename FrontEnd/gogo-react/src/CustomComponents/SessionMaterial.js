@@ -14,7 +14,6 @@ import {
   FormGroup,
   Label,
   Input,
-  Progress,
   Col,
 } from 'reactstrap';
 import Switch from 'rc-switch';
@@ -38,7 +37,6 @@ import Avatar from './avatarnew.png';
 import Make_modal from './Make_modal';
 import axiosInstance from '../helpers/axiosInstance';
 import NotificationManager from '../components/common/react-notifications/NotificationManager';
-import ProgressBar from './ProgressBar';
 
 export default class SessionMaterial extends Component {
   constructor(props) {
@@ -102,7 +100,10 @@ export default class SessionMaterial extends Component {
         session_duration: '',
 
         Trainer: {
-          name: 'Vedant',
+          trainer_full_name: '',
+          trainer_career_summary: '',
+          trainer_experience: '',
+          trainer_occupation: '',
           skills: [
             'HTML',
             'CSS',
@@ -159,52 +160,63 @@ export default class SessionMaterial extends Component {
   }
   componentDidMount() {
     try {
-      if (!this.props.location.state.uniquesessionid)
+      if (
+        !this.props.location.state.uniquesessionid ||
+        !this.props.location.state.trainer_id
+      )
         this.props.history.push('/app/dashboard/default');
+
+      const { uniquesessionid, trainer_id } = this.props.location.state;
+
+      axiosInstance
+        .get(
+          `/tutor/libraryItems/recorded/${uniquesessionid}/trainer/${trainer_id}`
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.data.success) {
+            const session = response.data.sessionData;
+            const trainer = response.data.trainerData;
+            console.log(trainer);
+            this.setState({
+              ...this.state,
+              data: {
+                name: session.session_name,
+                type: session.session_type,
+                date: session.session_start_date,
+                time: session.session_start_time.toString().slice(-8),
+                tagline: session.session_tagline || 'Default Tagline',
+                description: session.session_description,
+                seo: session.session_tags,
+                session_duration: session.session_duration,
+                session_link: session.session_link,
+                session_fee_type: session.session_fee_type,
+                session_fee: session.session_fee
+                  ? `${session.session_fee} INR`
+                  : '0',
+                Trainer: {
+                  ...this.state.data.Trainer,
+                  trainer_full_name: trainer.trainer_full_name,
+                  trainer_career_summary: trainer.trainer_career_summary,
+                  trainer_experience: trainer.trainer_experience,
+                  trainer_occupation: trainer.trainer_occupation,
+                },
+              },
+              SessionMaterial: response.data.SessionMaterial,
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.props.history.push('/app/dashboard/default');
+        });
     } catch (e) {
       this.props.history.push('/app/dashboard/default');
     }
-    axiosInstance
-      .get(
-        `/tutor/libraryItems/recorded/${this.props.location.state.uniquesessionid}`
-      )
-      .then((response) => {
-        console.log(response);
-        if (response.data.success) {
-          const session = response.data.sessionData;
-          console.log(
-            //   session.session_start_time,
-            //   typeof session.session_start_time,
-            //   session.session_start_time.toString(),
-            session.session_start_time.toString().slice(-8)
-          );
-          this.setState({
-            ...this.state,
-            data: {
-              name: session.session_name,
-              type: session.session_type,
-              date: session.session_start_date,
-              time: session.session_start_time.toString().slice(-8),
-              tagline: session.session_tagline || 'Default Tagline',
-              description: session.session_description,
-              seo: session.session_tags,
-              session_duration: session.session_duration,
-              session_link: session.session_link,
-              session_fee_type: session.session_fee_type,
-              session_fee: session.session_fee
-                ? `${session.session_fee} INR`
-                : '0',
-              Trainer: this.state.data.Trainer,
-            },
-            SessionMaterial: response.data.SessionMaterial,
-          });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        this.props.history.push('/app/dashboard/default');
-      });
   }
+  createMarkup = (data) => {
+    return { __html: data };
+  };
 
   validate = (data) => {
     for (let i = 0; i < data.length; i++) {
@@ -882,11 +894,10 @@ export default class SessionMaterial extends Component {
                     className="font-weight-bold"
                     style={{ fontSize: '1.3rem' }}
                   >
-                    {this.state.data.Trainer.name}
+                    {this.state.data.Trainer.trainer_full_name}
                   </h3>
                   <img src={Avatar} alt="..." id="avatar" />
-                  <p>Web developer, IBM, bengaluru</p>
-                  <p>2017 to present</p>
+                  <p>{this.state.data.Trainer.trainer_occupation}</p>
                   <Button outline color="secondary">
                     Edit Profile
                   </Button>
@@ -898,17 +909,14 @@ export default class SessionMaterial extends Component {
                   >
                     Career Summary
                   </h5>
-                  <p className="text-center">
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry. Lorem Ipsum has been the industry's
-                    standard dummy text ever since the 1500s, when an unknown
-                    printer took a galley of type and scrambled it to make a
-                    type specimen book. It has survived not only five centuries,
-                    but also the leap into electronic typesetting, remaining
-                    essentially unchanged. It was popularised in the 1960s with
-                    the release of Letraset sheets containing Lorem Ipsum
-                    passages, and more recently with desktop publishing software
-                    like Aldus PageMaker including versions of Lorem Ipsum.
+                  <p
+                    className="text-center"
+                    id="trainer_career_summary"
+                    dangerouslySetInnerHTML={this.createMarkup(
+                      this.state.data.Trainer.trainer_career_summary
+                    )}
+                  >
+                    {/* {this.state.data.Trainer.trainer_career_summary} */}
                   </p>
                   {/* <ul className="skillslist">
                                
@@ -934,18 +942,14 @@ export default class SessionMaterial extends Component {
                   </h5>
 
                   <div className="">
-                    <p className="text-center">
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry. Lorem Ipsum has been the industry's
-                      standard dummy text ever since the 1500s, when an unknown
-                      printer took a galley of type and scrambled it to make a
-                      type specimen book. It has survived not only five
-                      centuries, but also the leap into electronic typesetting,
-                      remaining essentially unchanged. It was popularised in the
-                      1960s with the release of Letraset sheets containing Lorem
-                      Ipsum passages, and more recently with desktop publishing
-                      software like Aldus PageMaker including versions of Lorem
-                      Ipsum.
+                    <p
+                      className="text-center"
+                      id="trainer_experience"
+                      dangerouslySetInnerHTML={this.createMarkup(
+                        this.state.data.Trainer.trainer_experience
+                      )}
+                    >
+                      {/* {this.state.data.Trainer.trainer_experience} */}
                     </p>
                   </div>
                 </Colxx>
@@ -1246,6 +1250,7 @@ export default class SessionMaterial extends Component {
                                                         ].lesson[lessonindex]
                                                           .videoUploadPercentage
                                                       }
+                                                      %
                                                     </div>
                                                   </div>
                                                   {/* <ProgressBar
@@ -1396,6 +1401,7 @@ export default class SessionMaterial extends Component {
                                                         ].lesson[lessonindex]
                                                           .assignmentUploadPercentage
                                                       }
+                                                      %
                                                     </div>
                                                   </div>
                                                 </Row>
@@ -1690,6 +1696,7 @@ export default class SessionMaterial extends Component {
                                                         ].lesson[lessonindex]
                                                           .handoutsUploadPercentage
                                                       }
+                                                      %
                                                     </div>
                                                   </div>
                                                 </Row>

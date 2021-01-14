@@ -4,6 +4,7 @@ import Table from './Table';
 import NotificationManager from '../../components/common/react-notifications/NotificationManager';
 import axiosInstance from '../../helpers/axiosInstance';
 import Loader from '../settings/Loader';
+import NoDataFound from '../NoDataFound';
 
 const Assignment = ({ columns }) => {
   const [data, setData] = useState([]);
@@ -65,7 +66,7 @@ const Assignment = ({ columns }) => {
   }, []);
 
   //backend team find a way to sort or filter data via this feature and show in tabs
-  if (!isLoaded) return <Loader />;
+  if (!isLoaded) return <NoDataFound />;
 
   if (!data.length)
     return (

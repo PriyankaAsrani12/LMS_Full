@@ -13,6 +13,7 @@ import Video from './Video';
 import Recordings from './Recordings';
 import Assignment from './Assignment';
 import Quiz from './Quiz';
+import NoDataFound from '../NoDataFound';
 
 const Library = () => {
   const [data, setData] = useState([
@@ -130,8 +131,7 @@ const Library = () => {
   //backend team find a way to sort or filter data via this feature and show in tabs
   if (!isLoaded) return <Loader />;
 
-  if (!data.length)
-    return <div style={{ marginBottom: '25rem' }}>No Data Found</div>;
+  if (!data.length) return <NoDataFound />;
   return (
     <>
       <br />
