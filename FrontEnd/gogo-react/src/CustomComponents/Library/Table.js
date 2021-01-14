@@ -11,6 +11,7 @@ const Table = ({ columns, data, divided = false }) => {
     getTableProps,
     getTableBodyProps,
     prepareRow,
+    headerGroups,
 
     page,
 
@@ -30,8 +31,30 @@ const Table = ({ columns, data, divided = false }) => {
       <table
         style={{ maxWidth: '1100px', margin: '0 auto' }}
         {...getTableProps()}
-        className={`r-table table ${classnames({ 'table-divided': divided })}`}
+        className={`r-table table ${classnames({ 'table-divided': divided })} `}
       >
+        <thead>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column, columnIndex) => (
+                <th
+                  key={`th_${columnIndex}`}
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
+                  className={
+                    column.isSorted
+                      ? column.isSortedDesc
+                        ? 'sorted-desc'
+                        : 'sorted-asc'
+                      : ''
+                  }
+                >
+                  {column.render('Header')}
+                  <span />
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
         <tbody {...getTableBodyProps()}>
           {page.map((row) => {
             // console.log(row);
