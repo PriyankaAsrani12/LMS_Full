@@ -7,7 +7,7 @@ import Loader from '../settings/Loader';
 import NoDataFound from '../NoDataFound';
 import { LibraryContext } from '../../context/LibraryContext';
 
-const Video = ({ columns }) => {
+const AllItems = ({ columns }) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -15,20 +15,13 @@ const Video = ({ columns }) => {
 
   useEffect(() => {
     if (error)
-      NotificationManager.warning(
-        error,
-        'Library Video Item',
-        3000,
-        null,
-        null,
-        ''
-      );
+      NotificationManager.warning(error, 'Library Items', 3000, null, null, '');
   }, [error]);
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const result = await axiosInstance.get('/tutor/library/videos');
+        const result = await axiosInstance.get('/tutor/library');
         if (result.data.success) {
           const data = result.data.result.map((doc) => {
             if (doc.item_type == 'quiz') doc.item_size = '---';
@@ -68,7 +61,8 @@ const Video = ({ columns }) => {
 
   //backend team find a way to sort or filter data via this feature and show in tabs
   if (!isLoaded) return <Loader />;
+
   if (!data.length) return <NoDataFound />;
   return <Table columns={columns} data={data} divided />;
 };
-export default Video;
+export default AllItems;

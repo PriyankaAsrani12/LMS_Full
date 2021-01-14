@@ -1,21 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { useTable, usePagination, useSortBy } from 'react-table';
 import classnames from 'classnames';
-import PopoverItem from '../../components/common/PopoverItem';
+import PopoverItem from './PopOverItem';
+import { LibraryContext } from '../../context/LibraryContext';
 
 const Table = ({ columns, data, divided = false }) => {
+  const [handleReloadTable] = useContext(LibraryContext);
   const {
     getTableProps,
     getTableBodyProps,
     prepareRow,
-    headerGroups,
+
     page,
-    canPreviousPage,
-    canNextPage,
-    pageCount,
-    gotoPage,
-    setPageSize,
+
     state: { pageIndex, pageSize },
   } = useTable(
     {
@@ -34,34 +32,9 @@ const Table = ({ columns, data, divided = false }) => {
         {...getTableProps()}
         className={`r-table table ${classnames({ 'table-divided': divided })}`}
       >
-        {/* <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column, columnIndex) => (
-                  <th
-                    key={`th_${columnIndex}`}
-                    
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className={(
-                      column.isSorted
-                        ? column.isSortedDesc
-                          ? 'sorted-desc'
-                          : 'sorted-asc'
-                        : '') + columnIndex===3?'text-right':'text-left'
-                    }
-                  >
-                    
-                    {column.render('Header')}
-                    {column.isSorted ? (column.isSortedDesc ? '' : '') : ''}
-                    <span />
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead> */}
-
         <tbody {...getTableBodyProps()}>
           {page.map((row) => {
+            // console.log(row);
             prepareRow(row);
             return (
               <tr {...row.getRowProps()}>
@@ -77,27 +50,17 @@ const Table = ({ columns, data, divided = false }) => {
                   </td>
                 ))}
                 <td>
-                  <PopoverItem id={`1${row.id}`} />
+                  <PopoverItem
+                    id={row.original.id}
+                    type={row.original.type}
+                    handleReloadTable={handleReloadTable}
+                  />
                 </td>
               </tr>
             );
           })}
         </tbody>
       </table>
-
-      {/* <DatatablePagination
-          page={pageIndex}
-          pages={pageCount}
-          canPrevious={canPreviousPage}
-          canNext={canNextPage}
-          pageSizeOptions={[4, 10, 20, 30, 40, 50]}
-          showPageSizeOptions={false}
-          showPageJump={false}
-          defaultPageSize={pageSize}
-          onPageChange={(p) => gotoPage(p)}
-          onPageSizeChange={(s) => setPageSize(s)}
-          paginationMaxSize={pageCount}
-        /> */}
     </div>
   );
 };

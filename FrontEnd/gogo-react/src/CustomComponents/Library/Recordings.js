@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import Table from './Table';
 import NotificationManager from '../../components/common/react-notifications/NotificationManager';
 import axiosInstance from '../../helpers/axiosInstance';
 import Loader from '../settings/Loader';
 import NoDataFound from '../NoDataFound';
+import { LibraryContext } from '../../context/LibraryContext';
 
 const Recordings = ({ columns }) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [handleReloadTable] = useContext(LibraryContext);
 
   useEffect(() => {
     if (error)
@@ -27,7 +29,6 @@ const Recordings = ({ columns }) => {
     const getData = async () => {
       try {
         const result = await axiosInstance.get('/tutor/library/recordings');
-        console.log(result);
         if (result.data.success) {
           const data = result.data.result.map((doc) => {
             if (doc.item_type == 'quiz') doc.item_size = '---';
@@ -37,6 +38,7 @@ const Recordings = ({ columns }) => {
               doc.item_size = `${(doc.item_size / 1048576).toFixed(2)}Mb`;
             else doc.item_size = `${(doc.item_size / 1073741824).toFixed(2)}Gb`;
             return {
+              id: doc.item_id,
               name: doc.item_name,
               size: doc.item_size,
               type: doc.item_type,
@@ -62,7 +64,7 @@ const Recordings = ({ columns }) => {
       }
     };
     getData();
-  }, []);
+  }, [handleReloadTable]);
 
   //backend team find a way to sort or filter data via this feature and show in tabs
   if (!isLoaded) return <Loader />;

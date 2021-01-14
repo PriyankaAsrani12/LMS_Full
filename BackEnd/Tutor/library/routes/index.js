@@ -11,7 +11,7 @@ const { db } = require('../../../common/db/sql');
 router.get('/', auth, async (req, res) => {
   try {
     //Fetch User Specific Data
-    let sql = `SELECT item_type,item_name,item_size,updatedAt FROM library_items WHERE  customer_id =${req.user.customer_id} `;
+    let sql = `SELECT item_id, item_type,item_name,item_size,updatedAt FROM library_items WHERE  customer_id =${req.user.customer_id} `;
 
     let query = await db.query(sql);
     if (!query)
@@ -34,7 +34,7 @@ router.get('/', auth, async (req, res) => {
 //To fetch all the data where type = video
 router.get('/videos', auth, async (req, res) => {
   try {
-    let sql = `SELECT item_type,item_name,item_size,updatedAt FROM library_items WHERE item_type='video' AND customer_id = ${req.user.customer_id} `;
+    let sql = `SELECT item_id,item_type,item_name,item_size,updatedAt FROM library_items WHERE item_type='video' AND customer_id = ${req.user.customer_id} `;
 
     let query = await db.query(sql);
     if (!query)
@@ -57,7 +57,7 @@ router.get('/videos', auth, async (req, res) => {
 //To fetch all the data where type = recording
 router.get('/recordings', auth, async (req, res) => {
   try {
-    let sql = `SELECT item_type,item_name,item_size,updatedAt FROM library_items WHERE item_type='recording' AND customer_id = ${req.user.customer_id} `;
+    let sql = `SELECT item_id,item_type,item_name,item_size,updatedAt FROM library_items WHERE item_type='recording' AND customer_id = ${req.user.customer_id} `;
 
     let query = await db.query(sql);
     if (!query)
@@ -80,7 +80,7 @@ router.get('/recordings', auth, async (req, res) => {
 //To fetch all the data where type = assignment
 router.get('/assignments', auth, async (req, res) => {
   try {
-    let sql = `SELECT item_type,item_name,item_size,updatedAt FROM library_items WHERE item_type='assignment' AND customer_id = ${req.user.customer_id} `;
+    let sql = `SELECT item_id,item_type,item_name,item_size,updatedAt FROM library_items WHERE item_type='assignment' AND customer_id = ${req.user.customer_id} `;
 
     let query = await db.query(sql);
     if (!query)
@@ -103,7 +103,7 @@ router.get('/assignments', auth, async (req, res) => {
 //To fetch all the data where type = quiz
 router.get('/quizs', auth, async (req, res) => {
   try {
-    let sql = `SELECT item_type,item_name,item_size,updatedAt FROM library_items WHERE item_type='quiz' AND customer_id = ${req.user.customer_id} `;
+    let sql = `SELECT item_id,item_type,item_name,item_size,updatedAt FROM library_items WHERE item_type='quiz' AND customer_id = ${req.user.customer_id} `;
 
     let query = await db.query(sql);
     if (!query)
@@ -126,7 +126,7 @@ router.get('/quizs', auth, async (req, res) => {
 //To fetch all the data where type = handout
 router.get('/handouts', auth, async (req, res) => {
   try {
-    let sql = `SELECT item_type,item_name,item_size,updatedAt FROM library_items WHERE item_type='handout' AND customer_id = ${req.user.customer_id} `;
+    let sql = `SELECT item_id,item_type,item_name,item_size,updatedAt FROM library_items WHERE item_type='handout' AND customer_id = ${req.user.customer_id} `;
 
     let query = await db.query(sql);
     if (!query)
@@ -172,15 +172,11 @@ router.post('/search', auth, async (req, res) => {
 //To delete a particular item
 router.delete('/:id', auth, async (req, res) => {
   try {
-    let sql = `DELETE FROM LIBRARY_TABLE WHERE LIBRARY_ITEM_ID = ${req.params.id} AND CUSTOMER_ID = ${req.user.customer_id} `;
+    let sql = `DELETE FROM library_items WHERE item_id = ${req.params.id} AND customer_id = ${req.user.customer_id} `;
 
-    let query = await db.query(sql, (err, result) => {
-      if (err) throw err;
-      console.log('RAN successfully');
-    });
+    let query = await db.query(sql);
+    console.log(query);
 
-    console.log('Deleted ');
-    // res.send('Successfuly deleted library content');
     res.json({
       success: 1,
       message: 'Successfuly deleted library content',
