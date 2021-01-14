@@ -10,6 +10,10 @@ const ShortUrl = db.define('short_url', {
   customer_id: {
     type: DataTypes.INTEGER(255),
     allowNull: false,
+    references: {
+      model: 'customer_tables',
+      key: 'customer_id',
+    },
   },
   link_name: {
     type: DataTypes.STRING,
@@ -60,42 +64,11 @@ const ShortUrl = db.define('short_url', {
     type: DataTypes.STRING,
     defaultValue: 'No Data Yet',
   },
-
-  // short: {
-  //   type: DataTypes.STRING,
-  //   allowNull: false,
-  //   primaryKey:true,
-  // },
-  // linkName: {
-  //   type: DataTypes.STRING,
-  //   allowNull:true
-  // },
-  // full: {
-  //   type: DataTypes.STRING,
-  //   allowNull:false
-  // }
+  link_total_visits: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
 });
 
 db.sync();
 module.exports = { db, ShortUrl };
-
-/*
-const shortUrlSchema = new mongoose.Schema({
-  full: {
-    type: String,
-    required: true
-  },
-  short: {
-    type: String,
-    required: true,
-    default: shortId.generate
-  },
-  clicks: {
-    type: Number,
-    required: true,
-    default: 0
-  }
-})
-
-module.exports = mongoose.model('ShortUrl', shortUrlSchema)
-*/

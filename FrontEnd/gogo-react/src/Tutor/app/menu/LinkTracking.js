@@ -35,6 +35,9 @@ const LinkTracking = () => {
   const [shortUrl, setShortUrl] = useState('');
   const [error, setError] = useState(null);
   const [tableData, setTableData] = useState([]);
+  const [reload, setReload] = useState(false);
+
+  const toggleReload = () => setReload(!reload);
 
   const cols20 = [
     {
@@ -217,7 +220,7 @@ const LinkTracking = () => {
               id: doc.link_id,
               link_name: doc.link_name,
               link: `https://tracking.oyesters.in/new.html?${doc.link_short_url}`,
-              visits: 56,
+              visits: doc.link_total_visits,
               u_visits: doc.link_unique_visits,
               av_ses_dur: doc.link_average_session_duration,
               color: 'danger',
@@ -253,9 +256,8 @@ const LinkTracking = () => {
       }
     };
     getData();
-  }, []);
+  }, [reload]);
 
-  if (!tableData.length) return <NoDataFound />;
   return (
     <>
       <Row>
@@ -368,6 +370,7 @@ const LinkTracking = () => {
             toggle={toggle}
             setShortUrl={setShortUrl}
             setError={setError}
+            toggleReload={toggleReload}
           />
         </Modal>
         <p>
@@ -377,37 +380,44 @@ const LinkTracking = () => {
             : ''}{' '}
         </p>
       </div>
-      <Card>
-        <FormGroup className="ml-auto mr-4 mt-4">
-          <Input
-            type="select"
-            name="select"
-            id="exampleSelect"
-            style={{ width: '150px' }}
-            onChange={changechart}
-          >
-            <option>Select filter</option>
-            <option>Last 7 days</option>
-            <option>Last 4 days</option>
-          </Input>
-        </FormGroup>
+      {!tableData.length ? (
+        <NoDataFound />
+      ) : (
+        <>
+          <Card>
+            <FormGroup className="ml-auto mr-4 mt-4">
+              <Input
+                type="select"
+                name="select"
+                id="exampleSelect"
+                style={{ width: '150px' }}
+                onChange={changechart}
+              >
+                <option>Select filter</option>
+                <option>Last 7 days</option>
+                <option>Last 4 days</option>
+              </Input>
+            </FormGroup>
 
-        <CardBody style={{}}>
-          {chartstatus ? (
-            <Line data={data} style={{ marginTop: '-100px' }} />
-          ) : (
-            <Line data={data2} style={{ marginTop: '-100px' }} />
-          )}
-        </CardBody>
-      </Card>
-      <br />
-      <Card className="h-100 ">
-        <Scrollbars style={{ width: '100%', height: 400 }}>
-          <CardBody style={{ width: '260%' }}>
-            <Table columns={cols20} data={tableData} />
-          </CardBody>
-        </Scrollbars>
-      </Card>
+            <CardBody style={{}}>
+              {chartstatus ? (
+                <Line data={data} style={{ marginTop: '-100px' }} />
+              ) : (
+                <Line data={data2} style={{ marginTop: '-100px' }} />
+              )}
+            </CardBody>
+          </Card>
+          <br />
+
+          <Card className="h-100 ">
+            <Scrollbars style={{ width: '100%', height: 400 }}>
+              <CardBody style={{ width: '260%' }}>
+                <Table columns={cols20} data={tableData} />
+              </CardBody>
+            </Scrollbars>
+          </Card>
+        </>
+      )}
     </>
   );
 };

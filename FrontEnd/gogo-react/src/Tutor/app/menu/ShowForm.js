@@ -138,7 +138,7 @@ const ShowForm = () => {
 
 // export default ShowForm;
 
-const ModalExample = ({ toggle, setShortUrl, setError }) => {
+const ModalExample = ({ toggle, setShortUrl, setError, toggleReload }) => {
   const [fullUrl, setFullUrl] = useState('');
   const [showComponent, setShowComponent] = useState(false);
   //   const [error, setError] = useState('');
@@ -164,12 +164,13 @@ const ModalExample = ({ toggle, setShortUrl, setError }) => {
       custom: document.getElementById('custom').value,
     };
     axiosInstance
-      .post('/shorturl/genShort', { values })
+      .post('/tutor/shorturl/genShort', { values })
       .then((response) => {
         console.log(response);
         if (response.data.success) {
           setShortUrl(response.data.shortUrl);
           setFullUrl(response.data.fullUrl);
+          toggleReload();
         } else setError(response.data.error);
       })
       .catch((err) => {
