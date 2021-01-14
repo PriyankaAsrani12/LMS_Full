@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { useTable, usePagination, useSortBy } from 'react-table';
 import {
   Row,
-  Button,
   NavItem,
   Nav,
   TabContent,
   TabPane,
   NavLink,
-  Table,
   CardTitle,
   CardBody,
   Card,
@@ -17,19 +15,14 @@ import {
   Col,
   CardText,
   UncontrolledDropdown,
-  Modal,
-  FormGroup,
-  Input,
   DropdownItem,
   DropdownToggle,
   DropdownMenu,
 } from 'reactstrap';
-import { Colxx, Separator } from '../../../components/common/CustomBootstrap';
+import { Colxx } from '../../../components/common/CustomBootstrap';
 import classnames from 'classnames';
 import { setContainerClassnames } from '../../../redux/actions';
-import my_table from '../../../data/my_table';
 import affiliate from '../../../data/affiliate';
-import { FaShoePrints, FaUsers } from 'react-icons/fa';
 import { FaFilter } from 'react-icons/fa';
 import { LineChart } from '../../../components/charts';
 import { lineChartData } from '../../../data/charts';
@@ -45,32 +38,17 @@ import { BiTime } from 'react-icons/bi';
 import { RiMailSendFill } from 'react-icons/ri';
 import { IoIosPeople } from 'react-icons/io';
 import { FaUserCheck } from 'react-icons/fa';
-import { FaBlog } from 'react-icons/fa';
-import { FaComments } from 'react-icons/fa';
-import { FaLink } from 'react-icons/fa';
-import { BiCheckDouble } from 'react-icons/bi';
-import { AiOutlineExclamation } from 'react-icons/ai';
-import { MdVisibility } from 'react-icons/md';
-import { FaGlobeAsia } from 'react-icons/fa';
 import './style.css';
 import { Scrollbars } from 'react-custom-scrollbars';
-import my_table_courses from '../../../data/my_table_courses';
 import Communication_table2 from '../../../data/Communication_table2';
 import Communication_table3 from '../../../data/Communication_table3';
 
 import affiliate2 from '../../../data/affiliate2';
-import { Line } from 'react-chartjs-2';
-import linkTraking from '../../../data/linkTraking';
-import countries from '../../../data/countries';
-import cities from '../../../data/cities';
-import d_countries from '../../../data/d_countries';
-import device from '../../../data/device';
-import ShowForm from './ShowForm';
-import { NotificationManager } from '../../../components/common/react-notifications';
-import { BsTypeStrikethrough } from 'react-icons/bs';
+
 import CourseTab from './CourseTab';
 import StudentsTab from './StudentsTab';
 import Blog from './Blog';
+import LinkTracking from './LinkTracking';
 
 const MenuTypes = ({
   match,
@@ -79,25 +57,6 @@ const MenuTypes = ({
   selectedMenuHasSubItems,
   setContainerClassnamesAction,
 }) => {
-  const [modal, setModal] = useState(false);
-  const [shortUrl, setShortUrl] = useState('');
-  const [error, setError] = useState(null);
-
-  const toggle = () => setModal(!modal);
-
-  useEffect(() => {
-    if (error) {
-      NotificationManager.warning(
-        error,
-        'Get Url Track Error',
-        3000,
-        null,
-        null,
-        ''
-      );
-    }
-  }, [error]);
-
   const getMenuClassesForResize = (classes) => {
     let nextClasses = classes.split(' ').filter((x) => x !== '');
     const windowWidth = window.innerWidth;
@@ -339,92 +298,6 @@ const MenuTypes = ({
       accessor: 'visited',
       cellClass: 'text-muted w-15',
       Cell: (props) => <p className="text-center">{props.value}</p>,
-      sortType: 'basic',
-    },
-  ];
-  const cols20 = [
-    {
-      Header: 'Link Name',
-      accessor: 'link_name',
-      cellClass: 'text-muted w-5',
-      Cell: (props) => <p className="ml-2">{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Link',
-      accessor: 'link',
-      cellClass: 'text-muted w-5',
-      Cell: (props) => <p className="">{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Visits',
-      accessor: 'visits',
-      cellClass: 'text-muted w-5',
-      Cell: (props) => <p className="ml-4">{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Unique visits',
-      accessor: 'u_visits',
-      cellClass: 'text-muted w-5',
-      Cell: (props) => <p className="ml-4">{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Average Session Duration',
-      accessor: 'av_ses_dur',
-      cellClass: 'text-muted w-10',
-      Cell: (props) => <p style={{ marginLeft: '70px' }}>{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Bouce Rates',
-      accessor: 'bounce_rate',
-      cellClass: 'text-muted w-5',
-      Cell: (props) => <p style={{ marginLeft: '50px' }}>{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Realtime(Last 30min)',
-      accessor: 'real_time_30',
-      cellClass: 'text-muted w-5',
-      Cell: (props) => <p style={{ marginLeft: '40px' }}>{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Realtime(Last 24hrs)',
-      accessor: 'real_time_24',
-      cellClass: 'text-muted w-5',
-      Cell: (props) => <p style={{ marginLeft: '50px' }}>{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Country Name',
-      accessor: 'lcwp',
-      cellClass: 'text-muted w-5',
-      Cell: (props) => <p>{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'City Name',
-      accessor: 'lcwv',
-      cellClass: 'text-muted w-5',
-      Cell: (props) => <p style={{ marginLeft: '0px' }}>{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Distinct Countries',
-      accessor: 'dc',
-      cellClass: 'text-muted w-5',
-      Cell: (props) => <p style={{ marginLeft: '50px' }}>{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Device Type',
-      accessor: 'device_type',
-      cellClass: 'text-muted w-5',
-      Cell: (props) => <p>{props.value}</p>,
       sortType: 'basic',
     },
   ];
@@ -725,92 +598,6 @@ const MenuTypes = ({
     },
   ];
 
-  const cols = [
-    {
-      Header: 'Name',
-      accessor: 'title',
-      cellClass: 'text-muted w-10',
-      Cell: (props) => <p>{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Contact No.',
-      accessor: 'ph',
-      cellClass: 'text-muted',
-      Cell: (props) => <p>{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Email',
-      accessor: 'email',
-      cellClass: 'text-muted w-10',
-      Cell: (props) => <p>{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Total Courses',
-      accessor: 'NOC',
-      cellClass: 'text-muted w-15 ',
-      Cell: (props) => <p className="text-center">{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Fee Paid',
-      accessor: 'fee',
-      cellClass: 'text-muted w-10',
-      Cell: (props) => <p className="text-center">{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Referrals',
-      accessor: 'sb',
-      cellClass: 'text-muted w-10',
-      Cell: (props) => <p className="text-center">{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Reward Earned',
-      accessor: 're',
-      cellClass: 'text-muted w-20',
-      Cell: (props) => <p className="ml-4">{props.value}</p>,
-      sortType: 'basic',
-    },
-    {
-      Header: 'Status',
-      accessor: 'status',
-      cellClass: 'color w-10',
-      Cell: (props) => {
-        if (props.value == 'Registered') {
-          return (
-            <Badge
-              color="danger"
-              style={{
-                fontSize: '10px',
-                borderRadius: '10px',
-                backgroundColor: 'red',
-              }}
-            >
-              {props.value}
-            </Badge>
-          );
-        } else {
-          return (
-            <Badge
-              color="primary"
-              style={{
-                fontSize: '10px',
-                borderRadius: '10px',
-                backgroundColor: 'green',
-              }}
-            >
-              {props.value}
-            </Badge>
-          );
-        }
-      },
-      sortType: 'basic',
-    },
-  ];
   function Table({ columns, data }) {
     const {
       getTableProps,
@@ -898,76 +685,7 @@ const MenuTypes = ({
   }
   const [activeFirstTab, setActiveFirstTab] = useState('1');
   const [activeFirstTab1, setActiveFirstTab1] = useState('8');
-  const [activeFirstTab2, setActiveFirstTab2] = useState('13');
   const [activeFirstTab6, setActiveFirstTab6] = useState('20');
-  const [chartstatus, setchartstatus] = useState(false);
-
-  const changechart = () => {
-    setchartstatus(!chartstatus);
-    console.log(chartstatus);
-  };
-  const data = {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    /* scaleShowLabels: false, */
-    datasets: [
-      {
-        label: 'Views in one week for #link1',
-        data: [32, 36, 29, 35, 32, 39, 28, 39, 44],
-        radius: 3,
-        tension: 0,
-        fill: false,
-        borderColor: '#5CCB00',
-        pointRadius: 6,
-        pointHoverRadius: 6,
-        pointBorderWidth: 2,
-        pointBackgroundColor: ' #FFFFFF',
-      },
-
-      {
-        label: 'Views in one week for #link2',
-        data: [35, 26, 27, 23, 32, 30, 28, 39, 34],
-        tension: 0,
-        radius: 3,
-        fill: false,
-        borderColor: '#EC7600',
-        pointRadius: 6,
-        pointHoverRadius: 6,
-        pointBorderWidth: 2,
-        pointBackgroundColor: ' #FFFFFF',
-      },
-    ],
-  };
-  const data2 = {
-    labels: ['Thu', 'Fri', 'Sat', 'Sun'],
-    /* scaleShowLabels: false, */
-    datasets: [
-      {
-        label: 'Views in one week for #link1',
-        data: [39, 28, 39, 44],
-        radius: 3,
-        tension: 0,
-        fill: false,
-        borderColor: '#5CCB00',
-        pointRadius: 6,
-        pointHoverRadius: 6,
-        pointBorderWidth: 2,
-        pointBackgroundColor: ' #FFFFFF',
-      },
-
-      {
-        label: 'Views in one week for #link2',
-        data: [30, 28, 39, 34],
-        tension: 0,
-        radius: 3,
-        fill: false,
-        borderColor: '#EC7600',
-        pointRadius: 6,
-        pointHoverRadius: 6,
-        pointBorderWidth: 2,
-        pointBackgroundColor: ' #FFFFFF',
-      },
-    ],
-  };
 
   return (
     <>
@@ -1621,161 +1339,7 @@ const MenuTypes = ({
             <br />
           </TabPane>
           <TabPane tabId="7">
-            <Row>
-              <Col sm="3" xs="12" className="mb-3">
-                <Card
-                  body
-                  id="crd"
-                  className="text-center"
-                  style={{ backgroundColor: '#ec407a' }}
-                >
-                  <Row>
-                    <Col md="6" xs="6">
-                      <FaLink id="myicon" className="text-light" />
-                    </Col>
-                    <Col md="6" xs="6">
-                      <CardText className="font-weight-bold head text-light">
-                        16
-                      </CardText>
-                      <CardText className="font-weight-bold para text-light">
-                        Total links
-                      </CardText>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-              <Col sm="3" xs="12" className="mb-3">
-                <Card
-                  body
-                  id="crd"
-                  className="text-center"
-                  style={{ backgroundColor: '#ab47bc' }}
-                >
-                  <Row>
-                    <Col md="6" xs="6">
-                      <MdVisibility id="myicon" className="text-light" />
-                    </Col>
-                    <Col md="6" xs="6">
-                      <CardText className="font-weight-bold head text-light">
-                        43
-                      </CardText>
-                      <CardText className="font-weight-bold para text-light">
-                        Total visits
-                      </CardText>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-              <Col sm="3" xs="12" className="mb-3">
-                <Card
-                  body
-                  id="crd"
-                  className="text-center"
-                  style={{ backgroundColor: '#64b5f6' }}
-                >
-                  <Row>
-                    <Col md="6" xs="6">
-                      <FaUsers id="myicon" className="text-light" />
-                    </Col>
-                    <Col md="6" xs="6" className="mb-3">
-                      <CardText className="font-weight-bold head text-light">
-                        12
-                      </CardText>
-                      <CardText className="font-weight-bold para text-light">
-                        Total Unique visits
-                      </CardText>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-              <Col sm="3" xs="12" className="mb-3">
-                <Card
-                  body
-                  id="crd"
-                  className="text-center"
-                  style={{ backgroundColor: '#4db6ac' }}
-                >
-                  <Row>
-                    <Col md="6" xs="6">
-                      <FaGlobeAsia id="myicon" className="text-light" />
-                    </Col>
-                    <Col md="6" xs="6" className="mb-3">
-                      <CardText className="font-weight-bold head text-light">
-                        6
-                      </CardText>
-                      <CardText className="font-weight-bold para text-light">
-                        Total Distinct Countries
-                      </CardText>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-            </Row>
-            <br />
-            <h1 style={{ marginLeft: '40%', marginRight: 'auto' }}>
-              Tracking Url{' '}
-            </h1>{' '}
-            <br />
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-around',
-                marginBottom: '10px',
-              }}
-            >
-              <Button color="danger" onClick={toggle}>
-                Create Shortened Url
-              </Button>
-              <Modal isOpen={modal} toggle={toggle}>
-                <ShowForm
-                  toggle={toggle}
-                  setShortUrl={setShortUrl}
-                  setError={setError}
-                />
-              </Modal>
-              <p>
-                {' '}
-                {shortUrl
-                  ? `https://tracking.oyesters.in/new.html?${shortUrl}`
-                  : ''}{' '}
-              </p>
-            </div>
-            {/* <Button>
-              Create
-              <ShowForm />
-            </Button> */}
-            {/* <ShowForm /> */}
-            <Card /* style={{height: '500px'}} */>
-              <FormGroup className="ml-auto mr-4 mt-4">
-                <Input
-                  type="select"
-                  name="select"
-                  id="exampleSelect"
-                  style={{ width: '150px' }}
-                  onChange={changechart}
-                >
-                  <option>Select filter</option>
-                  <option>Last 7 days</option>
-                  <option>Last 4 days</option>
-                </Input>
-              </FormGroup>
-
-              <CardBody style={{}}>
-                {chartstatus ? (
-                  <Line data={data} style={{ marginTop: '-100px' }} />
-                ) : (
-                  <Line data={data2} style={{ marginTop: '-100px' }} />
-                )}
-              </CardBody>
-            </Card>
-            <br />
-            <Card className="h-100 ">
-              <Scrollbars style={{ width: '100%', height: 400 }}>
-                <CardBody style={{ width: '260%' }}>
-                  <Table columns={cols20} data={linkTraking} />
-                </CardBody>
-              </Scrollbars>
-            </Card>
+            <LinkTracking />
             <br />
             <br />
             <br />

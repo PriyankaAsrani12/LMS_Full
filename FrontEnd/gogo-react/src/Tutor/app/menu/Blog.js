@@ -18,8 +18,6 @@ import { AiOutlineExclamation } from 'react-icons/ai';
 import classnames from 'classnames';
 import { Scrollbars } from 'react-custom-scrollbars';
 
-import posts1 from '../../../data/posts1';
-import posts2 from '../../../data/posts2';
 import Table from './Table';
 import axiosInstance from '../../../helpers/axiosInstance';
 import NotificationManager from '../../../components/common/react-notifications/NotificationManager';
