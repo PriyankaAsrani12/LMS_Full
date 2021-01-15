@@ -42,6 +42,20 @@ const Blog = () => {
       sortType: 'basic',
     },
     {
+      Header: 'Total Page Views',
+      accessor: 'total_page_views',
+      cellClass: 'text-muted w-25',
+      Cell: (props) => <p className="ml-4 mr-4">{props.value}</p>,
+      sortType: 'basic',
+    },
+    {
+      Header: 'Unique Page Views',
+      accessor: 'unique_page_views',
+      cellClass: 'text-muted w-25',
+      Cell: (props) => <p className="ml-4 mr-4">{props.value}</p>,
+      sortType: 'basic',
+    },
+    {
       Header: 'Comments',
       accessor: 'comments',
       cellClass: 'text-muted w-20',
@@ -67,6 +81,20 @@ const Blog = () => {
     {
       Header: 'Total number of Blogs',
       accessor: 'tnbp',
+      cellClass: 'text-muted w-25',
+      Cell: (props) => <p className="ml-4 mr-4">{props.value}</p>,
+      sortType: 'basic',
+    },
+    {
+      Header: 'Total Page Views',
+      accessor: 'total_page_views',
+      cellClass: 'text-muted w-25',
+      Cell: (props) => <p className="ml-4 mr-4">{props.value}</p>,
+      sortType: 'basic',
+    },
+    {
+      Header: 'Unique Page Views',
+      accessor: 'unique_page_views',
       cellClass: 'text-muted w-25',
       Cell: (props) => <p className="ml-4 mr-4">{props.value}</p>,
       sortType: 'basic',
@@ -107,12 +135,17 @@ const Blog = () => {
             b_name: doc.blog_writer_name,
             comments: '23 (Static Data)',
             like: '12 (Static Data)',
+            total_page_views: `0 static`,
+            unique_page_views: `0 static`,
           }));
           const data2 = result.data.result2.map((doc) => ({
             b_name: doc.blog_writer_name,
             tnbp: doc.total_blogs,
             comments: '23 (Static Data)',
             like: '12 (Static Data)',
+
+            total_page_views: `0 static`,
+            unique_page_views: `0 static`,
           }));
           setTab1Data(data1);
           setTab2Data(data2);
