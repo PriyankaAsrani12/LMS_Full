@@ -27,7 +27,7 @@ const LibraryItem = db.define('library_items', {
     type: DataTypes.STRING,
     allowNull: false,
     references: {
-      model: 'customer_table',
+      model: 'customer_tables',
       key: 'customer_id',
     },
   },

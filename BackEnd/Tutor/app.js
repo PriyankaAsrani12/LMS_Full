@@ -57,4 +57,6 @@ router.use('/invite/trainer', require('./inviteTrainer'));
 router.use('/stats', require('./stats'));
 router.use('/certificates', require('./certificates/server'));
 router.use('/blog', require('./blog'));
+router.use('/communication', require('./communication'));
+
 module.exports = router;

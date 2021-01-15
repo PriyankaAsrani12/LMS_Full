@@ -3,7 +3,6 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const webp = require('webp-converter');
-var CryptoJS = require('crypto-js');
 
 const auth = require('../../middleware/deepakAuth');
 const {

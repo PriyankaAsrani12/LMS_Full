@@ -17,7 +17,7 @@ const ChapterTable = db.define('chapter_table', {
   customer_id: {
     type: DataTypes.INTEGER(255),
     references: {
-      model: 'customer_table',
+      model: 'customer_tables',
       key: 'customer_id',
     },
   },

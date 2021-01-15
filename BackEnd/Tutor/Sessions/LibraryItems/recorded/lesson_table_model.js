@@ -18,7 +18,7 @@ const LessonTable = db.define('lesson_table', {
   customer_id: {
     type: DataTypes.INTEGER,
     references: {
-      model: 'customer_table',
+      model: 'customer_tables',
       key: 'customer_id',
     },
   },

@@ -143,6 +143,7 @@ function Table({ columns, data, handleReloadTable, divided = false }) {
                     )}
                     <PopoverItem
                       id={row.original.id}
+                      type={row.original.type == 'Recorded Session' ? 1 : 0}
                       handleReloadTable={handleReloadTable}
                     />
                   </div>

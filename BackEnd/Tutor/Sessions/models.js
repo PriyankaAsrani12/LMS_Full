@@ -11,7 +11,10 @@ const Session = db.define('session_table', {
   customer_id: {
     type: DataTypes.INTEGER(255),
     allowNull: true,
-    // defaultValue: Null
+    references: {
+      model: 'customer_tables',
+      key: 'customer_id',
+    },
   },
   session_type: {
     type: DataTypes.STRING,

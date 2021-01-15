@@ -140,18 +140,34 @@ const User = db.define('customer_table', {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  // customer_storage_zone_name: {
-  //   type:DataTypes.STRING,
-  //   allowNull:false
-  // },
-  // customer_pull_zone_name: {
-  //   type:DataTypes.STRING,
-  //   allowNull:false
-  // },
-  // customer_cdn_url: {
-  //   type:DataTypes.STRING,
-  //   allowNull:false
-  // }
+  customer_storage_zone_name: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  customer_pull_zone_name: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  customer_cdn_url: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  communication_email_signup: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: 0,
+  },
+  communication_email_on_purchase: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: 0,
+  },
+  communication_message_signup: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: 0,
+  },
+  communication_message_purchase: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: 0,
+  },
 });
 
 db.sync();

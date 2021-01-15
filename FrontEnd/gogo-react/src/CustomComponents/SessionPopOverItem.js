@@ -11,10 +11,9 @@ import { simplelineicons } from '../data/icons';
 import axiosInstance from '../helpers/axiosInstance';
 import NotificationManager from '../components/common/react-notifications/NotificationManager';
 
-const SessionPopoverItem = ({ id, handleReloadTable }) => {
+const SessionPopoverItem = ({ id, type, handleReloadTable }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [error, setError] = useState(null);
-  console.log(id);
   const toggle = () => setDropdownOpen((prevState) => !prevState);
 
   useEffect(() => {
@@ -26,7 +25,7 @@ const SessionPopoverItem = ({ id, handleReloadTable }) => {
     toggle();
     try {
       const result = await axiosInstance.delete(
-        `/tutor/sessions/deleteSession/${id}`
+        `/tutor/sessions/deleteSession/${id}/${type}`
       );
       if (!result.data.success) {
         try {

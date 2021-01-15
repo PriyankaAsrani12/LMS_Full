@@ -58,7 +58,7 @@ const ThirdPartyIntegration = () => {
     // setTimeout(() => {
     getThirdPartyDetails();
     // }, 1500);
-  }, [success, error]);
+  }, []);
 
   const handleSubmit = async () => {
     const values = { customer_zoom_email, customer_zoom_jwt_token };

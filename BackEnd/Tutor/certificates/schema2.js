@@ -19,10 +19,10 @@ const Template = db.define('certificates', {
   customer_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    references: {
-      model: 'customer_tables',
-      key: 'customer_id',
-    },
+    // references: {
+    //   model: 'customer_tables',
+    //   key: 'customer_id',
+    // },
   },
   name: {
     type: DataTypes.STRING,

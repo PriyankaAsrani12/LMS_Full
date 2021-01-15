@@ -11,13 +11,13 @@ import {
 } from 'reactstrap';
 import Switch from 'rc-switch';
 
-import { Colxx } from '../components/common/CustomBootstrap';
-import './Customcss.css';
-import img from './bebinca-thumb.jpg';
-import NotificationManager from '../components/common/react-notifications/NotificationManager';
-import axiosInstance from '../helpers/axiosInstance';
+import { Colxx } from '../../components/common/CustomBootstrap';
+import '../Customcss.css';
+import img from '../bebinca-thumb.jpg';
+import NotificationManager from '../../components/common/react-notifications/NotificationManager';
+import axiosInstance from '../../helpers/axiosInstance';
 
-const EmailCommunication = () => {
+const CourseAlert = () => {
   const [error, setError] = useState(null);
 
   const [courses, setCourses] = useState([]);
@@ -37,18 +37,20 @@ const EmailCommunication = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const result = await axiosInstance.get('/tutor/communication/session');
+        const result = await axiosInstance.get(
+          '/tutor/communication/directmessage'
+        );
         console.log(result);
         if (result.data.success) {
           const data = result.data.result.map((doc) => ({
             name: doc.session_name,
             id: doc.session_id,
-            status: doc.communication_email ? true : false,
+            status: doc.communication_message ? true : false,
             notificationperiod:
-              doc.communication_email_days === 999
+              doc.communication_message_days === 999
                 ? null
-                : doc.communication_email
-                ? doc.communication_email_days
+                : doc.communication_message
+                ? doc.communication_message_days
                 : null,
           }));
           setCourses(data);
@@ -73,7 +75,7 @@ const EmailCommunication = () => {
   const changeCourses = async (index, id) => {
     try {
       const values = {
-        communication_email: !courses[index].status,
+        communication_message: !courses[index].status,
         session_id: id,
       };
       const result = await axiosInstance.put('/tutor/communication/toggle', {
@@ -112,8 +114,8 @@ const EmailCommunication = () => {
       else {
         const values = {
           session_id: id,
-          communication_email: 1,
-          communication_email_days: notificationperiod,
+          communication_message: 1,
+          communication_message_days: notificationperiod,
         };
         const result = await axiosInstance.put(
           '/tutor/communication/mail/changePeriod',
@@ -139,7 +141,7 @@ const EmailCommunication = () => {
   };
 
   return (
-    <div>
+    <div style={{ marginBottom: '5rem' }}>
       <h1 className="mb-4 headingCA">Course Alert</h1>
 
       {courses.map((item, index) => {
@@ -164,23 +166,24 @@ const EmailCommunication = () => {
             {item.status ? (
               <Row>
                 <Colxx sm="6" md="6">
-                  <div className="front-end box">
+                  <>
+                    {' '}
                     <Card
-                      className="p-4 mb-3 ml-4 inside"
-                      style={{ minWidth: '200px', minHeight: '200px' }}
+                      body
+                      style={{
+                        width: '60%',
+                        marginLeft: '80px',
+                        marginTop: '20px',
+                      }}
                     >
-                      <CardImg
-                        top
-                        width="100%"
-                        src={img}
-                        alt="Theme1 img"
-                        className="emailimg"
-                      />
-                      <CardBody>
-                        <Button>Edit</Button>
-                      </CardBody>
-                    </Card>
-                  </div>
+                      Lorem Ipsum is simply dummy text of the printing and
+                      typesetting industry. Lorem Ipsum has been the industry's
+                      standard dummy text ever since the 1500s, when an unknown
+                      printer took a galley of type and scrambled it to make a
+                      type specimen book.
+                    </Card>{' '}
+                    <br /> <br />{' '}
+                  </>
                 </Colxx>
                 <Colxx sm="6" md="6">
                   <p>
@@ -221,4 +224,4 @@ const EmailCommunication = () => {
   );
 };
 
-export default EmailCommunication;
+export default CourseAlert;

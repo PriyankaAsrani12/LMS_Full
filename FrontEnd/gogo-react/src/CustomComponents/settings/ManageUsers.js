@@ -131,7 +131,7 @@ const ManageUsers = () => {
     setTimeout(() => {
       getInvitedUsers();
     }, 1500);
-  }, [success, error, setSuccess, setError]);
+  }, []);
   const cols = [
     {
       Header: 'Name',

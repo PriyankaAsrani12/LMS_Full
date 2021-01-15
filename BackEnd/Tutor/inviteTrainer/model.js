@@ -11,7 +11,7 @@ const InviteTrainer = db.define('invited_user', {
     type: INTEGER,
     allowNull: false,
     references: {
-      model: 'customer_table',
+      model: 'customer_tables',
       key: 'customer_id',
     },
   },

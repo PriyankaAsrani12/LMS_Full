@@ -6,8 +6,9 @@ const router = require('express').Router();
 const auth = require('../middleware/deepakAuth');
 const { Op } = require('sequelize');
 const webp = require('webp-converter');
-const ChapterTable = require('./LibraryItems/recorded/chapter_table_model');
-const LessonTable = require('./LibraryItems/recorded/lesson_table_model');
+const { ChapterTable } = require('./LibraryItems/recorded/chapter_table_model');
+const { LessonTable } = require('./LibraryItems/recorded/lesson_table_model');
+const Communication = require('../communication/model');
 
 router.post('/createLiveSession', auth, async (req, res) => {
   console.log('❓', req.body);
@@ -122,8 +123,18 @@ router.post('/createLiveSession', auth, async (req, res) => {
       session_zoom_code: Zoom_res.id,
       session_zoom_password: Zoom_res.password,
     });
-    console.log(session.session_start_time);
-    // console.log('new Session created', session)
+    console.log(session.session_id);
+
+    const communicationData = await Communication.create({
+      session_id: session.session_id,
+      customer_id: req.user.customer_id,
+    });
+
+    if (!communicationData)
+      return res.status(400).json({
+        success: 0,
+        error: 'error while creating communication record',
+      });
     return res.status(200).json({
       success: 1,
       session,
@@ -214,7 +225,16 @@ router.post('/createRecordedSession', auth, async (req, res) => {
       session_zoom_code: Zoom_res.id,
       session_zoom_password: Zoom_res.password,
     });
-    // console.log('new Session created', session)
+    const communicationData = await Communication.create({
+      session_id: session.session_id,
+      customer_id: req.user.customer_id,
+    });
+
+    if (!communicationData)
+      return res.status(400).json({
+        success: 0,
+        error: 'error while creating communication record',
+      });
     if (!session)
       return res.status(500).json({
         success: 0,
@@ -539,35 +559,43 @@ router.post('/updateRecordedSession', auth, async (req, res) => {
   }
 });
 
-router.delete('/deleteSession/:id', async (req, res) => {
-  console.log(req.body);
+router.delete('/deleteSession/:id/:type', async (req, res) => {
+  console.log(req.params);
   try {
     if (!req.params.id)
       return res.status(400).json({
         success: 0,
         error: 'Session id not provided',
       });
-    const deletedChapters = await ChapterTable.destroy({
-      where: {
-        session_id: req.params.id,
-      },
-    });
-    if (!deletedChapters)
+    if (!req.params.type)
       return res.status(400).json({
         success: 0,
-        error: 'Unable to delete chapters',
+        error: 'Session type not provided',
       });
+    if (req.params.type == 1) {
+      const deletedChapters = await ChapterTable.destroy({
+        where: {
+          session_id: req.params.id,
+        },
+      });
+      // if (!deletedChapters)
+      //   return res.status(400).json({
+      //     success: 0,
+      //     error: 'Unable to delete chapters',
+      //   });
 
-    const deletedLessons = await LessonTable.destroy({
-      where: {
-        session_id: req.params.id,
-      },
-    });
-    if (!deletedLessons)
-      return res.status(400).json({
-        success: 0,
-        error: 'Unable to delete lessons',
+      const deletedLessons = await LessonTable.destroy({
+        where: {
+          session_id: req.params.id,
+        },
       });
+      // if (!deletedLessons)
+      //   return res.status(400).json({
+      //     success: 0,
+      //     error: 'Unable to delete lessons',
+      //   });
+    }
+
     const result = await Session.destroy({
       where: {
         session_id: req.params.id,
