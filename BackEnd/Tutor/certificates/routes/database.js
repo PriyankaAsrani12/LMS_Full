@@ -12,6 +12,7 @@ route.get('/2', async (req, res) => {
 
 route.get('/2/:name', async (req, res) => {
   try {
+    console.log(req.params.name);
     // const datavalue = await htmlthemes.findById(req.params.id);
     const datavalue = await Template.findOne({
       where: {

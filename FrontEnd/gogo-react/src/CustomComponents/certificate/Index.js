@@ -10,6 +10,7 @@ const Index = () => {
   const [theme, setTheme] = useState('1');
   const [certificates, setCertificates] = useState([]);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   let selectme = (e) => {
     if (e == 'select') {
@@ -35,6 +36,18 @@ const Index = () => {
   }, [error, setError]);
 
   useEffect(() => {
+    if (error)
+      NotificationManager.warning(
+        'Certificate Deleted Successfully',
+        'Certicates Delete Success',
+        3000,
+        3000,
+        null,
+        ''
+      );
+  }, [success]);
+
+  useEffect(() => {
     const getData = async () => {
       try {
         const result = await axiosInstance.get('/tutor/certificates/findAll');
@@ -57,8 +70,22 @@ const Index = () => {
       }
     };
     getData();
-  }, []);
+  }, [success]);
 
+  const handleDelete = async (id) => {
+    try {
+      const result = await axiosInstance.delete(`/tutor/certificates/${id}`);
+      if (result.data.success) {
+        setSuccess(true);
+      }
+    } catch (error) {
+      try {
+        setError(error.response.data.error);
+      } catch (error) {
+        setError('Unable to delete certificate');
+      }
+    }
+  };
   return (
     <>
       <Button
@@ -97,16 +124,17 @@ const Index = () => {
                     <CardBody>
                       <Button
                         className="float-left butn"
-                        onClick={() => selectme('select')}
+                        onClick={() => handleDelete(doc.certificate_id)}
                       >
-                        {select}
+                        Delete
                       </Button>
                       <Button
                         className="float-right butn"
                         onClick={() => {
                           console.log('edit ');
                           window.open(
-                            `http://35.154.109.203:5000/tutor/certificates/api/database/2/${doc.certificate_id}`
+                            // `http://35.154.109.203:5000/tutor/certificates/api/database/2/${doc.certificate_id}`
+                            `http://35.154.109.203:5000/tutor/certificates/edit/${doc.certificate_id}`
                           );
                         }}
                       >
