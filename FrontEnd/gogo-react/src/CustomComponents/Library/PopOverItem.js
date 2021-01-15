@@ -52,6 +52,19 @@ const PopoverItem = ({ id, type, handleReloadTable }) => {
     }
   };
 
+  const handleDownload = async () => {
+    try {
+      const result = await axiosInstance.get(`/tutor/library/download/${id}`);
+      console.log(result);
+    } catch (error) {
+      try {
+        setError(error.response.data.error);
+      } catch (error) {
+        setError('Can not delete library item');
+      }
+    }
+  };
+
   return (
     <span>
       <Dropdown isOpen={dropdownOpen} toggle={toggle}>
@@ -77,13 +90,13 @@ const PopoverItem = ({ id, type, handleReloadTable }) => {
             ''
           )}
 
-          {/* <DropdownItem
+          <DropdownItem
             onClick={toggle}
             className={`glyph-icon ${simplelineicons[146]} mr-2`}
             style={{ fontSize: '1.1rem' }}
           >
             <span className="ml-4">Preview</span>
-          </DropdownItem> */}
+          </DropdownItem>
 
           <DropdownItem
             onClick={handleDelete}
@@ -92,13 +105,13 @@ const PopoverItem = ({ id, type, handleReloadTable }) => {
           >
             <span className="ml-4">Delete</span>
           </DropdownItem>
-          {/* <DropdownItem
-            onClick={toggle}
+          <DropdownItem
+            onClick={handleDownload}
             className={`glyph-icon ${simplelineicons[143]} mr-2`}
             style={{ fontSize: '1.1rem' }}
           >
             <span className="ml-4">Download</span>
-          </DropdownItem> */}
+          </DropdownItem>
         </DropdownMenu>
       </Dropdown>
     </span>

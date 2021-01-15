@@ -193,37 +193,46 @@ router.delete('/:id', auth, async (req, res) => {
 router.get('/download/:id', auth, async (req, res) => {
   try {
     // let libraryContent = await  Library.find({ library_item_id:req.params.id });
+    if (!req.params.id)
+      return res.status(400).json({
+        success: 0,
+        error: 'Item Id not provided',
+      });
+    let sql = `SELECT * FROM library_items WHERE item_id = ${req.params.id}`;
+    const libraryContent = await db.query(sql);
+    if (!libraryContent)
+      return res.status(400).json({
+        success: 0,
+        error: 'unable to download',
+      });
 
-    let sql = `SELECT * FROM LIBRARY_TABLE WHERE LIBRARY_ITEM_ID = ${req.params.id}`;
-    let query = await db.query(sql, (err, libraryContent) => {
-      if (err) throw err;
-      console.log('RAN successfully');
+    console.log('RAN successfully', libraryContent);
 
-      let absPath = libraryContent[0].library_item_location; // Absolute path to the server storage folder
-      let fileName = libraryContent[0].library_item_name; // The default name the browser will use to store file
+    let absPath = process.env.FILE_UPLOAD_PATH_CLIENT;
+    // let absPath = libraryContent[0].library_item_location; // Absolute path to the server storage folder
+    let fileName = libraryContent[0].item_name; // The default name the browser will use to store file
 
-      // console.log(absPath);
+    // console.log(absPath);
 
-      if (
-        libraryContent[0].library_item_type == 'quiz' ||
-        libraryContent[0].library_item_type == 'handout' ||
-        libraryContent[0].library_item_type == 'assignment'
-      ) {
-        absPath = `${absPath}\\${fileName}.pdf`;
-        fileName = fileName + '-Report.pdf';
-      } else if (
-        libraryContent[0].library_item_type == 'video' ||
-        libraryContent[0].library_item_type == 'recording'
-      ) {
-        absPath = `${absPath}\\${fileName}.mp4`;
-        console.log(absPath);
-        fileName = fileName + '-Video.mp4';
-      } else {
-        fileName = fileName + '-ERROR.pdf';
-      }
+    if (
+      libraryContent[0].library_item_type == 'quiz' ||
+      libraryContent[0].library_item_type == 'handout' ||
+      libraryContent[0].library_item_type == 'assignment'
+    ) {
+      absPath = `${absPath}\\${fileName}.pdf`;
+      fileName = fileName + '-Report.pdf';
+    } else if (
+      libraryContent[0].library_item_type == 'video' ||
+      libraryContent[0].library_item_type == 'recording'
+    ) {
+      absPath = `${absPath}\\${fileName}.mp4`;
+      console.log(absPath);
+      fileName = fileName + '-Video.mp4';
+    } else {
+      fileName = fileName + '-ERROR.pdf';
+    }
 
-      res.download(absPath, fileName);
-    });
+    res.download(absPath, fileName);
   } catch (err) {
     console.error(err);
     res.json({
