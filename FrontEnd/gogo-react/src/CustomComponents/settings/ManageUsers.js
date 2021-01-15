@@ -17,6 +17,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 
 import NotificationManager from '../../components/common/react-notifications/NotificationManager';
 import axiosInstance from '../../helpers/axiosInstance';
+import NoDataFound from '../NoDataFound';
 
 const ManageUsers = () => {
   const [error, setError] = useState(null);
@@ -215,64 +216,70 @@ const ManageUsers = () => {
       >
         Invite User
       </Button>
-      <Row>
-        <Col md="12" xs="12">
-          <Card className="h-100  ">
-            <Scrollbars style={{ width: '100%', height: 400 }}>
-              <CardBody>
-                <Table columns={cols} data={data} />
-              </CardBody>
-            </Scrollbars>
-          </Card>
-        </Col>
-      </Row>
-      <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Modal title</ModalHeader>
-        <Form>
-          <ModalBody>
-            <label>First Name</label>
-            <Input
-              type="text"
-              placeholder="Example: John"
-              name="invited_user_first_name"
-              value={inviteUser.invited_user_first_name}
-              onChange={handleInviteUserChange}
-            />
-            <label>Last Name</label>
-            <Input
-              type="text"
-              placeholder="Example: Doe"
-              name="invited_user_last_name"
-              value={inviteUser.invited_user_last_name}
-              onChange={handleInviteUserChange}
-            />
-            <label>Role</label>
-            <Input
-              type="text"
-              placeholder="Example: Tutor"
-              name="invited_user_role"
-              value={inviteUser.invited_user_role}
-              onChange={handleInviteUserChange}
-            />
-            <label>Email</label>
-            <Input
-              type="email"
-              placeholder="Example: johndoe@gmail.com"
-              name="invited_user_email"
-              value={inviteUser.invited_user_email}
-              onChange={handleInviteUserChange}
-            />
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={handleInviteUserSubmit}>
-              Submit
-            </Button>{' '}
-            <Button color="secondary" onClick={toggle}>
-              Cancel
-            </Button>
-          </ModalFooter>
-        </Form>
-      </Modal>
+      {!data.length ? (
+        <NoDataFound />
+      ) : (
+        <>
+          <Row>
+            <Col md="12" xs="12">
+              <Card className="h-100  ">
+                <Scrollbars style={{ width: '100%', height: 400 }}>
+                  <CardBody>
+                    <Table columns={cols} data={data} />
+                  </CardBody>
+                </Scrollbars>
+              </Card>
+            </Col>
+          </Row>
+          <Modal isOpen={modal} toggle={toggle}>
+            <ModalHeader toggle={toggle}>Modal title</ModalHeader>
+            <Form>
+              <ModalBody>
+                <label>First Name</label>
+                <Input
+                  type="text"
+                  placeholder="Example: John"
+                  name="invited_user_first_name"
+                  value={inviteUser.invited_user_first_name}
+                  onChange={handleInviteUserChange}
+                />
+                <label>Last Name</label>
+                <Input
+                  type="text"
+                  placeholder="Example: Doe"
+                  name="invited_user_last_name"
+                  value={inviteUser.invited_user_last_name}
+                  onChange={handleInviteUserChange}
+                />
+                <label>Role</label>
+                <Input
+                  type="text"
+                  placeholder="Example: Tutor"
+                  name="invited_user_role"
+                  value={inviteUser.invited_user_role}
+                  onChange={handleInviteUserChange}
+                />
+                <label>Email</label>
+                <Input
+                  type="email"
+                  placeholder="Example: johndoe@gmail.com"
+                  name="invited_user_email"
+                  value={inviteUser.invited_user_email}
+                  onChange={handleInviteUserChange}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" onClick={handleInviteUserSubmit}>
+                  Submit
+                </Button>{' '}
+                <Button color="secondary" onClick={toggle}>
+                  Cancel
+                </Button>
+              </ModalFooter>
+            </Form>
+          </Modal>
+        </>
+      )}
     </>
   );
 };

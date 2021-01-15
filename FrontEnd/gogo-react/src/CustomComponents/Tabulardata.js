@@ -53,7 +53,7 @@ function Table({ columns, data, handleReloadTable, divided = false }) {
   return (
     <>
       <table
-        style={{ margin: '0 auto' }}
+        style={{ margin: '0 auto', paddingBottom: '10rem' }}
         {...getTableProps()}
         className={`r-table table ${classnames({ 'table-divided': divided })}`}
       >

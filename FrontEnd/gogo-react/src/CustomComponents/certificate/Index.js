@@ -3,6 +3,7 @@ import { Card, Row, Col, CardBody, Button, CardImg } from 'reactstrap';
 
 import axiosInstance from '../../helpers/axiosInstance';
 import NotificationManager from '../../components/common/react-notifications/NotificationManager';
+import NoDataFound from '../NoDataFound';
 
 const Index = () => {
   let [select, setSelect] = useState('Select');
@@ -97,54 +98,57 @@ const Index = () => {
       >
         Create A Certificate Template
       </Button>
-      <Row className="mt-1" style={{ marginLeft: '15px' }}>
-        <label>
-          <input
-            type="radio"
-            checked={theme === '1'}
-            value="1"
-            onChange={(e) => setTheme(e.target.value)}
-          />
-          <div className="">
-            <Row className="mt-4" style={{ marginBottom: '2rem' }}>
-              {certificates.map((doc) => {
-                return (
-                  <Card
-                    className="p-4 ml-4"
-                    style={{ minWidth: '270px', minHeight: '200px' }}
-                  >
-                    <CardImg
-                      top
-                      width="100%"
-                      src={require('../bebinca-thumb.jpg')}
-                      alt="Theme1 img"
-                      className="mb-3"
-                    />
-                    {doc.name}
-                    <CardBody>
-                      <Button
-                        className="float-left butn"
-                        onClick={() => handleDelete(doc.certificate_id)}
-                      >
-                        Delete
-                      </Button>
-                      <Button
-                        className="float-right butn"
-                        onClick={() => {
-                          console.log('edit ');
-                          window.open(
-                            // `http://35.154.109.203:5000/tutor/certificates/api/database/2/${doc.certificate_id}`
-                            `http://35.154.109.203:5000/tutor/certificates/edit/${doc.certificate_id}`
-                          );
-                        }}
-                      >
-                        Edit
-                      </Button>
-                    </CardBody>
-                  </Card>
-                );
-              })}
-              {/* <Card
+      {!certificates.length ? (
+        <NoDataFound />
+      ) : (
+        <Row className="mt-1" style={{ marginLeft: '15px' }}>
+          <label>
+            <input
+              type="radio"
+              checked={theme === '1'}
+              value="1"
+              onChange={(e) => setTheme(e.target.value)}
+            />
+            <div className="">
+              <Row className="mt-4" style={{ marginBottom: '2rem' }}>
+                {certificates.map((doc) => {
+                  return (
+                    <Card
+                      className="p-4 ml-4"
+                      style={{ minWidth: '270px', minHeight: '200px' }}
+                    >
+                      <CardImg
+                        top
+                        width="100%"
+                        src={require('../bebinca-thumb.jpg')}
+                        alt="Theme1 img"
+                        className="mb-3"
+                      />
+                      {doc.name}
+                      <CardBody>
+                        <Button
+                          className="float-left butn"
+                          onClick={() => handleDelete(doc.certificate_id)}
+                        >
+                          Delete
+                        </Button>
+                        <Button
+                          className="float-right butn"
+                          onClick={() => {
+                            console.log('edit ');
+                            window.open(
+                              // `http://35.154.109.203:5000/tutor/certificates/api/database/2/${doc.certificate_id}`
+                              `http://35.154.109.203:5000/tutor/certificates/edit/${doc.certificate_id}`
+                            );
+                          }}
+                        >
+                          Edit
+                        </Button>
+                      </CardBody>
+                    </Card>
+                  );
+                })}
+                {/* <Card
                 className="p-4 ml-4"
                 style={{ minWidth: '270px', minHeight: '200px' }}
               >
@@ -195,10 +199,11 @@ const Index = () => {
                   <Button className="float-right butn">Edit</Button>
                 </CardBody>
               </Card> */}
-            </Row>
-          </div>
-        </label>
-      </Row>
+              </Row>
+            </div>
+          </label>
+        </Row>
+      )}
     </>
   );
 };
