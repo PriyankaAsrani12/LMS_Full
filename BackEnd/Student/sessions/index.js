@@ -178,6 +178,14 @@ router.get('/details/:id', verifyToken, async (req, res) => {
     const sql3 = `SELECT item_id,item_name from library_items WHERE session_id=${req.params.id}`;
     const LibraryItems = await db.query(sql3, { type: db.QueryTypes.SELECT });
 
+    const sql4 = `SELECT cart_item_status FROM cart_tables WHERE session_id=${req.params.id} AND student_id=${req.user.student_id}`;
+    const status = await db.query(sql4, {
+      type: db.QueryTypes.SELECT,
+    });
+    let cart_item_status = null;
+    if (status && status[0] && status[0].cart_item_status)
+      cart_item_status = status[0].cart_item_status;
+
     const ans = [];
 
     const getIndex = (doc) => {
@@ -240,6 +248,7 @@ router.get('/details/:id', verifyToken, async (req, res) => {
       success: 1,
       session: sessionData[0],
       ans,
+      cart_item_status,
     });
   } catch (err) {
     console.log(err);

@@ -6,5 +6,6 @@ router.use('/blog', require('./blog'));
 router.use('/courses', require('./courses'));
 router.use('/referal', require('./referalLink'));
 router.use('/mycourses', require('./mycourses'));
+router.use('/cart', require('./cart'));
 
 module.exports = router;
