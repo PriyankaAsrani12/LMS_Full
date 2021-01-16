@@ -9,28 +9,28 @@ const Course = db.define('student_purchase', {
   },
   student_id: {
     type: INTEGER,
-    references: {
-      model: 'student_table',
-      key: 'student_id',
-    },
+    // references: {
+    //   model: 'student_table',
+    //   key: 'student_id',
+    // },
   },
   customer_id: {
     type: INTEGER,
-    references: {
-      model: 'customer_table',
-      key: 'customer_id',
-    },
+    // references: {
+    //   model: 'customer_table',
+    //   key: 'customer_id',
+    // },
   },
   session_id: {
     type: INTEGER,
-    references: {
-      model: 'session_table',
-      key: 'session_id',
-    },
+    // references: {
+    //   model: 'session_table',
+    //   key: 'session_id',
+    // },
   },
   purchase_razorpay_payment_id: {
     type: STRING,
-    allowNull: false,
+    allowNull: true,
   },
   purchase_razorpay_order_id: {
     type: STRING,
@@ -46,15 +46,15 @@ const Course = db.define('student_purchase', {
   },
   purchase_razorpay_payment_time: {
     type: STRING,
-    allowNull: false,
+    allowNull: true,
   },
   purchase_razorpay_payment_email: {
     type: STRING,
-    allowNull: false,
+    allowNull: true,
   },
   purchase_razorpay_payment_contact: {
     type: STRING,
-    allowNull: false,
+    allowNull: true,
   },
   purchase_razorpay_payment_status: {
     type: BOOLEAN,
