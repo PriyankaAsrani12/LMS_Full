@@ -9,6 +9,8 @@ const Student = require('../loginSignUp/model');
 const RazorpayModel = require('./RazorpayModel');
 const Course = require('../courses/model');
 
+router.use('/coupon', require('./coupon'));
+
 router.get('/', verifyToken, async (req, res) => {
   try {
     const sql = `SELECT 
@@ -198,15 +200,12 @@ router.post('/verification', async (req, res) => {
 
     console.log(updatedPaymentRecord);
 
-    //  Remove all cart items
     const result = await Cart.update(
       { cart_item_status: 'purchased' },
       {
         where: { cart_item_status: 'cart' },
       }
     );
-
-    console.log(deletedResult);
 
     result.forEach(async (doc) => {
       const update = await Course.update(
