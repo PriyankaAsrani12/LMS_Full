@@ -254,11 +254,6 @@ router.post('/users/reset-password', async (req, res) => {
         });
       console.log(decoded);
 
-      if (Date.now() - decoded.valid > 86400000)
-        return res.status(400).json({
-          success: 0,
-          error: 'The link is expired',
-        });
       const salt = bcrypt.genSaltSync(10);
       new_hashed_password = await bcrypt.hashSync(newPassword, salt);
 

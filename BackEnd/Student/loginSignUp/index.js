@@ -66,7 +66,7 @@ router.post('/register', async (req, res) => {
     //     success:1,
     //     message:"User Successfully Created"
     // });
-    res.redirect(307, '/auth/login');
+    res.redirect(307, '/student/auth/login');
   } catch (err) {
     console.log(err);
     return res.status(500).json({
@@ -162,9 +162,17 @@ router.post('/forgotPassword', async (req, res) => {
         error: 'Email not registered',
       });
     } else {
-      let temp = await sendPasswordResetEmail(email);
-      console.log('🚀', temp);
+      const encryptedData = jwt.sign(
+        { email, valid: Date.now() },
+        process.env.JWT_KEY,
+        {
+          expiresIn: '1d',
+        }
+      );
+      console.log(encryptedData);
 
+      let temp = await sendPasswordResetEmail(email, encryptedData);
+      console.log('🚀', temp);
       return res.status(200).json({
         success: 1,
         error: '',
@@ -183,22 +191,32 @@ router.post('/forgotPassword', async (req, res) => {
 router.post('/reset-password', async (req, res) => {
   try {
     const { email, newPassword } = req.body.values;
-    const salt = bcrypt.genSaltSync(10);
-    new_hashed_password = await bcrypt.hashSync(newPassword, salt);
 
-    const sqlCheck = await Student.update(
-      { student_password: new_hashed_password },
-      { where: { student_email: email } }
-    );
-    if (sqlCheck == 0)
-      return res.status(400).json({
-        success: 0,
-        error: 'Mail not registered',
+    jwt.verify(email, process.env.JWT_KEY, async (err, decoded) => {
+      if (err)
+        return res.status(400).json({
+          success: 0,
+          error: 'Invalid Code',
+        });
+      console.log(decoded);
+
+      const salt = bcrypt.genSaltSync(10);
+      new_hashed_password = await bcrypt.hashSync(newPassword, salt);
+
+      const sqlCheck = await Student.update(
+        { student_password: new_hashed_password },
+        { where: { student_email: email } }
+      );
+      if (sqlCheck == 0)
+        return res.status(400).json({
+          success: 0,
+          error: 'Mail not registered',
+        });
+
+      return res.status(200).json({
+        success: 1,
+        error: '',
       });
-
-    return res.status(200).json({
-      success: 1,
-      error: '',
     });
   } catch (err) {
     console.log('final err', err);
