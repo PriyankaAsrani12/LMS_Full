@@ -49,7 +49,7 @@ router.post('/register', async (req, res) => {
 
     // Take customer_id from database according to particular subdomain ...
     // send mail if value of communication_email_signup is 1
-    const customer_id = 2;
+    const customer_id = 1;
 
     const customer = await db.query(
       `SELECT communication_email_signup FROM customer_tables WHERE customer_id=${customer_id}`,
