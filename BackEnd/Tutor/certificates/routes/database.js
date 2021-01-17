@@ -77,4 +77,38 @@ route.post('/template', async (req, res) => {
   }
 });
 
+route.post('/template/edit', async (req, res) => {
+  try {
+    console.log(req.body);
+    const { certificate_id, name, doctemp, operations, image_url } = req.body;
+
+    const value = await Template.update(
+      {
+        name,
+        doctemp,
+        operations,
+        image_url,
+      },
+      { where: { certificate_id } }
+    );
+
+    if (!value)
+      return res.status(400).json({
+        status: false,
+        error: 'could not update template',
+      });
+
+    return res.status(200).json({
+      status: true,
+      value,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({
+      status: false,
+      err,
+    });
+  }
+});
+
 exports = module.exports = route;

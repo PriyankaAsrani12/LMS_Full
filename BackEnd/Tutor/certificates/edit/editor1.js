@@ -6,7 +6,9 @@ let max_aspect_ratio,
   max_height,
   max_width = 1;
 let save_pending = false;
+
 let image_url = null;
+let certificate_id = null;
 
 let state = {
   multiplier: 1,
@@ -20,9 +22,6 @@ let state = {
 };
 
 async function getop() {
-  console.log(
-    window.location.pathname.slice(25, window.location.pathname.length - 1)
-  );
   const id = window.location.pathname.slice(
     25,
     window.location.pathname.length - 1
@@ -30,9 +29,16 @@ async function getop() {
   await $.get(`/tutor/certificates/api/database/2/${id}`, async (data) => {
     console.log(data);
     const opr = JSON.parse(data.operations);
-    image_url = data.image_url;
-    console.log(opr);
+
+    certificate_id = data.certificate_id;
+
+    // image_url = data.image_url; //(This url is coming from db)
+    image_url =
+      'https://image.shutterstock.com/image-photo/bright-spring-view-cameo-island-260nw-1048185397.jpg';
+    console.log(opr, data.name, document.getElementById('temp-name'));
     operations = opr;
+    document.getElementById('temp-name').value = data.name;
+    livePreview(null, image_url);
     // operations = await data.temp.operations;
   });
 }
@@ -1083,30 +1089,26 @@ getop().then(() => {
       });
     });
   }
-
-  console.log(operations);
-
-  // let operations =
-  // '[{&quot;src&quot;:&quot;preview.jpg&quot;,&quot;w&quot;:6600,&quot;h&quot;:4560},{&quot;type&quot;:&quot;text&quot;,&quot;name&quot;:&quot;Name&quot;,&quot;value&quot;:&quot;Y.
-  // Manoj Kumar
-  // Reddy&quot;,&quot;x&quot;:&quot;3390&quot;,&quot;y&quot;:&quot;2391&quot;,&quot;color&quot;:&quot;#1792b7&quot;,&quot;font&quot;:&quot;Arial
-  // Rounded&quot;,&quot;size&quot;:&quot;230&quot;,&quot;align&quot;:&quot;center&quot;,&quot;style&quot;:&quot;normal&quot;},{&quot;type&quot;:&quot;text&quot;,&quot;name&quot;:&quot;College
-  // Name&quot;,&quot;value&quot;:&quot;ABCD Institute
-  // &quot;,&quot;x&quot;:&quot;3304&quot;,&quot;y&quot;:&quot;2112&quot;,&quot;color&quot;:&quot;#000000&quot;,&quot;font&quot;:&quot;Arial
-  // Rounded&quot;,&quot;size&quot;:&quot;115&quot;,&quot;align&quot;:&quot;center&quot;,&quot;style&quot;:&quot;normal&quot;},{&quot;type&quot;:&quot;text&quot;,&quot;name&quot;:&quot;Registration
-  // Id&quot;,&quot;value&quot;:&quot;FST001&quot;,&quot;x&quot;:&quot;1206&quot;,&quot;y&quot;:&quot;4168&quot;,&quot;color&quot;:&quot;#000000&quot;,&quot;font&quot;:&quot;Arial
-  // Rounded&quot;,&quot;size&quot;:&quot;115&quot;,&quot;align&quot;:&quot;center&quot;,&quot;style&quot;:&quot;normal&quot;},{&quot;name&quot;:&quot;QR&quot;,&quot;type&quot;:&quot;image&quot;,&quot;src&quot;:null,&quot;x&quot;:1490,&quot;y&quot;:357,&quot;w&quot;:&quot;700&quot;,&quot;h&quot;:&quot;700&quot;}]'
 });
-function livePreview(e) {
-  // console.log(e)
-  if (e.files.length == 0) return null;
+
+function livePreview(e, currentImage = null) {
+  console.log(currentImage);
+  if (e && e.files.length == 0 && currentImage == null) return null;
+
   state.newbase = true;
-  document.getElementById('base-image-src-name').innerText = e.files[0].name;
-  document.getElementById('base-image-pre').src = window.URL.createObjectURL(
-    e.files[0]
-  );
-  // console.log(window.URL.createObjectURL(e.files[0]))
-  state.temp = e.files[0];
+
+  if (e && e.files.length) {
+    document.getElementById('base-image-src-name').innerText = e.files[0].name;
+    document.getElementById('base-image-pre').src = window.URL.createObjectURL(
+      e.files[0]
+    );
+    state.temp = e.files[0];
+  } else {
+    document.getElementById('base-image-pre').src = image_url;
+
+    console.log(image_url);
+    state.temp = image_url;
+  }
 }
 function goBack() {
   if (save_pending) {
@@ -1190,6 +1192,7 @@ async function save() {
 
   console.log('before json parse temp --------------------------------');
   let temp_operations = JSON.parse(JSON.stringify(operations));
+  console.log(temp_operations);
   temp_operations[0] = operations[0];
   console.log(temp_operations[0].file);
   console.log('after json parse temp --------------------------------');
@@ -1285,11 +1288,13 @@ async function save() {
   body.doctemp = document.getElementById('doc-temp-id').value;
   body.operations = JSON.stringify(temp_operations);
   body.image_url = image_url;
+  body.certificate_id = certificate_id;
+
   console.log('body-----------------------------------');
   console.log(body);
   let xhr = new XMLHttpRequest();
   // xhr.open("POST", "/user/file/template", true);
-  xhr.open('POST', 'api/database/template', true);
+  xhr.open('POST', '/tutor/certificates/api/database/template/edit', true);
   xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
   xhr.onload = function () {
     if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
