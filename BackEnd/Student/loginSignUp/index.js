@@ -2,6 +2,7 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const { db } = require('../../common/db/sql');
 const Student = require('./model');
 const {
   sendWelcomeEmail,
@@ -46,8 +47,18 @@ router.post('/register', async (req, res) => {
     let name = student_first_name;
     if (student_last_name) name = `${student_first_name} ${student_last_name}`;
 
-    let temp = await sendWelcomeEmail(student_email, name);
-    console.log('🚀', temp);
+    // Take customer_id from database according to particular subdomain ...
+    // send mail if value of communication_email_signup is 1
+    const customer_id = 2;
+
+    const customer = await db.query(
+      `SELECT communication_email_signup FROM customer_tables WHERE customer_id=${customer_id}`,
+      { type: db.QueryTypes.SELECT }
+    );
+    if (customer.communication_email_signup) {
+      let temp = await sendWelcomeEmail(student_email, name);
+      console.log('🚀', temp);
+    }
 
     // sending sms
     if (!using_google) {
@@ -57,6 +68,7 @@ router.post('/register', async (req, res) => {
     const user = await Student.create({
       student_first_name,
       student_last_name,
+      customer_id,
       student_phone_number,
       student_email,
       student_password,
