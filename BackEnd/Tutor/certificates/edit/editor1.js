@@ -28,7 +28,11 @@ async function getop() {
   );
   await $.get(`/tutor/certificates/api/database/2/${id}`, async (data) => {
     console.log(data);
-    const opr = JSON.parse(data.operations);
+    console.log(await data.operations);
+
+    const op = await data.operations;
+
+    const opr = JSON.parse(op);
 
     certificate_id = data.certificate_id;
 
@@ -36,7 +40,7 @@ async function getop() {
     image_url =
       'https://image.shutterstock.com/image-photo/bright-spring-view-cameo-island-260nw-1048185397.jpg';
     console.log(opr, data.name, document.getElementById('temp-name'));
-    operations = opr;
+    operations = op;
     document.getElementById('temp-name').value = data.name;
     livePreview(null, image_url);
     // operations = await data.temp.operations;
@@ -1346,7 +1350,7 @@ function xhrSendFile(file) {
       fd.append('certiimage', file);
       let xhr = new XMLHttpRequest();
       // xhr.open("POST", "/user/file/asset", true);
-      xhr.open('POST', 'api/database/imageupload', true);
+      xhr.open('POST', '/tutor/certificates/api/database/imageupload', true);
       xhr.onload = function () {
         if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
           // console.log("finished filesend")
