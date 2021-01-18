@@ -1,14 +1,17 @@
-import React,{ useEffect} from 'react';
-import { Row,Card,CardImg,CardBody,CardTitle,CardSubtitle,CardText,Button,Col,  UncontrolledDropdown,FormGroup,Input,
+import React, { useState, useEffect } from 'react';
+import {
+  Row,
+  Card,
+  CardBody,
+  CardTitle,
+  CardText,
+  Col,
+  UncontrolledDropdown,
   DropdownItem,
   DropdownToggle,
-  DropdownMenu, } from 'reactstrap';
-import IntlMessages from '../../helpers/IntlMessages';
-import GradientWithRadialProgressCard from '../../components/cards/GradientWithRadialProgressCard';
-import { Colxx, Separator } from '../../components/common/CustomBootstrap';
-import Breadcrumb from '../../containers/navs/Breadcrumb';
-import { injectIntl } from 'react-intl';
-import './dash.css'
+  DropdownMenu,
+} from 'reactstrap';
+import './dash.css';
 import { FaUsers } from 'react-icons/fa';
 import { FaCode } from 'react-icons/fa';
 import { FaDatabase } from 'react-icons/fa';
@@ -20,167 +23,180 @@ import { LineChart } from '../../components/charts';
 import { lineChartData } from '../../data/charts';
 import { useHistory } from 'react-router-dom';
 
-import { CircularProgressbar ,buildStyles} from 'react-circular-progressbar';
-import EnhancedTable from '../../CustomComponents/EnhancedTable';
-// import { getCurrentUser } from '../../helpers/Utils';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 
+import axiosInstance from '../../helpers/axiosInstance';
+import NotificationManager from '../../components/common/react-notifications/NotificationManager';
 
-// Radial separators
-
-
-const BlankPage = ({ intl,match }) => {
+const BlankPage = ({ intl, match }) => {
   const Enroll_percentage = 66;
   const course_percentage = 9;
   const data_percentage = '14';
-  const bandwidth_percentage = 20
+  const bandwidth_percentage = 20;
   const number = 43;
+  const [enrollments, setEnrollments] = useState(0);
+  const [totalCourses, setTotalCourses] = useState(0);
+  const [storage, setStorage] = useState('14GB');
+  const [error, setError] = useState(false);
 
   const history = useHistory();
-  
-  // useEffect(() => {
-  //   try {
-  //     if (!getCurrentUser().user.frontend_token)
-  //       history.push('/Tutor/user/login');
-  //   } catch (err) {
-  //     history.push('/Tutor/user/login');
-  //   }
-  // })
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      NotificationManager.warning(error, 'User Profile', 3000, null, null, '');
+    }
+  }, [error]);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const result = await axiosInstance.get('/tutor/dashboard');
+        console.log(result);
+        if (result.data.success) {
+          setTotalCourses(result.data.totalCourses[0].totalCourses);
+          setEnrollments(result.data.enrollments[0].enrollments);
+        } else {
+          try {
+            setError(result.data.error);
+          } catch (error) {
+            setError('Unable to fetch data');
+          }
+        }
+      } catch (error) {
+        try {
+          setError(error.response.data.error);
+        } catch (error) {
+          setError('Unable to fetch data');
+        }
+      }
+    };
+    getData();
+  }, []);
+
   return (
     <>
- {/*      <Row> 
-        <Colxx xs="12">
-          <FormGroup className="mb-4 d-flex float-right" id="search">
-            <Input type="email" className="d-flex" id="exampleEmail" placeholder="Search anything" />
-            <Button id="searchbutton" className="d-flex ml-2">Search</Button>
-          </FormGroup>
-        </Colxx>
-      </Row>*/}
-      <Row> 
-        <Col md = "3" xs = "12">
-      <Card id="card121"> 
-        {/* <CardImg top width="100%" src="/assets/318x180.svg" alt="Card image cap" /> */}
-        <CardBody>
-          {/* <CardTitle tag="h5">Card title</CardTitle> */}
-          {/* <CardSubtitle tag="h6" className="mb-2 text-muted">Card subtitle</CardSubtitle> */}
-          {/* <CardText>Some quick example text to build on the card title and make up the bulk of the card's content.</CardText> */}
-          <Row>
-          <Col md="12">
-            <FaUsers id="users"/>
-            <h1 id="number" >{number}</h1>
-            <CardText id="small">Enrollments till now</CardText>
-          </Col>
-
-          </Row>
-          {/* <Button>Button</Button> */}
-        </CardBody>
-      </Card>
-      </Col>
-      <Col md = "3" xs = "12">
-      <Card id="card122">
-        {/* <CardImg top width="100%" src="/assets/318x180.svg" alt="Card image cap" /> */}
-        <CardBody>
-        <Row>
-          <Col md="12">
-            <FaCode id="users"/>
-            <h1 id="number" >11</h1>
-            <CardText id="small">Courses uploaded till now</CardText>
-          </Col>
-          </Row>
-        </CardBody>
-      </Card>
-      </Col>
-      <Col md = "3" xs = "12">
-      <Card id="card123">
-        {/* <CardImg top width="100%" src="/assets/318x180.svg" alt="Card image cap" /> */}
-        <CardBody>
-        <Row>
-          <Col md="7" xs="7">
-            <FaDatabase id="users"/>
-            <h1 id="number" >14GB</h1>
-            <CardText id="small">Storage Used</CardText>
-          </Col>
-          <Col md="5" xs="5">
-          <CircularProgressbar
-            value={data_percentage}
-            text={`${data_percentage}%`}
-            styles={buildStyles({
-              textColor: "red",
-              pathColor: "#228B22"
-            })}
-          />
-          </Col>
-          </Row>
-        </CardBody>
-      </Card>
-      </Col>
-      <Col md = "3" xs = "12">
-      <Card id="card124">
-        <CardBody>
-        <Row>
-          <Col md="7" xs="7">
-            <FaWifi id="users"/>
-            <h1 id="number" >10GB</h1>
-            <CardText id="small">Bandwidth used</CardText>
-          </Col>
-          <Col md="5" xs="5">
-          <CircularProgressbar
-            value={bandwidth_percentage}
-            text={`${bandwidth_percentage}%`}
-            styles={buildStyles({
-              textColor: "#46b5d1",
-              pathColor: "#E4495A"
-            })}
-          />
-          </Col>
-          </Row>
-        </CardBody>
-      </Card>
-      </Col>
+      <Row>
+        <Col md="3" xs="12">
+          <Card id="card121">
+            <CardBody>
+              <Row>
+                <Col md="12">
+                  <FaUsers id="users" />
+                  <h1 id="number">{enrollments}</h1>
+                  <CardText id="small">Enrollments till now</CardText>
+                </Col>
+              </Row>
+            </CardBody>
+          </Card>
+        </Col>
+        <Col md="3" xs="12">
+          <Card id="card122">
+            <CardBody>
+              <Row>
+                <Col md="12">
+                  <FaCode id="users" />
+                  <h1 id="number">{totalCourses}</h1>
+                  <CardText id="small">Courses uploaded till now</CardText>
+                </Col>
+              </Row>
+            </CardBody>
+          </Card>
+        </Col>
+        <Col md="3" xs="12">
+          <Card id="card123">
+            <CardBody>
+              <Row>
+                <Col md="7" xs="7">
+                  <FaDatabase id="users" />
+                  <h1 id="number">{storage}</h1>
+                  <CardText id="small">Storage Used(Static)</CardText>
+                </Col>
+                <Col md="5" xs="5">
+                  <CircularProgressbar
+                    value={data_percentage}
+                    text={`${data_percentage}%`}
+                    styles={buildStyles({
+                      textColor: 'red',
+                      pathColor: '#228B22',
+                    })}
+                  />
+                </Col>
+              </Row>
+            </CardBody>
+          </Card>
+        </Col>
+        <Col md="3" xs="12">
+          <Card id="card124">
+            <CardBody>
+              <Row>
+                <Col md="7" xs="7">
+                  <FaWifi id="users" />
+                  <h1 id="number">10GB</h1>
+                  <CardText id="small">Bandwidth used(Static)</CardText>
+                </Col>
+                <Col md="5" xs="5">
+                  <CircularProgressbar
+                    value={bandwidth_percentage}
+                    text={`${bandwidth_percentage}%`}
+                    styles={buildStyles({
+                      textColor: '#46b5d1',
+                      pathColor: '#E4495A',
+                    })}
+                  />
+                </Col>
+              </Row>
+            </CardBody>
+          </Card>
+        </Col>
       </Row>
       <Row>
-      <Col md="12" xs="12">
-      <Scrollbars style={{ width: '100%', height: 500 }}>
-      <Card className="mt-4 ccc mb-4" id="cb">
-      <CardTitle>
-      <Row className="ml-4 mt-4">
-      
-      <div className="thecard">
-        <span id="dot"></span><small className="ml-2">Registrations</small> 
-        <span id="dot2"></span><small id="no" className="ml-2" >Enrollments</small>
-        <span id="dot3"></span> <small id="no">Revenue</small>
-      </div>
+        <Col md="12" xs="12">
+          <Scrollbars style={{ width: '100%', height: 500 }}>
+            <Card className="mt-4 ccc mb-4" id="cb">
+              <CardTitle>
+                <Row className="ml-4 mt-4">
+                  <div className="thecard">
+                    <span id="dot"></span>
+                    <small className="ml-2">Registrations</small>
+                    <span id="dot2"></span>
+                    <small id="no" className="ml-2">
+                      Enrollments
+                    </small>
+                    <span id="dot3"></span> <small id="no">Revenue</small>
+                  </div>
 
-      <div className="position-absolute card-top-buttons">
-        <UncontrolledDropdown>
-          <DropdownToggle color="" className="btn btn-header-light icon-button mr-4">
-            <FaFilter className="mb-1"/>
-          </DropdownToggle>
-          <DropdownMenu right>
-            <DropdownItem>
-              <Row className="ml-1">Last 7 Days</Row>
-            </DropdownItem>
-            <DropdownItem>
-            <Row className="ml-1">Last one month</Row>
-            </DropdownItem>
-            <DropdownItem>
-            <Row className="ml-1">Last three months</Row>
-            </DropdownItem>
-          </DropdownMenu>
-          </UncontrolledDropdown>
-          </div>
-        </Row>
-        </CardTitle>
-      <CardBody > 
-        
-        
-        <div className="dashboard-line-chart">
-          <LineChart shadow data={lineChartData} />
-        </div>
-      </CardBody>
-    </Card></Scrollbars>
-    </Col>
-    </Row>
-        {/* <EnhancedTable/>  */}
+                  <div className="position-absolute card-top-buttons">
+                    <UncontrolledDropdown>
+                      <DropdownToggle
+                        color=""
+                        className="btn btn-header-light icon-button mr-4"
+                      >
+                        <FaFilter className="mb-1" />
+                      </DropdownToggle>
+                      <DropdownMenu right>
+                        <DropdownItem>
+                          <Row className="ml-1">Last 7 Days</Row>
+                        </DropdownItem>
+                        <DropdownItem>
+                          <Row className="ml-1">Last one month</Row>
+                        </DropdownItem>
+                        <DropdownItem>
+                          <Row className="ml-1">Last three months</Row>
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                  </div>
+                </Row>
+              </CardTitle>
+              <CardBody>
+                <div className="dashboard-line-chart">
+                  <LineChart shadow data={lineChartData} />
+                </div>
+              </CardBody>
+            </Card>
+          </Scrollbars>
+        </Col>
+      </Row>
     </>
   );
 };

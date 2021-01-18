@@ -168,6 +168,50 @@ const User = db.define('customer_table', {
     type: DataTypes.BOOLEAN,
     defaultValue: 0,
   },
+  customer_blogs: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: 0,
+  },
+  customer_affiliate: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: 0,
+  },
+  customer_affiliate_did_changes: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: 0,
+  },
+  customer_affiliate_monitary_benifits: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: 0,
+  },
+  customer_currency_name: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  customer_currency_rate: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
+  customer_affiliate_type: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  customer_affiliate_fixed_rate: {
+    type: DataTypes.INTEGER,
+    defaultValue: null,
+  },
+  customer_affiliate_range_cost_min: {
+    type: DataTypes.STRING,
+    defaultValue: null,
+  },
+  customer_affiliate_range_cost_max: {
+    type: DataTypes.STRING,
+    defaultValue: null,
+  },
+  customer_affiliate_range_rate: {
+    type: DataTypes.STRING,
+    defaultValue: null,
+  },
 });
 
 db.sync();

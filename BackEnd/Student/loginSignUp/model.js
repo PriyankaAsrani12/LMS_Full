@@ -19,6 +19,10 @@ const Student = db.define('student_table', {
     type: INTEGER,
     defaultValue: 0,
   },
+  student_first_purchase: {
+    type: INTEGER,
+    defaultValue: 0,
+  },
   student_first_name: {
     type: STRING,
     allowNull: false,

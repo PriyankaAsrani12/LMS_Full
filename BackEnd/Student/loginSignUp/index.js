@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const { db } = require('../../common/db/sql');
 const Student = require('./model');
+const verifyToken = require('../middlewares/verifyToken');
 const {
   sendWelcomeEmail,
   sendPasswordResetEmail,
@@ -11,6 +12,7 @@ const {
 const {
   sendsms,
 } = require('../../common/completed_test_modules/sendSmsModule');
+const { User } = require('../../Tutor/loginSignup/customer/models');
 
 //Create a new User
 router.post('/register', async (req, res) => {
@@ -236,6 +238,25 @@ router.post('/reset-password', async (req, res) => {
       success: 0,
       error: 'Database Connection Error',
       errorReturned: err,
+    });
+  }
+});
+
+router.get('/enabled', verifyToken, async (req, res) => {
+  try {
+    const result = await User.findOne({
+      where: { customer_id: 1 },
+      attributes: ['customer_blogs', 'customer_affiliate'],
+    });
+    return res.status(200).json({
+      success: 1,
+      result,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      success: 0,
+      error: 'Could not fetch data',
     });
   }
 });

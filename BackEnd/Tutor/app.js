@@ -58,5 +58,8 @@ router.use('/stats', require('./stats'));
 router.use('/certificates', require('./certificates/server'));
 router.use('/blog', require('./blog'));
 router.use('/communication', require('./communication'));
+router.use('/settings', require('./settings'));
+router.use('/affliates', require('./affliates'));
+router.use('/dashboard', require('./dashboard'));
 
 module.exports = router;
