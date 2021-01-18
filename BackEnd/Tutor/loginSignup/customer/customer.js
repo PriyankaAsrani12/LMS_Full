@@ -173,7 +173,7 @@ router.post('/users', async (req, res) => {
             success: 0,
             error: err,
           });
-        console.log(data);
+        console.log(data, '\n', data.substr(21), data['Key successfully set']);
         return res.status(200).json({
           success: 1,
           storageZoneData: response.data,
