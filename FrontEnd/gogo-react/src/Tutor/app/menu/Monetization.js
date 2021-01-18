@@ -10,6 +10,7 @@ import {
   UncontrolledDropdown,
   DropdownItem,
   DropdownToggle,
+  FormGroup,
   DropdownMenu,
 } from 'reactstrap';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -21,6 +22,7 @@ import { RiMoneyDollarCircleFill } from 'react-icons/ri';
 import { AiFillBank } from 'react-icons/ai';
 import { FaHandHoldingUsd } from 'react-icons/fa';
 import { lineChartData } from '../../../data/charts';
+import { Line } from 'react-chartjs-2';
 
 import Monitization_table from '../../../data/Monitization_table';
 import Table from './Table';
@@ -35,6 +37,71 @@ const Monetization = () => {
   const [paymentVolume, setPaymentVolume] = useState(0);
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
+
+  const [chartstatus, setchartstatus] = useState(false);
+
+  const data1 = {
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    /* scaleShowLabels: false, */
+    datasets: [
+      {
+        label: 'Views in one week for #link1',
+        data: [32, 36, 29, 35, 32, 39, 28, 39, 44],
+        radius: 3,
+        tension: 0,
+        fill: false,
+        borderColor: '#5CCB00',
+        pointRadius: 6,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: ' #FFFFFF',
+      },
+
+      {
+        label: 'Views in one week for #link2',
+        data: [35, 26, 27, 23, 32, 30, 28, 39, 34],
+        tension: 0,
+        radius: 3,
+        fill: false,
+        borderColor: '#EC7600',
+        pointRadius: 6,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: ' #FFFFFF',
+      },
+    ],
+  };
+  const data2 = {
+    labels: ['Thu', 'Fri', 'Sat', 'Sun'],
+    /* scaleShowLabels: false, */
+    datasets: [
+      {
+        label: 'Views in one week for #link1',
+        data: [39, 28, 39, 44],
+        radius: 3,
+        tension: 0,
+        fill: false,
+        borderColor: '#5CCB00',
+        pointRadius: 6,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: ' #FFFFFF',
+      },
+
+      {
+        label: 'Views in one week for #link2',
+        data: [30, 28, 39, 34],
+        tension: 0,
+        radius: 3,
+        fill: false,
+        borderColor: '#EC7600',
+        pointRadius: 6,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: ' #FFFFFF',
+      },
+    ],
+  };
 
   const cols4 = [
     {
@@ -279,8 +346,8 @@ const Monetization = () => {
           </Card>
         </Col>
       </Row>
-      <Scrollbars style={{ width: '100%', height: 500 }}>
-        <Card className=" line" md="12" id="l1">
+      <Scrollbars style={{ width: '100%', height: 600 }}>
+        {/* <Card className=" line" md="12" id="l1">
           <CardTitle>
             <Row className="ml-4 mt-4">
               <div className="thecard">
@@ -321,6 +388,49 @@ const Monetization = () => {
             <div className="dashboard-line-chart">
               <LineChart shadow data={lineChartData} />
             </div>
+          </CardBody>
+        </Card> */}
+        <Card>
+          <FormGroup className="ml-auto mr-4 mt-4">
+            {/* <Input
+                type="select"
+                name="select"
+                id="exampleSelect"
+                style={{ width: '150px' }}
+                onChange={changechart}
+              >
+                <option>Last 7 days</option>
+                <option>Last 4 days</option>
+              </Input> */}
+            <div className="position-absolute card-top-buttons">
+              <UncontrolledDropdown>
+                <DropdownToggle
+                  color=""
+                  className="btn btn-header-light icon-button mr-4"
+                >
+                  <FaFilter className="mb-1" />
+                </DropdownToggle>
+                <DropdownMenu right>
+                  <DropdownItem>
+                    <Row className="ml-1">Last 7 Days</Row>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <Row className="ml-1">Last one month</Row>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <Row className="ml-1">Last three months</Row>
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+            </div>
+          </FormGroup>
+
+          <CardBody style={{}}>
+            {chartstatus ? (
+              <Line data={data2} style={{ marginTop: '-100px' }} />
+            ) : (
+              <Line data={data1} style={{ marginTop: '-100px' }} />
+            )}
           </CardBody>
         </Card>
       </Scrollbars>

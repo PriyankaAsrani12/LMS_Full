@@ -145,7 +145,6 @@ router.post('/users', async (req, res) => {
 
     req.body.values.customer_storage_zone_id = storageZoneId;
     req.body.values.customer_storage_zone_name = storageZoneName;
-    req.body.values.customer_storage_zone_user_key = response.data.UserId;
     req.body.values.customer_storage_zone_password = response.data.Password;
     req.body.values.customer_pull_zone_hostname =
       pullZone.data.Hostnames[0].Value;
@@ -167,32 +166,34 @@ router.post('/users', async (req, res) => {
       `
     bnycdn key -t storages set ${pullZone.data.Name} ${response.data.Password}
     `,
-      (err, data, stderr) => {
+      async (err, data, stderr) => {
         if (err)
           return res.status(200).json({
             success: 0,
             error: err,
           });
-        console.log(data, '\n', data.substr(24), data['Key successfully set']);
-        return res.status(200).json({
-          success: 1,
-          storageZoneData: response.data,
-          pullZoneData: pullZone.data,
-          key: data,
-        });
+        console.log(data, '\n', data.substr(24));
+        req.body.values.customer_storage_zone_user_key = data.substr(24);
+
+        // return res.status(200).json({
+        //   success: 1,
+        //   storageZoneData: response.data,
+        //   pullZoneData: pullZone.data,
+        //   key: data,
+        // });
+
+        // return res.status(200).json({
+        //   success: 1,
+        //   'data FRom storageZone': response.data,
+        //   'data from pullzone': pullZone.data,
+        //   values: req.body.values,
+        //   hostname: pullZone.data.Hostnames[0].V,
+        // });
+
+        const user = await User.create(req.body.values);
+        res.redirect(307, 'users/login');
       }
     );
-
-    // return res.status(200).json({
-    //   success: 1,
-    //   'data FRom storageZone': response.data,
-    //   'data from pullzone': pullZone.data,
-    //   values: req.body.values,
-    //   hostname: pullZone.data.Hostnames[0].V,
-    // });
-
-    // const user = await User.create(req.body.values);
-    // res.redirect(307, 'users/login');
   } catch (err) {
     console.log(err);
     return res.status(500).json({
