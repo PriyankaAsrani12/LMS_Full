@@ -17,7 +17,6 @@ import { FaGlobeAsia } from 'react-icons/fa';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Line } from 'react-chartjs-2';
 
-import linkTraking from '../../../data/linkTraking';
 import ShowForm from './ShowForm';
 import Table from './Table';
 import NotificationManager from '../../../components/common/react-notifications/NotificationManager';
@@ -393,7 +392,6 @@ const LinkTracking = () => {
                 style={{ width: '150px' }}
                 onChange={changechart}
               >
-                <option>Select filter</option>
                 <option>Last 7 days</option>
                 <option>Last 4 days</option>
               </Input>
@@ -401,9 +399,9 @@ const LinkTracking = () => {
 
             <CardBody style={{}}>
               {chartstatus ? (
-                <Line data={data} style={{ marginTop: '-100px' }} />
-              ) : (
                 <Line data={data2} style={{ marginTop: '-100px' }} />
+              ) : (
+                <Line data={data} style={{ marginTop: '-100px' }} />
               )}
             </CardBody>
           </Card>

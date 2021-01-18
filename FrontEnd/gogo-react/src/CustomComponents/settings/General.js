@@ -348,6 +348,7 @@ const General = () => {
 
             <Col md="6" xs="12">
               <Switch
+                disabled={customer_affiliate_did_changes}
                 className="custom-switch custom-switch-secondary custom-switch-small ml-auto mb-auto"
                 id="custom-switch"
                 checked={timeline}

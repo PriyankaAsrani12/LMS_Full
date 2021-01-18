@@ -1,5 +1,5 @@
 const { db } = require('../../common/db/sql');
-const { INTEGER, STRING, BOOLEAN } = require('sequelize');
+const { DataTypes, INTEGER, STRING, BOOLEAN } = require('sequelize');
 
 const Course = db.define('student_purchase', {
   purchase_id: {
@@ -28,37 +28,37 @@ const Course = db.define('student_purchase', {
     //   key: 'session_id',
     // },
   },
-  purchase_razorpay_payment_id: {
-    type: STRING,
-    allowNull: true,
-  },
-  purchase_razorpay_order_id: {
+  purchase_type: {
     type: STRING,
     allowNull: false,
   },
-  purchase_razorpay_payment_amount: {
+  purchase_cupon_code_applied: {
     type: STRING,
     allowNull: false,
   },
-  purchase_razorpay_payment_date: {
+  purchase_units_taken: {
+    type: INTEGER,
+  },
+  purchased_for_email: {
     type: STRING,
     allowNull: false,
   },
-  purchase_razorpay_payment_time: {
+  purchased_GSTIN_number: {
     type: STRING,
-    allowNull: true,
+    allowNull: false,
   },
-  purchase_razorpay_payment_email: {
+  purchase_amount: {
     type: STRING,
-    allowNull: true,
+    allowNull: false,
   },
-  purchase_razorpay_payment_contact: {
-    type: STRING,
-    allowNull: true,
+  created_at: {
+    type: DataTypes.DATE(6),
+    defaultValue: new Date().getTime(),
   },
-  purchase_razorpay_payment_status: {
-    type: BOOLEAN,
-    defaultValue: 0,
+
+  modified_at: {
+    type: DataTypes.DATE(6),
+    defaultValue: new Date().getTime(),
   },
 });
 

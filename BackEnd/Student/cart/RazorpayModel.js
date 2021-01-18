@@ -2,67 +2,116 @@ const { db } = require('../../common/db/sql');
 const { DataTypes, INTEGER, STRING } = require('sequelize');
 
 const RazorpayModel = db.define('payment_data', {
-  id: {
-    type: DataTypes.INTEGER(255),
+  payment_id: {
+    type: DataTypes.INTEGER,
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
   },
-  student_id: { type: INTEGER, allowNull: false },
+  purchase_id: {
+    type: INTEGER,
+    // references: {
+    //   model: 'purchase_tables',
+    //   key:'purchase_id'
+    // }
+  },
   customer_id: {
     type: INTEGER,
     // references: {
-    //     model: 'customer_table',
-    //     key:'customer_id'
-    // },
+    //   model: 'customer_tables',
+    //   key:'customer_id'
+    // }
   },
-  amount_paid: {
-    type: INTEGER,
-    allowNull: false,
-  },
-  order_id: {
+  razorpay_payment_id: {
     type: STRING,
     allowNull: false,
+  },
+  razorpay_order_id: {
+    type: STRING,
+    allowNull: false,
+  },
+  razorpay_entity: {
+    type: STRING,
+    allowNull: false,
+  },
+  razorpay_amount: {
+    type: STRING,
+    allowNull: false,
+  },
+  razorpay_currency: {
+    type: STRING,
+    allowNull: false,
+  },
+  razorpay_status: {
+    type: STRING,
+    allowNull: false,
+  },
+  razorpay_invoice_id: {
+    type: STRING,
+    allowNull: false,
+  },
+  razorpay_invoice_url: {
+    type: STRING,
+    allowNull: false,
+  },
+  razorpay_international: {
+    type: STRING,
+    allowNull: false,
+  },
+  razorpay_method: {
+    type: STRING,
+    allowNull: false,
+  },
+  razorpay_amount_refunded: {
+    type: STRING,
+    allowNull: false,
+  },
+  razorpay_captured: {
+    type: STRING,
+    allowNull: false,
+  },
+  razorpay_email: {
+    type: STRING,
+    allowNull: false,
+  },
+  razorpay_contact: {
+    type: STRING,
+    allowNull: false,
+  },
+  razorpay_refund_status: {
+    type: STRING,
+    allowNull: true,
+  },
+  razorpay_error_code: {
+    type: STRING,
+    allowNull: true,
+  },
+  razorpay_error_description: {
+    type: STRING,
+    allowNull: true,
+  },
+  razorpay_error_source: {
+    type: STRING,
+    allowNull: true,
+  },
+  razorpay_error_step: {
+    type: STRING,
+    allowNull: true,
+  },
+  razorpay_error_reason: {
+    type: STRING,
+    allowNull: true,
   },
 
-  currency: {
+  razorpay_created_at: {
     type: STRING,
     allowNull: false,
   },
-  receipt: {
+  razorpay_updated_at: {
     type: STRING,
     allowNull: false,
-  },
-  status: {
-    type: STRING,
-    allowNull: false,
-  },
-  paid_using_email: {
-    type: STRING,
-    allowNull: true,
-  },
-  paid_using_contact: {
-    type: STRING,
-    allowNull: true,
-  },
-  payment_id: {
-    type: STRING,
-    allowNull: true,
   },
 });
 
 db.sync();
 module.exports = RazorpayModel;
-
-// id: 'order_GPw0R5RFIDsYnW',
-//   entity: 'order',
-//   amount: 20000,
-//   amount_paid: 0,
-//   amount_due: 20000,
-//   currency: 'INR',
-//   receipt: 'test test 200',
-//   offer_id: null,
-//   status: 'created',
-//   attempts: 0,
-//   notes: [],
-//   created_at: 1610790565

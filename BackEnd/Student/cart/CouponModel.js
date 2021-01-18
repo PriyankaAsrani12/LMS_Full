@@ -1,34 +1,62 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, INTEGER, STRING, BOOLEAN } = require('sequelize');
 const { db } = require('../../common/db/sql');
 
 const CouponModel = db.define('coupon_table', {
-  coupon_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    autoIncrement: true,
+  promocode_id: {
+    type: INTEGER,
     primaryKey: true,
+    autoIncrement: true,
   },
   customer_id: {
-    type: DataTypes.INTEGER,
+    type: INTEGER,
     // references: {
-    //     model: 'customer_tables',
-    //     key:'customer_id'
+    //   model: 'customer_tables',
+    //   key:'customer_id'
     // }
   },
-  session_id: {
-    type: DataTypes.INTEGER,
+  promocode_name: {
+    type: STRING,
+    allowNull: false,
+  },
+  promocode_discount_type: {
+    type: STRING,
+    allowNull: false,
+  },
+  promocode_discount_value: {
+    type: INTEGER,
+    allowNull: false,
+  },
+  promocode_available_session_ids: {
+    type: STRING,
     // references: {
-    //     model: 'session_tables',
-    //     key:'session_id'
+    //   model: 'session_tables',
+    //   key:'session_id'
     // }
   },
-  coupon_code: {
-    type: DataTypes.STRING,
-    allowNull: false,
+  promocode_status: {
+    type: BOOLEAN,
+    allowNull: true,
   },
-  coupon_code_value: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
+  promocode_start_date: {
+    type: STRING,
+    allowNull: true,
+  },
+  promocode_end_date: {
+    type: STRING,
+    allowNull: true,
+  },
+  promocode_condition: {
+    type: INTEGER,
+    allowNull: true,
+  },
+  created_at: {
+    type: DataTypes.DATE(6),
+    defaultValue: new Date().getTime(),
+  },
+
+  modified_at: {
+    type: DataTypes.DATE(6),
+    defaultValue: new Date().getTime(),
   },
 });
 

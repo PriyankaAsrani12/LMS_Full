@@ -33,6 +33,8 @@ const Monetization = () => {
   const [totalRewards, setTotalRewards] = useState(0);
   const [numberOfPayments, setNoofPayments] = useState(0);
   const [paymentVolume, setPaymentVolume] = useState(0);
+  const [error, setError] = useState(null);
+  const [data, setData] = useState([]);
 
   const cols4 = [
     {
@@ -128,6 +130,62 @@ const Monetization = () => {
       sortType: 'basic',
     },
   ];
+
+  useEffect(() => {
+    if (error)
+      NotificationManager.warning(
+        error,
+        'Monetization Error',
+        3000,
+        3000,
+        null,
+        ''
+      );
+  }, [error]);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const result = await axiosInstance.get('/tutor/monetization');
+        console.log(result);
+        if (result.data.success) {
+          let pVol = 0;
+          const data = result.data.result.map((doc) => {
+            pVol += parseInt(doc.razorpay_amount);
+            return {
+              payment_id: doc.payment_id,
+              razor_pay_id: doc.razorpay_payment_id,
+              order_id: doc.razorpay_order_id,
+              amount: doc.razorpay_amount,
+              date: doc.date,
+              time: doc.time,
+              status: doc.razorpay_status,
+              email: doc.razorpay_email,
+              contact: doc.razorpay_contact,
+            };
+          });
+          setNoofPayments(data.length);
+          setPaymentVolume(pVol);
+          setTotalCourses(result.data.total_courses);
+          setTotalRewards(result.data.total_rewards_given);
+          setData(data);
+        } else {
+          try {
+            setError(result.data.error);
+          } catch (error) {
+            setError('Unable to find blogs');
+          }
+        }
+      } catch (error) {
+        try {
+          setError(error.response.data.error);
+        } catch (error) {
+          setError('Unable to find blogs');
+        }
+      }
+    };
+    getData();
+  }, []);
 
   return (
     <>
@@ -271,7 +329,7 @@ const Monetization = () => {
           <Card className="h-120  ">
             <Scrollbars style={{ width: '100%', height: 400 }}>
               <CardBody style={{ width: '120%' }}>
-                <Table columns={cols4} data={Monitization_table} />
+                <Table columns={cols4} data={data} />
               </CardBody>
             </Scrollbars>
           </Card>
