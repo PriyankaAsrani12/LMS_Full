@@ -142,15 +142,15 @@ const User = db.define('customer_table', {
   },
   customer_storage_zone_name: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
   },
   customer_pull_zone_name: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
   },
   customer_cdn_url: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
   },
   communication_email_signup: {
     type: DataTypes.BOOLEAN,
@@ -194,7 +194,7 @@ const User = db.define('customer_table', {
   },
   customer_affiliate_type: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   customer_affiliate_fixed_rate: {
     type: DataTypes.INTEGER,
@@ -211,6 +211,30 @@ const User = db.define('customer_table', {
   customer_affiliate_range_rate: {
     type: DataTypes.STRING,
     defaultValue: null,
+  },
+  customer_storage_zone_id: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  customer_pull_zone_id: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  customer_storage_zone_user_key: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  customer_storage_zone_password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  customer_pull_zone_hostname: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  customer_url_token_authentication_key: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
 });
 

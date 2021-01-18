@@ -3,6 +3,9 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const webp = require('webp-converter');
+const request = require('request');
+const axios = require('axios').default;
+require('json-circular-stringify');
 
 const auth = require('../../middleware/deepakAuth');
 const {
@@ -96,6 +99,60 @@ router.post('/users', async (req, res) => {
     if (customer_last_name)
       name = `${customer_first_name} ${customer_last_name}`;
 
+    //create storage zone ,pull zone here
+    const storageZoneName = customer_last_name
+      ? `${customer_first_name}-${customer_last_name}`
+      : `${customer_first_name}`;
+    const data = { Name: storageZoneName, Region: 'DE' };
+    const headers = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      AccessKey: process.env.BUNNYCDN_ACCESS_KEY,
+    };
+
+    const response = await axios.post(
+      'https://bunnycdn.com/api/storagezone',
+      data,
+      { headers }
+    );
+
+    const storageZoneId = response.data.Id;
+
+    const pullZoneData = {
+      Name: response.data.Name,
+      Type: 1,
+      StorageZoneId: response.data.Id,
+      ZoneSecurityEnabled: true,
+      EnableGeoZoneUS: false,
+      EnableGeoZoneEU: false,
+      EnableGeoZoneASIA: false,
+      EnableGeoZoneAF: false,
+      ZoneSecurityEnabled: true,
+      EnableGeoZoneSA: false,
+      AccessControlOriginHeaderExtensions: ['*'],
+    };
+
+    const pullZone = await axios.post(
+      'https://bunnycdn.com/api/pullzone',
+      pullZoneData,
+      { headers }
+    );
+    const pullZoneId = response.data.Id;
+
+    req.body.values.customer_pull_zone_id = pullZoneId;
+    req.body.values.customer_pull_zone_name = pullZone.data.Name;
+
+    req.body.values.customer_storage_zone_id = storageZoneId;
+    req.body.values.customer_storage_zone_name = storageZoneName;
+    req.body.values.customer_storage_zone_user_key = response.data.UserId;
+    req.body.values.customer_storage_zone_password = response.data.Password;
+    req.body.values.customer_pull_zone_hostname =
+      pullZone.data.Hostnames[0].Value;
+    req.body.values.customer_url_token_authentication_key =
+      pullZone.data.ZoneSecurityKey;
+
+    req.body.values.customer_cdn_url = 'oyesth-lms-12.b-cdn.net';
+
     let temp = await sendWelcomeEmail(customer_email, name);
     console.log('🚀', temp);
 
@@ -104,12 +161,17 @@ router.post('/users', async (req, res) => {
       const result = await sendsms(customer_phone_number, 'test');
       console.log(result);
     }
+
+    // return res.status(200).json({
+    //   success: 1,
+    //   'data FRom storageZone': response.data,
+    //   'data from pullzone': pullZone.data,
+    //   values: req.body.values,
+    //   hostname:pullZone.data.Hostnames[0].V
+    // });
+
     const user = await User.create(req.body.values);
 
-    //  res.status(200).json({
-    //     success:1,
-    //     message:"User Successfully Created"
-    // });
     res.redirect(307, 'users/login');
   } catch (err) {
     console.log(err);
