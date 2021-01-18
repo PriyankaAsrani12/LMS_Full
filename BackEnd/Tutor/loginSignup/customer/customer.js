@@ -6,6 +6,7 @@ const webp = require('webp-converter');
 const request = require('request');
 const axios = require('axios').default;
 require('json-circular-stringify');
+const cmd = require('node-cmd');
 
 const auth = require('../../middleware/deepakAuth');
 const {
@@ -153,26 +154,45 @@ router.post('/users', async (req, res) => {
 
     req.body.values.customer_cdn_url = 'oyesth-lms-12.b-cdn.net';
 
-    let temp = await sendWelcomeEmail(customer_email, name);
-    console.log('🚀', temp);
+    // let temp = await sendWelcomeEmail(customer_email, name);
+    // console.log('🚀', temp);
 
-    // sending sms
-    if (!using_google) {
-      const result = await sendsms(customer_phone_number, 'test');
-      console.log(result);
-    }
+    // // sending sms
+    // if (!using_google) {
+    //   const result = await sendsms(customer_phone_number, 'test');
+    //   console.log(result);
+    // }
+
+    cmd.run(
+      `
+    bnycdn key -t storages set ${pullZone.data.Name} ${response.data.Password}
+    `,
+      (err, data, stderr) => {
+        if (err)
+          return res.status(200).json({
+            success: 0,
+            error: err,
+          });
+        console.log(data);
+        return res.status(200).json({
+          success: 1,
+          storageZoneData: response.data,
+          pullZoneData: pullZone.data,
+          key: data,
+        });
+      }
+    );
 
     // return res.status(200).json({
     //   success: 1,
     //   'data FRom storageZone': response.data,
     //   'data from pullzone': pullZone.data,
     //   values: req.body.values,
-    //   hostname:pullZone.data.Hostnames[0].V
+    //   hostname: pullZone.data.Hostnames[0].V,
     // });
 
-    const user = await User.create(req.body.values);
-
-    res.redirect(307, 'users/login');
+    // const user = await User.create(req.body.values);
+    // res.redirect(307, 'users/login');
   } catch (err) {
     console.log(err);
     return res.status(500).json({
