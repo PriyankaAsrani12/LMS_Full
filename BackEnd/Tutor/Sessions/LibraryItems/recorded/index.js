@@ -426,7 +426,7 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
     console.log(bData);
     const file = req.files.file;
 
-    file.mv(`${process.env.FILE_UPLOAD_PATH}${file.name}`, (err) => {
+    file.mv(`${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name}`, (err) => {
       if (err) {
         console.error(err);
         return res.status(500).josn({
@@ -435,10 +435,11 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
           errorReturned: JSON.stringify(err),
         });
       }
+      console.log('saved ');
 
       cmd.run(
         `
-    bnycdn cp -s ${bData[0].customer_storage_zone_user_key} -r ${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name} /${bData[0].customer_storage_zone_name}/${file.name}/
+    bnycdn cp -s ${bData[0].customer_storage_zone_user_key}  ${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name} /${bData[0].customer_storage_zone_name}/${file.name}/
     `,
         (err, data, stderr) => {
           if (err) {
