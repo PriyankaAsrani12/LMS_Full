@@ -5,6 +5,7 @@ import {
   CardBody,
   Card,
   Col,
+  Input,
   Badge,
   CardText,
   UncontrolledDropdown,
@@ -26,6 +27,8 @@ import { Line } from 'react-chartjs-2';
 
 import Monitization_table from '../../../data/Monitization_table';
 import Table from './Table';
+import './style.css';
+
 import axiosInstance from '../../../helpers/axiosInstance';
 import NotificationManager from '../../../components/common/react-notifications/NotificationManager';
 import NoDataFound from '../../../CustomComponents/NoDataFound';
@@ -38,14 +41,14 @@ const Monetization = () => {
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
 
-  const [chartstatus, setchartstatus] = useState(false);
+  const [chartstatus, setchartstatus] = useState('Last 7 days');
 
   const data1 = {
     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     /* scaleShowLabels: false, */
     datasets: [
       {
-        label: 'Views in one week for #link1',
+        label: 'Earning',
         data: [32, 36, 29, 35, 32, 39, 28, 39, 44],
         radius: 3,
         tension: 0,
@@ -58,7 +61,7 @@ const Monetization = () => {
       },
 
       {
-        label: 'Views in one week for #link2',
+        label: 'Courses',
         data: [35, 26, 27, 23, 32, 30, 28, 39, 34],
         tension: 0,
         radius: 3,
@@ -69,14 +72,26 @@ const Monetization = () => {
         pointBorderWidth: 2,
         pointBackgroundColor: ' #FFFFFF',
       },
+      {
+        label: 'Rewards',
+        data: [39, 28, 39, 44, 78, 65, 34],
+        radius: 3,
+        tension: 0,
+        fill: false,
+        borderColor: '#00FFFF',
+        pointRadius: 6,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: ' #FFFFFF',
+      },
     ],
   };
   const data2 = {
-    labels: ['Thu', 'Fri', 'Sat', 'Sun'],
+    labels: ['Week1', 'Week2', 'Week3', 'Week4'],
     /* scaleShowLabels: false, */
     datasets: [
       {
-        label: 'Views in one week for #link1',
+        label: 'Earning',
         data: [39, 28, 39, 44],
         radius: 3,
         tension: 0,
@@ -89,12 +104,67 @@ const Monetization = () => {
       },
 
       {
-        label: 'Views in one week for #link2',
+        label: 'Courses',
         data: [30, 28, 39, 34],
         tension: 0,
         radius: 3,
         fill: false,
         borderColor: '#EC7600',
+        pointRadius: 6,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: ' #FFFFFF',
+      },
+      {
+        label: 'Rewards',
+        data: [56, 67, 32, 12],
+        radius: 3,
+        tension: 0,
+        fill: false,
+        borderColor: '#00FFFF',
+        pointRadius: 6,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: ' #FFFFFF',
+      },
+    ],
+  };
+  const data3 = {
+    labels: ['Jan', 'Feb', 'March'],
+    /* scaleShowLabels: false, */
+    datasets: [
+      {
+        label: 'Earning',
+        data: [49, 54, 12],
+        radius: 3,
+        tension: 0,
+        fill: false,
+        borderColor: '#5CCB00',
+        pointRadius: 6,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: ' #FFFFFF',
+      },
+
+      {
+        label: 'Courses',
+        data: [71, 65, 45],
+        tension: 0,
+        radius: 3,
+        fill: false,
+        borderColor: '#EC7600',
+        pointRadius: 6,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: ' #FFFFFF',
+      },
+      {
+        label: 'Rewards',
+        data: [65, 54, 12],
+        radius: 3,
+        tension: 0,
+        fill: false,
+        borderColor: '#00FFFF',
         pointRadius: 6,
         pointHoverRadius: 6,
         pointBorderWidth: 2,
@@ -346,94 +416,45 @@ const Monetization = () => {
           </Card>
         </Col>
       </Row>
-      <Scrollbars style={{ width: '100%', height: 600 }}>
-        {/* <Card className=" line" md="12" id="l1">
-          <CardTitle>
-            <Row className="ml-4 mt-4">
-              <div className="thecard">
-                <span id="dott"></span>
-                <small className="ml-2">Earning</small>
-                <span id="dott2"></span>
-                <small id="no" className="ml-2">
-                  Courses
-                </small>
-                <span id="dott3"></span> <small id="no">Rewards</small>
-              </div>
 
-              <div className="position-absolute card-top-buttons">
-                <UncontrolledDropdown>
-                  <DropdownToggle
-                    color=""
-                    className="btn btn-header-light icon-button mr-4"
-                  >
-                    <FaFilter className="mb-1" />
-                  </DropdownToggle>
-                  <DropdownMenu right>
-                    <DropdownItem>
-                      <Row className="ml-1">Last 7 Days</Row>
-                    </DropdownItem>
-                    <DropdownItem>
-                      <Row className="ml-1">Last one month</Row>
-                    </DropdownItem>
-                    <DropdownItem>
-                      <Row className="ml-1">Last three months</Row>
-                    </DropdownItem>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
-              </div>
-            </Row>
-          </CardTitle>
-          <CardBody>
-            <CardTitle></CardTitle>
-            <div className="dashboard-line-chart">
-              <LineChart shadow data={lineChartData} />
-            </div>
-          </CardBody>
-        </Card> */}
-        <Card>
-          <FormGroup className="ml-auto mr-4 mt-4">
-            {/* <Input
-                type="select"
-                name="select"
-                id="exampleSelect"
-                style={{ width: '150px' }}
-                onChange={changechart}
+      <Card style={{ marginBottom: '3rem' }}>
+        <FormGroup className="ml-auto mr-4 mt-3">
+          <div className="position-absolute card-top-buttons">
+            <UncontrolledDropdown>
+              <DropdownToggle
+                color=""
+                className="btn btn-header-light icon-button mr-4"
               >
-                <option>Last 7 days</option>
-                <option>Last 4 days</option>
-              </Input> */}
-            <div className="position-absolute card-top-buttons">
-              <UncontrolledDropdown>
-                <DropdownToggle
-                  color=""
-                  className="btn btn-header-light icon-button mr-4"
+                <FaFilter className="mb-1" />
+              </DropdownToggle>
+              <DropdownMenu right>
+                <DropdownItem onClick={() => setchartstatus('Last 7 days')}>
+                  <Row className="ml-1">Last 7 Days</Row>
+                </DropdownItem>
+                <DropdownItem onClick={() => setchartstatus('Last One Month')}>
+                  <Row className="ml-1">Last One Month</Row>
+                </DropdownItem>
+                <DropdownItem
+                  onClick={() => setchartstatus('Last Three Months')}
                 >
-                  <FaFilter className="mb-1" />
-                </DropdownToggle>
-                <DropdownMenu right>
-                  <DropdownItem>
-                    <Row className="ml-1">Last 7 Days</Row>
-                  </DropdownItem>
-                  <DropdownItem>
-                    <Row className="ml-1">Last one month</Row>
-                  </DropdownItem>
-                  <DropdownItem>
-                    <Row className="ml-1">Last three months</Row>
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
-            </div>
-          </FormGroup>
+                  <Row className="ml-1">Last Three Months</Row>
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
+          </div>
+        </FormGroup>
 
-          <CardBody style={{}}>
-            {chartstatus ? (
-              <Line data={data2} style={{ marginTop: '-100px' }} />
-            ) : (
-              <Line data={data1} style={{ marginTop: '-100px' }} />
-            )}
-          </CardBody>
-        </Card>
-      </Scrollbars>
+        <CardBody style={{}}>
+          {chartstatus == 'Last 7 days' ? (
+            <Line data={data1} height="80%" />
+          ) : chartstatus == 'Last One Month' ? (
+            <Line data={data2} height="80%" />
+          ) : (
+            <Line data={data3} height="80%" />
+          )}
+        </CardBody>
+      </Card>
+
       <Row>
         <Col md="12" xs="12">
           <Card className="h-120  ">

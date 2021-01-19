@@ -15,6 +15,8 @@ import './dash.css';
 import { FaUsers } from 'react-icons/fa';
 import { FaCode } from 'react-icons/fa';
 import { FaDatabase } from 'react-icons/fa';
+import { Line } from 'react-chartjs-2';
+
 import { FaWifi } from 'react-icons/fa';
 import { FaFilter } from 'react-icons/fa';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -24,7 +26,7 @@ import { lineChartData } from '../../data/charts';
 import { useHistory } from 'react-router-dom';
 
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-
+import './menu/style.css';
 import axiosInstance from '../../helpers/axiosInstance';
 import NotificationManager from '../../components/common/react-notifications/NotificationManager';
 
@@ -38,6 +40,7 @@ const BlankPage = ({ intl, match }) => {
   const [totalCourses, setTotalCourses] = useState(0);
   const [storage, setStorage] = useState('14GB');
   const [error, setError] = useState(false);
+  const [chartstatus, setchartstatus] = useState('Last 7 days');
 
   const history = useHistory();
   useEffect(() => {
@@ -72,6 +75,135 @@ const BlankPage = ({ intl, match }) => {
     };
     getData();
   }, []);
+  const data1 = {
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    /* scaleShowLabels: false, */
+    datasets: [
+      {
+        label: 'Registrations',
+        data: [32, 36, 29, 35, 32, 39, 28, 39, 44],
+        radius: 3,
+        tension: 0,
+        fill: false,
+        borderColor: '#5CCB00',
+        pointRadius: 6,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: ' #FFFFFF',
+      },
+
+      {
+        label: 'Enrollments',
+        data: [35, 26, 27, 23, 32, 30, 28, 39, 34],
+        tension: 0,
+        radius: 3,
+        fill: false,
+        borderColor: '#EC7600',
+        pointRadius: 6,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: ' #FFFFFF',
+      },
+      {
+        label: 'Revenue',
+        data: [39, 28, 39, 44, 78, 65, 34],
+        radius: 3,
+        tension: 0,
+        fill: false,
+        borderColor: '#00FFFF',
+        pointRadius: 6,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: ' #FFFFFF',
+      },
+    ],
+  };
+  const data2 = {
+    labels: ['Week1', 'Week2', 'Week3', 'Week4'],
+    /* scaleShowLabels: false, */
+    datasets: [
+      {
+        label: 'Registrations',
+        data: [39, 28, 39, 44],
+        radius: 3,
+        tension: 0,
+        fill: false,
+        borderColor: '#5CCB00',
+        pointRadius: 6,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: ' #FFFFFF',
+      },
+
+      {
+        label: 'Enrollments',
+        data: [30, 28, 39, 34],
+        tension: 0,
+        radius: 3,
+        fill: false,
+        borderColor: '#EC7600',
+        pointRadius: 6,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: ' #FFFFFF',
+      },
+      {
+        label: 'Revenue',
+        data: [56, 67, 32, 12],
+        radius: 3,
+        tension: 0,
+        fill: false,
+        borderColor: '#00FFFF',
+        pointRadius: 6,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: ' #FFFFFF',
+      },
+    ],
+  };
+  const data3 = {
+    labels: ['Jan', 'Feb', 'March'],
+    /* scaleShowLabels: false, */
+    datasets: [
+      {
+        label: 'Registrations',
+        data: [49, 54, 12],
+        radius: 3,
+        tension: 0,
+        fill: false,
+        borderColor: '#5CCB00',
+        pointRadius: 6,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: ' #FFFFFF',
+      },
+
+      {
+        label: 'Enrollments',
+        data: [71, 65, 45],
+        tension: 0,
+        radius: 3,
+        fill: false,
+        borderColor: '#EC7600',
+        pointRadius: 6,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: ' #FFFFFF',
+      },
+      {
+        label: 'Revenue',
+        data: [65, 54, 12],
+        radius: 3,
+        tension: 0,
+        fill: false,
+        borderColor: '#00FFFF',
+        pointRadius: 6,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: ' #FFFFFF',
+      },
+    ],
+  };
 
   return (
     <>
@@ -155,7 +287,7 @@ const BlankPage = ({ intl, match }) => {
             <Card className="mt-4 ccc mb-4" id="cb">
               <CardTitle>
                 <Row className="ml-4 mt-4">
-                  <div className="thecard">
+                  {/* <div className="thecard">
                     <span id="dot"></span>
                     <small className="ml-2">Registrations</small>
                     <span id="dot2"></span>
@@ -163,7 +295,7 @@ const BlankPage = ({ intl, match }) => {
                       Enrollments
                     </small>
                     <span id="dot3"></span> <small id="no">Revenue</small>
-                  </div>
+                  </div>*/}
 
                   <div className="position-absolute card-top-buttons">
                     <UncontrolledDropdown>
@@ -174,14 +306,20 @@ const BlankPage = ({ intl, match }) => {
                         <FaFilter className="mb-1" />
                       </DropdownToggle>
                       <DropdownMenu right>
-                        <DropdownItem>
+                        <DropdownItem
+                          onClick={() => setchartstatus('Last 7 days')}
+                        >
                           <Row className="ml-1">Last 7 Days</Row>
                         </DropdownItem>
-                        <DropdownItem>
-                          <Row className="ml-1">Last one month</Row>
+                        <DropdownItem
+                          onClick={() => setchartstatus('Last One Month')}
+                        >
+                          <Row className="ml-1">Last One Month</Row>
                         </DropdownItem>
-                        <DropdownItem>
-                          <Row className="ml-1">Last three months</Row>
+                        <DropdownItem
+                          onClick={() => setchartstatus('Last Three Months')}
+                        >
+                          <Row className="ml-1">Last Three Months</Row>
                         </DropdownItem>
                       </DropdownMenu>
                     </UncontrolledDropdown>
@@ -189,9 +327,16 @@ const BlankPage = ({ intl, match }) => {
                 </Row>
               </CardTitle>
               <CardBody>
-                <div className="dashboard-line-chart">
-                  <LineChart shadow data={lineChartData} />
-                </div>
+                {/* <div className="dashboard-line-chart"> */}
+                {chartstatus == 'Last 7 days' ? (
+                  <Line data={data1} height="80%" />
+                ) : chartstatus == 'Last One Month' ? (
+                  <Line data={data2} height="80%" />
+                ) : (
+                  <Line data={data3} height="80%" />
+                )}
+                {/* <LineChart shadow data={lineChartData} /> */}
+                {/* </div> */}
               </CardBody>
             </Card>
           </Scrollbars>
