@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useDebugValue } from 'react';
 import {
   Row,
   NavItem,
@@ -35,9 +35,20 @@ import Table from './Table';
 import Communication_table2 from '../../../data/Communication_table2';
 import Communication_table3 from '../../../data/Communication_table3';
 
+import axiosInstance from '../../../helpers/axiosInstance';
+import NotificationManager from '../../../components/common/react-notifications/NotificationManager';
+import NoDataFound from '../../../CustomComponents/NoDataFound';
+
 const Communication = () => {
   const [activeFirstTab1, setActiveFirstTab1] = useState('8');
   const [chartstatus, setchartstatus] = useState('Last 7 days');
+
+  const [emailsSent, setEmailsSent] = useState(0);
+  const [smsSent, setSmsSent] = useState(0);
+  const [error, setError] = useState(null);
+
+  const [emailData, setEmailData] = useState([]);
+  const [TextSMSData, setTextSMSData] = useState([]);
 
   const cols3 = [
     {
@@ -283,6 +294,7 @@ const Communication = () => {
       },
     ],
   };
+
   const data2 = {
     labels: ['Week1', 'Week2', 'Week3', 'Week4'],
     /* scaleShowLabels: false, */
@@ -369,6 +381,56 @@ const Communication = () => {
       },
     ],
   };
+
+  useEffect(() => {
+    if (error)
+      NotificationManager.warning(error, 'Blog Error', 3000, 3000, null, '');
+  }, [error]);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const result = await axiosInstance.get('/tutor/stats/communication');
+        console.log(result.data);
+        if (result.data.success) {
+          const data1 = result.data.emailData.map((doc) => ({
+            Send_to: doc.send_email_to,
+            date: doc.send_email_date,
+            time: doc.send_email_time,
+            message_id: doc.send_email_id,
+            opened: 'Yes',
+          }));
+
+          const data2 = result.data.smsData.map((doc) => ({
+            Send_to: doc.send_sms_to,
+            date: doc.send_sms_date,
+            time: doc.send_sms_time,
+            message_id: doc.send_sms_id,
+            opened: 'No',
+          }));
+          console.log(data1, data2);
+          setEmailsSent(data1.length);
+          setSmsSent(data2.length);
+          setEmailData(data1);
+          setTextSMSData(data2);
+        } else {
+          try {
+            setError(result.data.error);
+          } catch (error) {
+            setError('Unable to find blogs');
+          }
+        }
+      } catch (error) {
+        try {
+          setError(error.response.data.error);
+        } catch (error) {
+          setError('Unable to find blogs');
+        }
+      }
+    };
+    getData();
+  }, []);
+
   return (
     <>
       <Row>
@@ -385,7 +447,7 @@ const Communication = () => {
               </Col>
               <Col md="6" xs="6">
                 <CardText className="font-weight-bold head text-light">
-                  76
+                  {emailsSent}
                 </CardText>
                 <CardText className="font-weight-bold para text-light">
                   Total Email Send
@@ -407,7 +469,7 @@ const Communication = () => {
               </Col>
               <Col md="6" xs="6">
                 <CardText className="font-weight-bold head text-light">
-                  43
+                  {smsSent}
                 </CardText>
                 <CardText className="font-weight-bold para text-light">
                   Total Text Message Send
@@ -451,7 +513,7 @@ const Communication = () => {
               </Col>
               <Col md="6" xs="6" className="mb-3">
                 <CardText className="font-weight-bold head text-light">
-                  60
+                  {smsSent + emailsSent}
                 </CardText>
                 <CardText className="font-weight-bold para text-light">
                   Total Spendings
@@ -567,13 +629,13 @@ const Communication = () => {
                 </Nav>
                 <TabContent activeTab={activeFirstTab1}>
                   <TabPane tabId="8">
-                    <Table columns={cols3} data={Communication_table} />
+                    <Table columns={cols3} data={emailData} />
                   </TabPane>
                   <TabPane tabId="9">
                     <Table columns={cols8} data={Communication_table2} />
                   </TabPane>
                   <TabPane tabId="10">
-                    <Table columns={cols9} data={Communication_table3} />
+                    <Table columns={cols9} data={TextSMSData} />
                   </TabPane>
                 </TabContent>
               </CardBody>

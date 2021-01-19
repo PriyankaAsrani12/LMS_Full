@@ -62,5 +62,6 @@ router.use('/settings', require('./settings'));
 router.use('/affliates', require('./affliates'));
 router.use('/dashboard', require('./dashboard'));
 router.use('/monetization', require('./monetization'));
+router.use('/stats/communication', require('./stats/communication'));
 
 module.exports = router;
