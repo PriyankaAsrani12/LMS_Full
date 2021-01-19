@@ -221,7 +221,7 @@ const Monetization = () => {
       accessor: 'status',
       cellClass: 'text-muted',
       Cell: (props) => {
-        if (props.value == 'Incompleted') {
+        if (props.value == 'created') {
           return (
             <Badge
               color="danger"
@@ -237,7 +237,7 @@ const Monetization = () => {
         } else {
           return (
             <Badge
-              color="primary"
+              color="success"
               style={{
                 fontSize: '10px',
                 borderRadius: '10px',
@@ -416,56 +416,62 @@ const Monetization = () => {
           </Card>
         </Col>
       </Row>
+      {!data.length ? (
+        <NoDataFound />
+      ) : (
+        <>
+          <Card style={{ marginBottom: '3rem' }}>
+            <FormGroup className="ml-auto mr-4 mt-3">
+              <div className="position-absolute card-top-buttons">
+                <UncontrolledDropdown>
+                  <DropdownToggle
+                    color=""
+                    className="btn btn-header-light icon-button mr-4"
+                  >
+                    <FaFilter className="mb-1" />
+                  </DropdownToggle>
+                  <DropdownMenu right>
+                    <DropdownItem onClick={() => setchartstatus('Last 7 days')}>
+                      <Row className="ml-1">Last 7 Days</Row>
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={() => setchartstatus('Last One Month')}
+                    >
+                      <Row className="ml-1">Last One Month</Row>
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={() => setchartstatus('Last Three Months')}
+                    >
+                      <Row className="ml-1">Last Three Months</Row>
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              </div>
+            </FormGroup>
 
-      <Card style={{ marginBottom: '3rem' }}>
-        <FormGroup className="ml-auto mr-4 mt-3">
-          <div className="position-absolute card-top-buttons">
-            <UncontrolledDropdown>
-              <DropdownToggle
-                color=""
-                className="btn btn-header-light icon-button mr-4"
-              >
-                <FaFilter className="mb-1" />
-              </DropdownToggle>
-              <DropdownMenu right>
-                <DropdownItem onClick={() => setchartstatus('Last 7 days')}>
-                  <Row className="ml-1">Last 7 Days</Row>
-                </DropdownItem>
-                <DropdownItem onClick={() => setchartstatus('Last One Month')}>
-                  <Row className="ml-1">Last One Month</Row>
-                </DropdownItem>
-                <DropdownItem
-                  onClick={() => setchartstatus('Last Three Months')}
-                >
-                  <Row className="ml-1">Last Three Months</Row>
-                </DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
-          </div>
-        </FormGroup>
-
-        <CardBody style={{}}>
-          {chartstatus == 'Last 7 days' ? (
-            <Line data={data1} height="80%" />
-          ) : chartstatus == 'Last One Month' ? (
-            <Line data={data2} height="80%" />
-          ) : (
-            <Line data={data3} height="80%" />
-          )}
-        </CardBody>
-      </Card>
-
-      <Row>
-        <Col md="12" xs="12">
-          <Card className="h-120  ">
-            <Scrollbars style={{ width: '100%', height: 400 }}>
-              <CardBody style={{ width: '120%' }}>
-                <Table columns={cols4} data={data} />
-              </CardBody>
-            </Scrollbars>
+            <CardBody style={{}}>
+              {chartstatus == 'Last 7 days' ? (
+                <Line data={data1} height="80%" />
+              ) : chartstatus == 'Last One Month' ? (
+                <Line data={data2} height="80%" />
+              ) : (
+                <Line data={data3} height="80%" />
+              )}
+            </CardBody>
           </Card>
-        </Col>
-      </Row>
+          <Row>
+            <Col md="12" xs="12">
+              <Card className="h-120  ">
+                <Scrollbars style={{ width: '100%', height: 400 }}>
+                  <CardBody style={{ width: '120%' }}>
+                    <Table columns={cols4} data={data} />
+                  </CardBody>
+                </Scrollbars>
+              </Card>
+            </Col>
+          </Row>{' '}
+        </>
+      )}
     </>
   );
 };
