@@ -12,7 +12,7 @@ const Communication = require('../communication/model');
 
 router.post('/createLiveSession', auth, async (req, res) => {
   console.log('❓', req.body);
-  // return res.status(200).json({success:1})
+  // return res.status(200).json({ success: 1 });
 
   try {
     let {
@@ -35,9 +35,12 @@ router.post('/createLiveSession', auth, async (req, res) => {
     session_description = description;
     session_duration = duration;
     session_occurance = occurance;
-    session_associated_course_id = '10';
     session_start_date = startDateRange;
     session_start_time = time;
+
+    // if (session_trainer_id === 'customer_id') {
+    //   return res.status
+    // }
 
     // Find if session name already exists
     const sessionExist = await Session.findOne({
@@ -48,15 +51,6 @@ router.post('/createLiveSession', auth, async (req, res) => {
         success: 0,
         error: 'Sesison name already exists',
       });
-
-    // finding associated courses
-    session_associated_course_id = await Session.findAll({
-      where: {
-        session_name: session_associated_course_id,
-      },
-    });
-
-    console.log(session_associated_course_id);
 
     // let type;
 
@@ -101,8 +95,6 @@ router.post('/createLiveSession', auth, async (req, res) => {
 
     const session = await Session.create({
       customer_id: req.user.customer_id,
-      // session_id:'2',
-      // customer_id:'10',
       session_type: 'Live Session',
       session_name,
       session_description,
@@ -118,10 +110,10 @@ router.post('/createLiveSession', auth, async (req, res) => {
       session_start_date,
       session_enable_registration,
       session_start_time,
-      // session_registration,
       session_associated_course_id,
       session_zoom_code: Zoom_res.id,
       session_zoom_password: Zoom_res.password,
+      session_associated_course_id,
     });
     console.log(session.session_id);
 
@@ -160,7 +152,6 @@ router.post('/createRecordedSession', auth, async (req, res) => {
       session_trainer_name,
       session_trainer_id,
       session_fee_type,
-      session_associated_course_id = '10',
     } = req.body.values;
 
     if (!session_name || !session_description || !session_duration)
@@ -179,11 +170,6 @@ router.post('/createRecordedSession', auth, async (req, res) => {
         success: 0,
         error: 'Sesison name already exists',
       });
-
-    // finding associated courses
-    session_associated_course_id = Session.findAll({
-      where: { session_id: session_associated_course_id },
-    });
 
     // creating zoom meet
     Zoom_body = {
@@ -221,10 +207,10 @@ router.post('/createRecordedSession', auth, async (req, res) => {
       // session_start_date,
       // session_start_time,
       session_registration: 0,
-      session_associated_course_id,
       session_zoom_code: Zoom_res.id,
       session_zoom_password: Zoom_res.password,
     });
+
     const communicationData = await Communication.create({
       session_id: session.session_id,
       customer_id: req.user.customer_id,
@@ -393,6 +379,7 @@ router.get(
   auth,
   async (req, res) => {
     try {
+      console.log(req.params);
       if (!req.params.id)
         return res.status(400).json({
           success: 0,
@@ -416,9 +403,22 @@ router.get(
           error: 'Could not find session',
         });
 
-      const sql = `SELECT  trainer_full_name,trainer_experience,trainer_career_summary,trainer_occupation   from trainer_profiles WHERE customer_id=${req.user.customer_id} AND trainer_id=${req.params.trainer_id}`;
-      const TrainerData = await db.query(sql, { type: db.QueryTypes.SELECT });
-
+      let TrainerData;
+      if (req.params.trainer_id == 999) {
+        console.log('here');
+        TrainerData = await db.query(
+          `SELECT
+         customer_career_summary as trainer_career_summary,
+         CONCAT(customer_first_name,' ',customer_last_name) as trainer_full_name,
+         customer_occupation as trainer_occupation
+        FROM customer_tables WHERE customer_id=${req.user.customer_id}`,
+          { type: db.QueryTypes.SELECT }
+        );
+      } else {
+        const sql = `SELECT  trainer_full_name,trainer_experience,trainer_career_summary,trainer_occupation   from trainer_profiles WHERE customer_id=${req.user.customer_id} AND trainer_id=${req.params.trainer_id}`;
+        TrainerData = await db.query(sql, { type: db.QueryTypes.SELECT });
+      }
+      console.log(TrainerData);
       if (!TrainerData)
         return res.status(400).json({
           success: 0,

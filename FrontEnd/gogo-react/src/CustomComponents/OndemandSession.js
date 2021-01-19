@@ -28,9 +28,12 @@ const OndemandSession = ({ closeModal, propHandle }) => {
   let [select, setselect] = useState('');
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
-  const [trainerSelect, setTrainerSelect] = useState('');
+  const [trainerSelect, setTrainerSelect] = useState([
+    { value: 'You', label: 'customer_id' },
+  ]);
   const [loaded, setLoaded] = useState(false);
   const [trainerData, setTrainerData] = useState([]);
+  const [sessions, setSessions] = useState([]);
 
   const initialValues = {
     trainer: [],
@@ -77,7 +80,18 @@ const OndemandSession = ({ closeModal, propHandle }) => {
             value: doc.trainer_full_name,
             label: doc.trainer_id,
           }));
+          trainers.push({
+            value: 'You',
+            label: 'customer_id',
+          });
           initialValues.trainer = trainers;
+          const s = result.data.sessions.map((doc) => ({
+            value: doc.session_id,
+            label: doc.session_name,
+            id: doc.session_id,
+            color: '#00B8D9',
+          }));
+          setSessions(s);
           setTrainerData(trainers);
           setTrainerSelect(trainers[0].value);
         } else {
@@ -125,34 +139,34 @@ const OndemandSession = ({ closeModal, propHandle }) => {
     )
       setError('Provide Valid Fees');
     else {
-      setTimeout(() => {
-        //here makerequest fr your session creation
-        axiosInstance
-          .post('/tutor/sessions/createRecordedSession', { values })
-          .then((response) => {
-            console.log(response);
-            if (response.data.success) {
-              setSuccess(true);
-              closeModal();
-            } else {
-              try {
-                setError(response.data.error);
-              } catch (err) {
-                setError('Could not create session');
-              }
-            }
-          })
-          .catch((err) => {
-            console.log(err);
+      // setTimeout(() => {
+      //here makerequest fr your session creation
+      axiosInstance
+        .post('/tutor/sessions/createRecordedSession', { values })
+        .then((response) => {
+          console.log(response);
+          if (response.data.success) {
+            setSuccess(true);
+            closeModal();
+          } else {
             try {
-              setError(err.response.data.error);
-            } catch (error) {
+              setError(response.data.error);
+            } catch (err) {
               setError('Could not create session');
             }
-          })
-          .then(() => propHandle());
-        setSubmitting(false);
-      }, 1000);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          try {
+            setError(err.response.data.error);
+          } catch (error) {
+            setError('Could not create session');
+          }
+        })
+        .then(() => propHandle());
+      setSubmitting(false);
+      // }, 1000);
     }
   };
 

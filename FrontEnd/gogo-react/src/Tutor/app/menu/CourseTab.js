@@ -22,26 +22,26 @@ const CourseTab = () => {
     {
       Header: 'Course',
       accessor: 'title',
-      cellClass: 'text-muted w-20',
+      cellClass: 'text-muted w-10',
       Cell: (props) => <p style={{ fontSize: '1rem' }}>{props.value}</p>,
       sortType: 'basic',
     },
     {
       Header: 'Registrations',
       accessor: 'status',
-      cellClass: 'color text-muted w-15',
+      cellClass: 'color text-muted w-10',
       Cell: (props) => (
-        <p style={{ marginLeft: '30px', fontSize: '1rem' }}>{props.value}</p>
+        <p style={{ marginLeft: '10px', fontSize: '1rem' }}>{props.value}</p>
       ),
       sortType: 'basic',
     },
-    {
-      Header: 'Enrolled',
-      accessor: 'fee',
-      cellClass: 'text-muted w-15',
-      Cell: (props) => <p style={{ fontSize: '1rem' }}>{props.value}</p>,
-      sortType: 'basic',
-    },
+    // {
+    //   Header: 'Enrolled',
+    //   accessor: 'fee',
+    //   cellClass: 'text-muted w-15',
+    //   Cell: (props) => <p style={{ fontSize: '1rem' }}>{props.value}</p>,
+    //   sortType: 'basic',
+    // },
     {
       Header: 'Revenue',
       accessor: 'sb',

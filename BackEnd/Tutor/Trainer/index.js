@@ -3,6 +3,7 @@ const webp = require('webp-converter');
 
 const { Trainer } = require('./model');
 const auth = require('../middleware/deepakAuth');
+const { db } = require('../../common/db/sql');
 
 router.get('/', auth, async (req, res) => {
   try {
@@ -123,14 +124,16 @@ router.get('/specific', auth, async (req, res) => {
       },
       attributes: ['trainer_id', 'trainer_full_name'],
     });
-    if (!result)
-      return res.status(400).json({
-        success: 0,
-        error: 'Unable to find trainer data',
-      });
+
+    const sessions = await db.query(
+      `SELECT session_name,session_id FROM session_tables WHERE customer_id=${req.user.customer_id}`,
+      { type: db.QueryTypes.SELECT }
+    );
+
     return res.status(200).json({
       success: 1,
       result,
+      sessions,
     });
   } catch (err) {
     console.log(err);

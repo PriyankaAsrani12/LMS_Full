@@ -46,7 +46,7 @@ const Session = db.define('session_table', {
     // defaultValue: Null
   },
   session_trainer_id: {
-    type: DataTypes.INTEGER(255),
+    type: DataTypes.STRING,
     allowNull: true,
     // defaultValue: Null
   },

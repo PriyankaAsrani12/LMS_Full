@@ -160,14 +160,11 @@ export default class SessionMaterial extends Component {
   }
   componentDidMount() {
     try {
-      if (
-        !this.props.location.state.uniquesessionid ||
-        !this.props.location.state.trainer_id
-      )
+      if (isNaN(this.props.location.state.uniquesessionid))
         this.props.history.push('/app/dashboard/default');
 
-      const { uniquesessionid, trainer_id } = this.props.location.state;
-
+      let { uniquesessionid, trainer_id } = this.props.location.state;
+      if (trainer_id == 'customer_id') trainer_id = 999;
       axiosInstance
         .get(
           `/tutor/libraryItems/recorded/${uniquesessionid}/trainer/${trainer_id}`

@@ -52,9 +52,21 @@ Router.get('/:id/trainer/:trainer_id', auth, async (req, res) => {
     const sql3 = `SELECT item_id,item_name,item_url from library_items WHERE session_id=${req.params.id} AND customer_id=${req.user.customer_id}`;
     const LibraryItems = await db.query(sql3, { type: db.QueryTypes.SELECT });
 
-    const sql4 = `SELECT  trainer_full_name,trainer_experience,trainer_career_summary,trainer_occupation   from trainer_profiles WHERE customer_id=${req.user.customer_id} AND trainer_id=${req.params.trainer_id}`;
-    const TrainerData = await db.query(sql4, { type: db.QueryTypes.SELECT });
-
+    let TrainerData;
+    if (req.params.trainer_id == 999) {
+      console.log('here');
+      TrainerData = await db.query(
+        `SELECT
+       customer_career_summary as trainer_career_summary,
+       CONCAT(customer_first_name,' ',customer_last_name) as trainer_full_name,
+       customer_occupation as trainer_occupation
+      FROM customer_tables WHERE customer_id=${req.user.customer_id}`,
+        { type: db.QueryTypes.SELECT }
+      );
+    } else {
+      const sql4 = `SELECT  trainer_full_name,trainer_experience,trainer_career_summary,trainer_occupation   from trainer_profiles WHERE customer_id=${req.user.customer_id} AND trainer_id=${req.params.trainer_id}`;
+      TrainerData = await db.query(sql4, { type: db.QueryTypes.SELECT });
+    }
     if (!TrainerData)
       return res.status(400).json({
         success: 0,

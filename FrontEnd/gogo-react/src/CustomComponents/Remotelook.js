@@ -57,13 +57,11 @@ const Remotelook = (props) => {
   useEffect(() => {
     const getData = async () => {
       try {
-        if (
-          !props.location.state.uniquesessionid ||
-          !props.location.state.trainer_id
-        )
+        console.log(props.location.state);
+        if (isNaN(props.location.state.uniquesessionid))
           props.history.push('/app/dashboard/default');
-        const { uniquesessionid, trainer_id } = props.location.state;
-
+        let { uniquesessionid, trainer_id } = props.location.state;
+        if (trainer_id == 'customer_id') trainer_id = 999;
         const response = await axiosInstance.get(
           `/tutor/sessions/FindSessionById/${uniquesessionid}/trainer_id/${trainer_id}`
         );

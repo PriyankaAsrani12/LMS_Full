@@ -11,45 +11,6 @@ import NotificationManager from '../components/common/react-notifications/Notifi
 import { DropDownContext } from '../context/DropdownContext';
 import Loader from './settings/Loader';
 
-const course = [
-  { value: 'Option1', label: 'Option1' },
-  { value: 'Option2', label: 'Option2' },
-  { value: 'Option3', label: 'Option3' },
-  { value: 'Option4', label: 'Option4' },
-  { value: 'Option5', label: 'Option5' },
-];
-const dur = [
-  { value: 'Option1', label: 'Option1' },
-  { value: 'Option2', label: 'Option2' },
-  { value: 'Option3', label: 'Option3' },
-  { value: 'Option4', label: 'Option4' },
-  { value: 'Option5', label: 'Option5' },
-];
-const fee = [
-  { value: 'free', label: 'Free for Course Enrolled Students' },
-  { value: 'cost', label: 'Paid for Course Enrolled Students' },
-];
-const fee2 = [
-  { value: 'free', label: '' },
-  { value: 'cost', label: '' },
-  { value: 'cost2', label: '' },
-];
-
-const options = [
-  { value: 'once', label: 'Only Once' },
-  { value: 'daily', label: 'Daily' },
-  { value: 'weekly', label: 'Weekly' },
-  { value: 'monthly', label: 'Monthly' },
-  { value: 'yearly', label: 'Yearly' },
-];
-
-const traineroptions = [{ value: 'you', label: 'You' }];
-
-const correspondanceoption = [
-  { value: 'independent', label: 'independent' },
-  { value: 'uploaded', label: 'uploaded' },
-];
-
 const RemoteSession = ({ closeModal, propHandle }) => {
   const [startDateRange, setStartDateRange] = useState('');
   const [time, setTime] = useState('');
@@ -67,11 +28,15 @@ const RemoteSession = ({ closeModal, propHandle }) => {
   let [trainer, setTrainer] = useState('');
   let [session_fee, setSession_fee] = useState('');
   const [handleReloadTable] = useContext(DropDownContext);
-  const [trainerData, setTrainerData] = useState([]);
+  const [trainerData, setTrainerData] = useState([
+    { value: 'You', label: 'customer_id' },
+  ]);
   const [loaded, setLoaded] = useState(false);
 
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+
+  const [sessions, setSessions] = useState([]);
 
   useEffect(() => {
     if (error) {
@@ -85,30 +50,24 @@ const RemoteSession = ({ closeModal, propHandle }) => {
         ''
       );
     }
-  }, [error, setError]);
+  }, [error]);
 
   useEffect(() => {
     if (success) {
       NotificationManager.success(
         'Session Created Successfully',
-        'Create Ondemand Session',
+        'Create Live Session',
         3000,
         null,
         null,
         ''
       );
     }
-  }, [success, setSuccess]);
+  }, [success]);
 
-  const checkinp = () => {
-    setcheck(!check);
-  };
-  const selectcheck = (e) => {
-    setstate((state = e.target.value));
-  };
-  const selectcheck2 = (e) => {
-    setfees((fees = e.target.value));
-  };
+  const checkinp = () => setcheck(!check);
+  const selectcheck = (e) => setstate((state = e.target.value));
+  const selectcheck2 = (e) => setfees((fees = e.target.value));
 
   useEffect(() => {
     const getTrainerData = async () => {
@@ -120,6 +79,17 @@ const RemoteSession = ({ closeModal, propHandle }) => {
             value: doc.trainer_full_name,
             label: doc.trainer_id,
           }));
+          trainers.push({
+            value: 'You',
+            label: 'customer_id',
+          });
+          const s = result.data.sessions.map((doc) => ({
+            value: doc.session_id,
+            label: doc.session_name,
+            id: doc.session_id,
+            color: '#00B8D9',
+          }));
+          setSessions(s);
           setTrainerData(trainers);
           setTrainer(trainers[0].value);
         } else {
@@ -177,9 +147,14 @@ const RemoteSession = ({ closeModal, propHandle }) => {
   };
 
   const onSubmit = () => {
-    console.log(handleReloadTable);
+    let session_associated_course_id;
+    if (course) {
+      session_associated_course_id = course.map((doc) => doc.value);
+      session_associated_course_id = session_associated_course_id.toString();
+    }
 
     const values = {
+      session_associated_course_id,
       session_name,
       description,
       occurance,
@@ -195,6 +170,7 @@ const RemoteSession = ({ closeModal, propHandle }) => {
     trainerData.forEach((doc) => {
       if (doc.value === trainer) values.session_trainer_id = doc.label;
     });
+    console.log(values);
 
     if (
       (!check && fees === 'Free for Course Enrolled Students') ||
@@ -344,7 +320,7 @@ const RemoteSession = ({ closeModal, propHandle }) => {
         <Select
           isMulti
           name="session_associated_course"
-          options={colourOptions}
+          options={sessions}
           className="basic-multi-select"
           classNamePrefix="select"
           onChange={(e) => setCourse(e)}
