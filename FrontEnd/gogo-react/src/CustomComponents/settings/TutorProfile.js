@@ -14,6 +14,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import NotificationManager from '../../components/common/react-notifications/NotificationManager';
 import axiosInstance from '../../helpers/axiosInstance';
 import Loader from './Loader';
+import logo from './user.png';
 
 const TutorProfile = () => {
   const [error, setError] = useState(null);
@@ -63,7 +64,7 @@ const TutorProfile = () => {
     customer_twitter_url: '',
   });
 
-  const [displayProfileImage, setDisplayProfileImage] = useState(null);
+  const [displayProfileImage, setDisplayProfileImage] = useState(logo);
 
   const handleUserProfileChange = (e) => {
     const { name, value } = e.target;
@@ -128,7 +129,8 @@ const TutorProfile = () => {
           } catch (e) {
             setEditorState(EditorState.createEmpty());
           }
-
+          if (result.data.user.customer_profile_picture)
+            setDisplayProfileImage(result.data.user.customer_profile_picture);
           setUserProfile(result.data.user);
         } else {
           if (result.data.error) setError(result.data.error);
