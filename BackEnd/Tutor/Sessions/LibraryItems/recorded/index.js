@@ -439,7 +439,8 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
 
       cmd.run(
         `
-    bnycdn cp -s ${bData[0].customer_storage_zone_user_key}  ${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name} /${bData[0].customer_storage_zone_name}/${file.name}/
+        cd ${process.env.FILE_UPLOAD_PATH_CLIENT}
+    bnycdn cp -s ${bData[0].customer_storage_zone_user_key}  /${file.name} /${bData[0].customer_storage_zone_name}/${file.name}/
     `,
         (err, data, stderr) => {
           if (err) {
