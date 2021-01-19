@@ -429,7 +429,7 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
     file.mv(`${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name}`, (err) => {
       if (err) {
         console.error(err);
-        return res.status(500).josn({
+        return res.status(500).json({
           success: 0,
           error: 'could not upload file',
           errorReturned: JSON.stringify(err),
