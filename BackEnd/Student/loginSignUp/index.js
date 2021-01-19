@@ -25,6 +25,7 @@ router.post('/register', async (req, res) => {
       student_email,
       student_password,
       using_google = false,
+      customer_id,
     } = req.body.values;
 
     //Don't change it to let otherwise DB is will not connect
@@ -51,19 +52,22 @@ router.post('/register', async (req, res) => {
 
     // Take customer_id from database according to particular subdomain ...
     // send mail if value of communication_email_signup is 1
-    const customer_id = 1;
+    if (!customer_id) customer_id = 1;
 
     const customer = await db.query(
-      `SELECT communication_email_signup FROM customer_tables WHERE customer_id=${customer_id}`,
+      `SELECT communication_email_signup,communication_message_signup FROM customer_tables WHERE customer_id=${customer_id}`,
       { type: db.QueryTypes.SELECT }
     );
+
+    console.log(customer);
+
     if (customer.communication_email_signup) {
       let temp = await sendWelcomeEmail(student_email, name);
       console.log('🚀', temp);
     }
 
     // sending sms
-    if (!using_google) {
+    if (!using_google && customer.communication_message_signup) {
       const result = await sendsms(student_phone_number, 'test');
       console.log(result);
     }
