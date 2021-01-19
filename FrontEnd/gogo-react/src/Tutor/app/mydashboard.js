@@ -96,7 +96,7 @@ const BlankPage = ({ intl, match }) => {
                 <Col md="12">
                   <FaCode id="users" />
                   <h1 id="number">{totalCourses}</h1>
-                  <CardText id="small">Courses uploaded till now</CardText>
+                  <CardText id="small">Sessions taken till now</CardText>
                 </Col>
               </Row>
             </CardBody>
