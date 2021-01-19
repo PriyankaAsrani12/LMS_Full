@@ -425,25 +425,37 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
     );
     console.log(bData);
     const file = req.files.file;
-    cmd.run(
-      `
-    bnycdn cp -s ${bData[0].customer_storage_zone_user_key} -r ${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name} /${bData[0].customer_storage_zone_name}/${file.name}/
-    `,
-      (err, data, stderr) => {
-        if (err) {
-          console.log(err);
-          return res.status(400).json({
-            success: 0,
-            error: err,
-          });
-        }
-        console.log(data);
-        return res.status(200).json({
-          success: 1,
-          data,
+
+    file.mv(`${process.env.FILE_UPLOAD_PATH}${file.name}`, (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).josn({
+          success: 0,
+          error: 'could not upload file',
+          errorReturned: JSON.stringify(err),
         });
       }
-    );
+
+      cmd.run(
+        `
+    bnycdn cp -s ${bData[0].customer_storage_zone_user_key} -r ${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name} /${bData[0].customer_storage_zone_name}/${file.name}/
+    `,
+        (err, data, stderr) => {
+          if (err) {
+            console.log(err);
+            return res.status(400).json({
+              success: 0,
+              error: err,
+            });
+          }
+          console.log(data);
+          return res.status(200).json({
+            success: 1,
+            data,
+          });
+        }
+      );
+    });
 
     // const savedItem = await LibraryItem.create({
     //   session_id: req.body.session_id,
