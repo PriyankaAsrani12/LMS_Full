@@ -93,7 +93,7 @@ const Index = () => {
         id="default"
         className="font-weight-bold"
         onClick={() =>
-          window.open('http://35.154.109.203:5000/tutor/certificates')
+          window.open('http://13.233.214.77:5000/tutor/certificates')
         }
       >
         Create A Certificate Template
@@ -137,8 +137,8 @@ const Index = () => {
                           onClick={() => {
                             console.log('edit ');
                             window.open(
-                              // `http://35.154.109.203:5000/tutor/certificates/api/database/2/${doc.certificate_id}`
-                              `http://35.154.109.203:5000/tutor/certificates/edit/${doc.certificate_id}`
+                              // `http://13.233.214.77:5000/tutor/certificates/api/database/2/${doc.certificate_id}`
+                              `http://13.233.214.77:5000/tutor/certificates/edit/${doc.certificate_id}`
                             );
                           }}
                         >

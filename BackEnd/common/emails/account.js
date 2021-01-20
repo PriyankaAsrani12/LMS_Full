@@ -116,7 +116,7 @@ const sendPasswordResetEmail = (email, encryptedData) => {
       subject: 'Welcome!!!!!!',
       htmlbody: `nice to have you here ${email}
             <h2>Reset Your Password</h2>
-            <a href="http://35.154.109.203:3000/Tutor/user/reset-password?oobCode=${encryptedData}">Reset</a>
+            <a href="http://13.233.214.77:3000/Tutor/user/reset-password?oobCode=${encryptedData}">Reset</a>
   `,
     })
   );
