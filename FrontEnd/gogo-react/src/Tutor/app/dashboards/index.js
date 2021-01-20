@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import './index.css'
+import './index.css';
 // import { ProtectedRoute, UserRole } from '../../../helpers/authHelper';
 import Breadcrumb from '../../../containers/navs/Breadcrumb';
 
@@ -16,31 +16,32 @@ const AnalyticsDefault = React.lazy(() =>
 const EcommerceDefault = React.lazy(() =>
   import(/* webpackChunkName: "dashboard-ecommerce" */ './ecommerce')
 );
-
+const MyDash = React.lazy(() => import('../mydashboard'));
 const Dashboards = ({ match }) => (
   <>
-  {console.log(match)}
+    {console.log(match)}
 
-  <Suspense fallback={<div className="loading" />}>
-    <Switch>
-      <Redirect exact from={`${match.url}/`} to={`${match.url}/default`} />
-      <Route
-        path={`${match.url}/default`}
-        render={(props) => <DashboardDefault {...props} />}
-      />
-      <Route
-        path={`${match.url}/content`}
-        render={(props) => <ContentDefault {...props} />}
-      /> 
-      <Route
-        path={`${match.url}/ecommerce`}
-        render={(props) => <EcommerceDefault {...props} />}
-      />
-      <Route
-        path={`${match.url}/analytics`}
-        render={(props) => <AnalyticsDefault {...props} />}
-      />
-      {/* 
+    <Suspense fallback={<div className="loading" />}>
+      <Switch>
+        <Redirect exact from={`${match.url}/`} to={`${match.url}/default`} />
+
+        <Route
+          path={`${match.url}/default`}
+          render={(props) => <DashboardDefault {...props} />}
+        />
+        <Route
+          path={`${match.url}/content`}
+          render={(props) => <ContentDefault {...props} />}
+        />
+        <Route
+          path={`${match.url}/ecommerce`}
+          render={(props) => <EcommerceDefault {...props} />}
+        />
+        <Route
+          path={`${match.url}/analytics`}
+          render={(props) => <AnalyticsDefault {...props} />}
+        />
+        {/* 
       <ProtectedRoute
         path={`${match.url}/default`}
         component={DashboardDefault}
@@ -63,9 +64,9 @@ const Dashboards = ({ match }) => (
       />
       */}
 
-      <Redirect to="/error" />
-    </Switch>
-  </Suspense>
+        <Redirect to="/error" />
+      </Switch>
+    </Suspense>
   </>
 );
 export default Dashboards;

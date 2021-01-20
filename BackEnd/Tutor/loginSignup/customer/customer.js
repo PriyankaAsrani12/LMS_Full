@@ -98,7 +98,7 @@ router.post('/users', async (req, res) => {
     //Change it to customer email and customer name
     let name = customer_first_name;
     if (customer_last_name)
-      name = `${customer_first_name} ${customer_last_name}`;
+      name = `${customer_first_name}-${customer_last_name}`;
 
     //create storage zone ,pull zone here
     const storageZoneName = customer_last_name
@@ -153,14 +153,14 @@ router.post('/users', async (req, res) => {
 
     req.body.values.customer_cdn_url = 'oyesth-lms-12.b-cdn.net';
 
-    // let temp = await sendWelcomeEmail(customer_email, name);
-    // console.log('🚀', temp);
+    let temp = await sendWelcomeEmail(customer_email, name);
+    console.log('🚀', temp);
 
-    // // sending sms
-    // if (!using_google) {
-    //   const result = await sendsms(customer_phone_number, 'test');
-    //   console.log(result);
-    // }
+    // sending sms
+    if (!using_google) {
+      const result = await sendsms(customer_phone_number, 'test');
+      console.log(result);
+    }
 
     cmd.run(
       `

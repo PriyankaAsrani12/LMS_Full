@@ -109,7 +109,7 @@ function* registerWithEmailPassword({ payload }) {
       const item = { uid: registerUser.token, user: registerUser.user };
       setCurrentUser(item);
       yield put(registerUserSuccess(item));
-      history.push('/app/dashboard');
+      history.push('/app/mydashboard');
     } else {
       yield put(registerUserError(registerUser.error));
     }
