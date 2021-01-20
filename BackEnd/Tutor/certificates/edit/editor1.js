@@ -1208,7 +1208,9 @@ async function save() {
     console.log(sfile);
     console.log(sfile.status);
     if (sfile.status) {
-      temp_operations[0].src = '/uploads/' + sfile.name;
+      // temp_operations[0].src = '/uploads/' + sfile.name;
+      temp_operations[0].src =
+        'https://image.shutterstock.com/image-photo/bright-spring-view-cameo-island-260nw-1048185397.jpg';
       delete temp_operations[0].file;
       delete operations[0].file;
     } else {
@@ -1252,7 +1254,9 @@ async function save() {
           console.log('sfile----------------------');
           console.log(sfile);
           if (sfile.status) {
-            temp_operations[i].src = '/uploads/' + sfile.name;
+            // temp_operations[i].src = '/uploads/' + sfile.name;
+            temp_operations[i].src =
+              'https://image.shutterstock.com/image-photo/bright-spring-view-cameo-island-260nw-1048185397.jpg';
             delete temp_operations[i].file;
             delete operations[i].file;
             operations[i].src = temp_operations[i].src;

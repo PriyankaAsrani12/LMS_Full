@@ -9,8 +9,8 @@ router.get('/', auth, async (req, res) => {
         send_email_date,
         send_email_time,
         send_email_id,
-          send_email_confimation,
-            COUNT(send_email_id) as totalEmailsSent
+          send_email_confimation
+            
             FROM email_tables
             WHERE customer_id=${req.user.customer_id}
           `;
@@ -20,14 +20,15 @@ router.get('/', auth, async (req, res) => {
         send_sms_date,
         send_sms_time,
         send_sms_to,
-        send_sms_confimation,
-        COUNT(send_sms_id) as totalSMSSent
+        send_sms_confimation
         FROM sms_tables
         WHERE customer_id=${req.user.customer_id}
      
         `;
     const result1 = await db.query(sql1, { type: db.QueryTypes.SELECT });
     const result2 = await db.query(sql2, { type: db.QueryTypes.SELECT });
+
+    console.log(result1, result2);
 
     return res.status(200).json({
       success: 1,

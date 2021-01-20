@@ -241,7 +241,7 @@ const Trainer = () => {
   if (!isLoaded) return <Loader />;
 
   return (
-    <>
+    <div style={{ marginBottom: '20rem' }}>
       {inputList1.map((x, i) => {
         console.log(i);
         return (
@@ -499,7 +499,7 @@ const Trainer = () => {
       </Button>
       {/* )} */}
       <Button onClick={handleTrainerSubmit}>Submit</Button>
-    </>
+    </div>
   );
 };
 
