@@ -14,6 +14,20 @@ const Affliate = db.define('affiliate_table', {
     //     key:'customer_id'
     // }
   },
+  student_id: {
+    type: STRING,
+    // references: {
+    //   model: 'student_tables',
+    //   key:'student_id'
+    // }
+  },
+  student_name: {
+    type: STRING,
+    // references: {
+    //   model: 'student_tables',
+    //   key:'student_name'
+    // }
+  },
   affiliate_name: {
     type: STRING,
     allowNull: false,
