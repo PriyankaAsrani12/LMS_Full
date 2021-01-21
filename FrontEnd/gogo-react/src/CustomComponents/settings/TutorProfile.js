@@ -57,6 +57,7 @@ const TutorProfile = () => {
     customer_institute_name: '',
     customer_about_me: '',
     customer_career_summary: '',
+    customer_experience: '',
     customer_role: '',
     customer_linkedin_url: '',
     customer_occupation: '',
@@ -67,6 +68,21 @@ const TutorProfile = () => {
 
   const [displayProfileImage, setDisplayProfileImage] = useState(logo);
 
+  const handleReset = () =>
+    setUserProfile({
+      customer_profile_picture: '',
+      customer_institute_name: '',
+      customer_about_me: '',
+      customer_career_summary: '',
+      customer_experience: '',
+      customer_role: '',
+      customer_linkedin_url: '',
+      customer_occupation: '',
+      customer_facebook_url: '',
+      customer_website_url: '',
+      customer_twitter_url: '',
+    });
+
   const handleUserProfileChange = (e) => {
     const { name, value } = e.target;
     setUserProfile((prevState) => ({
@@ -76,6 +92,7 @@ const TutorProfile = () => {
   };
 
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [editorState2, setEditorState2] = useState(EditorState.createEmpty());
 
   const handleUserProfileSubmit = async (e) => {
     e.preventDefault();
@@ -84,6 +101,11 @@ const TutorProfile = () => {
     values.customer_career_summary = draftToHtml(
       convertToRaw(editorState.getCurrentContent())
     );
+
+    values.customer_experience = draftToHtml(
+      convertToRaw(editorState2.getCurrentContent())
+    );
+
     console.log(values);
     try {
       const formData = new FormData();
@@ -109,6 +131,7 @@ const TutorProfile = () => {
   };
 
   const onEditorStateChange = (editorState) => setEditorState(editorState);
+  const onEditorStateChange2 = (editorState) => setEditorState2(editorState);
 
   useEffect(() => {
     const getUser = async () => {
@@ -130,6 +153,21 @@ const TutorProfile = () => {
           } catch (e) {
             setEditorState(EditorState.createEmpty());
           }
+
+          try {
+            const blocksFromHTML = convertFromHTML(
+              result.data.user.customer_experience
+            );
+            const state = ContentState.createFromBlockArray(
+              blocksFromHTML.contentBlocks,
+              blocksFromHTML.entityMap
+            );
+
+            setEditorState2(EditorState.createWithContent(state));
+          } catch (e) {
+            setEditorState2(EditorState.createEmpty());
+          }
+
           if (result.data.user.customer_profile_picture)
             setDisplayProfileImage(result.data.user.customer_profile_picture);
           setUserProfile(result.data.user);
@@ -204,7 +242,7 @@ const TutorProfile = () => {
                     <p id="ufd">Upload from device</p>
                   </label>
                 </Row>
-                <label className="mt-5">SubDomain Name</label>
+                <label className="mt-3">SubDomain Name</label>
                 <Input
                   type="text"
                   name="customer_subdomain_name"
@@ -222,12 +260,90 @@ const TutorProfile = () => {
                   value={userProfile.customer_institute_name}
                   onChange={handleUserProfileChange}
                 />
-                <label className="mt-4">About me</label>
+                <label style={{ marginTop: '32px' }}>About me</label>
                 <Input
                   type="text"
                   name="customer_about_me"
                   onChange={handleUserProfileChange}
                   value={userProfile.customer_about_me}
+                />
+              </Col>
+            </Row>
+            <Row className="mt-4">
+              <Col md={4} xs="12" style={{ marginTop: '24px' }}>
+                <label>Role</label>
+                <Input
+                  type="text"
+                  value="Instructor"
+                  className="ml10"
+                  disabled
+                  // style={{ width: '170%' }}
+                />
+              </Col>
+
+              <Col md={4} xs="12">
+                <label className="mt-4">Occupation</label>
+                <Input
+                  type="text"
+                  placeholder="Occupation"
+                  className="ml10"
+                  name="customer_occupation"
+                  value={userProfile.customer_occupation}
+                  onChange={handleUserProfileChange}
+                  // style={{ width: '170%' }}
+                />
+              </Col>
+
+              <Col md={4} xs="12">
+                <label className="mt-4">Website</label>
+                <Input
+                  type="text"
+                  placeholder="example: www.xyz.com"
+                  className="ml10"
+                  name="customer_website_url"
+                  value={userProfile.customer_website_url}
+                  onChange={handleUserProfileChange}
+                  // style={{ width: '170%' }}
+                />
+              </Col>
+            </Row>
+            <Row className="mt-4">
+              <Col md={4} xs="12" style={{ marginTop: '24px' }}>
+                <label className="">LinkedIn</label>
+                <Input
+                  type="text"
+                  placeholder="Your LinkedIn Account URL"
+                  className="ml10"
+                  name="customer_linkedin_url"
+                  value={userProfile.customer_linkedin_url}
+                  onChange={handleUserProfileChange}
+                  // style={{ width: '170%' }}
+                />
+              </Col>
+
+              <Col md={4} xs="12">
+                <label className="mt-4">Facebook</label>
+                <Input
+                  type="text"
+                  placeholder="Your Facebook Account URL"
+                  className="ml10"
+                  name="customer_facebook_url"
+                  value={userProfile.customer_facebook_url}
+                  onChange={handleUserProfileChange}
+                  // style={{ width: '170%' }}
+                />
+              </Col>
+
+              <Col md={4} xs="12">
+                <label className="mt-4">Twitter</label>
+                <Input
+                  type="text"
+                  placeholder="Your Twitter Account URL"
+                  className="ml10"
+                  name="customer_twitter_url"
+                  value={userProfile.customer_twitter_url}
+                  onChange={handleUserProfileChange}
+                  // style={{ width: '170%' }}
                 />
               </Col>
             </Row>
@@ -242,96 +358,21 @@ const TutorProfile = () => {
                   onEditorStateChange={onEditorStateChange}
                   editorStyle={{ height: '150px' }}
                 />
-                {/* <textarea
-                  type="text"
-                  name="customer_career_summary"
-                  style={{
-                    fontFamily: 'inherit',
-                    fontSize: 'inherit',
-                    height: '300px',
-                    width: '100%',
-                    maxWidth: '100% !important',
-                  }}
-                  value={userProfile.customer_career_summary}
-                  onChange={handleUserProfileChange}
-                  onKeyPress={(e) => (e.key === 'Enter' ? false : true)}
-                />
-                <p className="mt-2">
-                  <b>Note:</b>&nbsp;Please add ',' to separte skills.
-                </p> */}
               </Col>
               <Col
                 md={6}
                 className="mt-3"
                 // style={{ alignItems: 'center', justifyContent: 'center' }}
               >
-                <Row
-                  className="mt-5"
-                  style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    justifyContent: 'space-evenly',
-                  }}
-                >
-                  <Col md={3}>
-                    <label>Role</label>
-                    <Input
-                      type="text"
-                      value="Instructor"
-                      disabled
-                      style={{ width: '170%' }}
-                    />
-
-                    <label className="mt-4">Occupation</label>
-                    <Input
-                      type="text"
-                      placeholder="Occupation"
-                      name="customer_occupation"
-                      value={userProfile.customer_occupation}
-                      onChange={handleUserProfileChange}
-                      style={{ width: '170%' }}
-                    />
-
-                    <label className="mt-4">Website</label>
-                    <Input
-                      type="text"
-                      placeholder="example: www.xyz.com"
-                      name="customer_website_url"
-                      value={userProfile.customer_website_url}
-                      onChange={handleUserProfileChange}
-                      style={{ width: '170%' }}
-                    />
-                  </Col>
-                  <Col md={3}>
-                    <label className="">LinkedIn</label>
-                    <Input
-                      type="text"
-                      placeholder="Your LinkedIn Account URL"
-                      name="customer_linkedin_url"
-                      value={userProfile.customer_linkedin_url}
-                      onChange={handleUserProfileChange}
-                      style={{ width: '170%' }}
-                    />
-                    <label className="mt-4">Facebook</label>
-                    <Input
-                      type="text"
-                      placeholder="Your Facebook Account URL"
-                      name="customer_facebook_url"
-                      value={userProfile.customer_facebook_url}
-                      onChange={handleUserProfileChange}
-                      style={{ width: '170%' }}
-                    />
-                    <label className="mt-4">Twitter</label>
-                    <Input
-                      type="text"
-                      placeholder="Your Twitter Account URL"
-                      name="customer_twitter_url"
-                      value={userProfile.customer_twitter_url}
-                      onChange={handleUserProfileChange}
-                      style={{ width: '170%' }}
-                    />
-                  </Col>
-                </Row>
+                <label style={{ fontSize: '15px' }}>Experience</label>
+                <Editor
+                  editorState={editorState2}
+                  toolbarClassName="toolbarClassName"
+                  wrapperClassName="wrapperClassName"
+                  editorClassName="editorClassName"
+                  onEditorStateChange={onEditorStateChange2}
+                  editorStyle={{ height: '150px' }}
+                />
               </Col>
             </Row>
 
@@ -340,6 +381,7 @@ const TutorProfile = () => {
                 type="reset"
                 className="ml-auto mt-4 mr-2"
                 style={{ width: '100px', borderRadius: '0px' }}
+                onClick={handleReset}
               >
                 Reset
               </Button>{' '}

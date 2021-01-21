@@ -26,6 +26,7 @@ router.get('/user', auth, async (req, res) => {
       'customer_institute_name',
       'customer_about_me',
       'customer_career_summary',
+      'customer_experience',
       'customer_role',
       'customer_linkedin_url',
       'customer_occupation',
@@ -392,6 +393,25 @@ router.put('/users', auth, async (req, res) => {
 
             try {
               const values = JSON.parse(req.body.values);
+
+              if (!values.customer_subdomain_name)
+                return res.status(400).json({
+                  success: 0,
+                  error: 'Subdomain not provided',
+                });
+
+              const isPresent = await User.findOne({
+                where: {
+                  customer_subdomain_name: values.customer_subdomain_name,
+                  customer_id: { $not: req.user.customer_id },
+                },
+              });
+              if (isPresent)
+                return res.status(400).json({
+                  success: 0,
+                  error: 'Provided Subdomain Name Already Exists',
+                });
+
               values.customer_profile_picture = profile_name;
               const updatedUser = await User.update(values, {
                 where: { customer_id: req.user.customer_id },
@@ -422,8 +442,15 @@ router.put('/users', auth, async (req, res) => {
         customer_facebook_url,
         customer_website_url,
         customer_twitter_url,
+        customer_experience,
       } = JSON.parse(req.body.values);
+      console.log('here', customer_subdomain_name);
 
+      if (!customer_subdomain_name)
+        return res.status(400).json({
+          success: 0,
+          error: 'Subdomain not provided',
+        });
       const user = await User.findOne({
         where: { customer_id: req.user.customer_id },
       });
@@ -432,13 +459,13 @@ router.put('/users', auth, async (req, res) => {
           success: 0,
           error: 'user does not exists',
         });
-
+      console.log(user.customer_subdomain_name);
       // const user = sqlCheck.dataValues;
       if (customer_subdomain_name != user.customer_subdomain_name) {
         const isPresent = await User.findOne({
           where: {
             customer_id: { $not: req.user.customer_id },
-            $and: { customer_subdomain_name },
+            customer_subdomain_name,
           },
         });
         if (isPresent)
@@ -459,6 +486,7 @@ router.put('/users', auth, async (req, res) => {
       user.customer_facebook_url = customer_facebook_url;
       user.customer_website_url = customer_website_url;
       user.customer_twitter_url = customer_twitter_url;
+      user.customer_experience = customer_experience;
 
       const updatedUser = await user.save();
       if (!updatedUser)

@@ -43,6 +43,10 @@ const User = db.define('customer_table', {
     type: DataTypes.TEXT('long'),
     allowNull: true,
   },
+  customer_experience: {
+    type: DataTypes.TEXT('long'),
+    allowNull: true,
+  },
   customer_role: {
     type: DataTypes.STRING,
     defaultValue: 'Admin',
