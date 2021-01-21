@@ -104,14 +104,19 @@ function* registerWithEmailPassword({ payload }) {
   try {
     const values = payload.user.values;
     const registerUser = yield call(registerWithEmailPasswordAsync, values);
-    // console.log(registerUser)
+    console.log(registerUser);
     if (registerUser.success) {
       const item = { uid: registerUser.token, user: registerUser.user };
       setCurrentUser(item);
       yield put(registerUserSuccess(item));
       history.push('/app/mydashboard');
     } else {
-      yield put(registerUserError(registerUser.error));
+      console.log(registerUser.error, 'here');
+      try {
+        yield put(registerUserError(registerUser.data.error));
+      } catch (error) {
+        yield put(registerUserError('Unable to proceed...please try again'));
+      }
     }
   } catch (error) {
     console.log(error, typeof error, error.message, JSON.stringify(error));

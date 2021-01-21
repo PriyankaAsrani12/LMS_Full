@@ -74,7 +74,7 @@ router.post('/users', async (req, res) => {
     // console.log('❓',sqlCheck)
 
     if (sqlCheck) {
-      return res.json({
+      return res.status(400).json({
         success: 0,
         error: 'Email Aready Registered',
       });
