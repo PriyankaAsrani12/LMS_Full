@@ -162,7 +162,7 @@ const TutorProfile = () => {
                 <Row className="ml-1">
                   {' '}
                   <img
-                    src={require(`${filePath}${userProfile.customer_profile_picture}`)}
+                    src={displayProfileImage}
                     style={{ width: '20%', marginLeft: '10px' }}
                   />
                   <label className="mr-auto ml-4">
