@@ -12,6 +12,7 @@ const db = new sequelize(
       dateStrings: true,
       typeCast: true,
       timezone: '+05:30',
+      multipleStatements: true,
     },
     timezone: '+05:30', //for writing to database
     operatorsAliases: false,

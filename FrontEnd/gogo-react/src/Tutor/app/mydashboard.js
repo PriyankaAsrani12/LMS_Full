@@ -11,21 +11,16 @@ import {
   DropdownToggle,
   DropdownMenu,
 } from 'reactstrap';
-import './dash.css';
 import { FaUsers } from 'react-icons/fa';
 import { FaCode } from 'react-icons/fa';
 import { FaDatabase } from 'react-icons/fa';
 import { Line } from 'react-chartjs-2';
-
 import { FaWifi } from 'react-icons/fa';
 import { FaFilter } from 'react-icons/fa';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { LineChart } from '../../components/charts';
-
-import { lineChartData } from '../../data/charts';
-import { useHistory } from 'react-router-dom';
-
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+
+import './dash.css';
 import './menu/style.css';
 import axiosInstance from '../../helpers/axiosInstance';
 import NotificationManager from '../../components/common/react-notifications/NotificationManager';
@@ -42,40 +37,7 @@ const BlankPage = ({ intl, match }) => {
   const [error, setError] = useState(false);
   const [chartstatus, setchartstatus] = useState('Last 7 days');
 
-  const history = useHistory();
-  useEffect(() => {
-    if (error) {
-      console.log(error);
-      NotificationManager.warning(error, 'User Profile', 3000, null, null, '');
-    }
-  }, [error]);
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const result = await axiosInstance.get('/tutor/dashboard');
-        console.log(result);
-        if (result.data.success) {
-          setTotalCourses(result.data.totalCourses[0].totalCourses);
-          setEnrollments(result.data.enrollments[0].enrollments);
-        } else {
-          try {
-            setError(result.data.error);
-          } catch (error) {
-            setError('Unable to fetch data');
-          }
-        }
-      } catch (error) {
-        try {
-          setError(error.response.data.error);
-        } catch (error) {
-          setError('Unable to fetch data');
-        }
-      }
-    };
-    getData();
-  }, []);
-  const data1 = {
+  const [data1, setData1] = useState({
     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     /* scaleShowLabels: false, */
     datasets: [
@@ -117,8 +79,8 @@ const BlankPage = ({ intl, match }) => {
         pointBackgroundColor: ' #FFFFFF',
       },
     ],
-  };
-  const data2 = {
+  });
+  const [data2, setData2] = useState({
     labels: ['Week1', 'Week2', 'Week3', 'Week4'],
     /* scaleShowLabels: false, */
     datasets: [
@@ -160,8 +122,8 @@ const BlankPage = ({ intl, match }) => {
         pointBackgroundColor: ' #FFFFFF',
       },
     ],
-  };
-  const data3 = {
+  });
+  const [data3, setData3] = useState({
     labels: ['Jan', 'Feb', 'March'],
     /* scaleShowLabels: false, */
     datasets: [
@@ -203,7 +165,39 @@ const BlankPage = ({ intl, match }) => {
         pointBackgroundColor: ' #FFFFFF',
       },
     ],
-  };
+  });
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      NotificationManager.warning(error, 'User Profile', 3000, null, null, '');
+    }
+  }, [error]);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const result = await axiosInstance.get('/tutor/dashboard');
+        console.log(result);
+        if (result.data.success) {
+          setTotalCourses(result.data.totalCourses[0].totalCourses);
+          setEnrollments(result.data.enrollments[0].enrollments);
+        } else {
+          try {
+            setError(result.data.error);
+          } catch (error) {
+            setError('Unable to fetch data');
+          }
+        }
+      } catch (error) {
+        try {
+          setError(error.response.data.error);
+        } catch (error) {
+          setError('Unable to fetch data');
+        }
+      }
+    };
+    getData();
+  }, []);
 
   return (
     <>
@@ -287,16 +281,6 @@ const BlankPage = ({ intl, match }) => {
             <Card className="mt-4 ccc mb-4" id="cb">
               <CardTitle>
                 <Row className="ml-4 mt-4">
-                  {/* <div className="thecard">
-                    <span id="dot"></span>
-                    <small className="ml-2">Registrations</small>
-                    <span id="dot2"></span>
-                    <small id="no" className="ml-2">
-                      Enrollments
-                    </small>
-                    <span id="dot3"></span> <small id="no">Revenue</small>
-                  </div>*/}
-
                   <div className="position-absolute card-top-buttons">
                     <UncontrolledDropdown>
                       <DropdownToggle
@@ -327,7 +311,6 @@ const BlankPage = ({ intl, match }) => {
                 </Row>
               </CardTitle>
               <CardBody>
-                {/* <div className="dashboard-line-chart"> */}
                 {chartstatus == 'Last 7 days' ? (
                   <Line data={data1} height="80%" />
                 ) : chartstatus == 'Last One Month' ? (
@@ -335,8 +318,6 @@ const BlankPage = ({ intl, match }) => {
                 ) : (
                   <Line data={data3} height="80%" />
                 )}
-                {/* <LineChart shadow data={lineChartData} /> */}
-                {/* </div> */}
               </CardBody>
             </Card>
           </Scrollbars>

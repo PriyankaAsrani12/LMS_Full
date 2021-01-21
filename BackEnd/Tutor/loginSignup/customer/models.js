@@ -142,11 +142,11 @@ const User = db.define('customer_table', {
   },
   customer_storage_zone_name: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   customer_pull_zone_name: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   customer_cdn_url: {
     type: DataTypes.STRING,
@@ -214,27 +214,27 @@ const User = db.define('customer_table', {
   },
   customer_storage_zone_id: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   customer_pull_zone_id: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   customer_storage_zone_user_key: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   customer_storage_zone_password: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   customer_pull_zone_hostname: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   customer_url_token_authentication_key: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
 });
 

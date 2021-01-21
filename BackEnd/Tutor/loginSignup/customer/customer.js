@@ -100,10 +100,22 @@ router.post('/users', async (req, res) => {
     if (customer_last_name)
       name = `${customer_first_name}-${customer_last_name}`;
 
+    req.body.values.customer_cdn_url = 'oyesth-lms-12.b-cdn.net';
+
+    const user = await User.create(req.body.values);
+
+    let temp = await sendWelcomeEmail(customer_email, name);
+    console.log('🚀', temp);
+
+    // sending sms
+    if (!using_google) {
+      const result = await sendsms(customer_phone_number, 'test');
+      console.log(result);
+    }
+
     //create storage zone ,pull zone here
-    const storageZoneName = customer_last_name
-      ? `${customer_first_name}-${customer_last_name}`
-      : `${customer_first_name}`;
+    const storageZoneName = `oye-${customer_first_name}-${user.customer_id}`;
+
     const data = { Name: storageZoneName, Region: 'DE' };
     const headers = {
       'Content-Type': 'application/json',
@@ -151,17 +163,6 @@ router.post('/users', async (req, res) => {
     req.body.values.customer_url_token_authentication_key =
       pullZone.data.ZoneSecurityKey;
 
-    req.body.values.customer_cdn_url = 'oyesth-lms-12.b-cdn.net';
-
-    let temp = await sendWelcomeEmail(customer_email, name);
-    console.log('🚀', temp);
-
-    // sending sms
-    if (!using_google) {
-      const result = await sendsms(customer_phone_number, 'test');
-      console.log(result);
-    }
-
     cmd.run(
       `
     bnycdn key -t storages set ${pullZone.data.Name} ${response.data.Password}
@@ -175,23 +176,13 @@ router.post('/users', async (req, res) => {
         console.log(data, '\n', data.substr(24));
         req.body.values.customer_storage_zone_user_key = data.substr(24);
 
-        // return res.status(200).json({
-        //   success: 1,
-        //   storageZoneData: response.data,
-        //   pullZoneData: pullZone.data,
-        //   key: data,
-        // });
+        // run update query here
+        const updates = await User.update(req.body.values, {
+          where: { customer_id: user.customer_id },
+        });
+        console.log(updates);
 
-        // return res.status(200).json({
-        //   success: 1,
-        //   'data FRom storageZone': response.data,
-        //   'data from pullzone': pullZone.data,
-        //   values: req.body.values,
-        //   hostname: pullZone.data.Hostnames[0].V,
-        // });
-
-        const user = await User.create(req.body.values);
-        res.redirect(307, 'users/login');
+        res.redirect(307, '/tutor/users/login');
       }
     );
   } catch (err) {
