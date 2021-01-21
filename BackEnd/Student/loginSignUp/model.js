@@ -43,6 +43,38 @@ const Student = db.define('student_table', {
     type: STRING,
     allowNull: true,
   },
+  student_profile_picture: {
+    type: STRING,
+    allowNull: true,
+  },
+  student_bio: {
+    type: STRING,
+    allowNull: true,
+  },
+  student_website_url: {
+    type: STRING,
+    allowNull: true,
+  },
+  student_linkedin_url: {
+    type: STRING,
+    allowNull: true,
+  },
+  student_facebook_url: {
+    type: STRING,
+    allowNull: true,
+  },
+  student_twitter_url: {
+    type: STRING,
+    allowNull: true,
+  },
+  student_github_url: {
+    type: STRING,
+    allowNull: true,
+  },
+  student_youtube_url: {
+    type: STRING,
+    allowNull: true,
+  },
 });
 
 db.sync();
