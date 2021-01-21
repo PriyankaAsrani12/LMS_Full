@@ -115,7 +115,11 @@ function* registerWithEmailPassword({ payload }) {
       try {
         yield put(registerUserError(registerUser.data.error));
       } catch (error) {
-        yield put(registerUserError('Unable to proceed...please try again'));
+        try {
+          yield put(registerUserError(registerUser.error));
+        } catch (error) {
+          yield put(registerUserError('Unable to proceed...please try again'));
+        }
       }
     }
   } catch (error) {
