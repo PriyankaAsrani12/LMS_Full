@@ -9,6 +9,8 @@ const {
   sendWelcomeEmail,
   sendPasswordResetEmail,
 } = require('../../common/emails/account');
+const webp = require('webp-converter');
+
 const {
   sendsms,
 } = require('../../common/completed_test_modules/sendSmsModule');
@@ -261,6 +263,105 @@ router.get('/enabled', verifyToken, async (req, res) => {
     return res.status(400).json({
       success: 0,
       error: 'Could not fetch data',
+    });
+  }
+});
+
+router.get('/profile', verifyToken, async (req, res) => {
+  try {
+    const result = await Student.findOne({
+      where: { student_id: req.user.student_id },
+      attributes: [
+        'student_first_name',
+        'student_last_name',
+        'student_profile_picture',
+        'student_bio',
+        'student_website_url',
+        'student_linkedin_url',
+        'student_facebook_url',
+        'student_twitter_url',
+        'student_github_url',
+        'student_youtube_url',
+      ],
+    });
+    return res.status(200).json({
+      success: 1,
+      result,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      success: 0,
+      error: 'Unable to fetch data',
+      errorReturned: error,
+    });
+  }
+});
+
+router.put('/profile', verifyToken, async (req, res) => {
+  try {
+    const values = JSON.parse(req.body.values);
+    console.log(values);
+
+    if (req.files && req.files.student_profile_picture) {
+      const file = req.files.student_profile_picture;
+      file.mv(`${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name}`, (err) => {
+        if (err)
+          return res.status(500).json({
+            success: 0,
+            error: 'unable to upload thumbnail',
+            errorReturned: JSON.stringify(err),
+          });
+        webp
+          .cwebp(
+            `${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name}`,
+            `${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name.substr(
+              0,
+              file.name.lastIndexOf('.')
+            )}.webp`,
+            '-q 80'
+          )
+          .then(async (response) => {
+            console.log(response);
+            values.student_profile_picture = 'url of profile';
+            console.log(values);
+
+            const result = await Student.update(values, {
+              where: { student_id: req.user.student_id },
+            });
+
+            return res.status(200).json({
+              success: 1,
+              result,
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+
+            return res.status(400).json({
+              success: 0,
+              error: 'Unable to update profile',
+              errorReturned: err,
+            });
+          });
+        console.log('profile pic uploaded');
+      });
+    } else {
+      const result = await Student.update(values, {
+        where: { student_id: req.user.student_id },
+      });
+
+      return res.status(200).json({
+        success: 1,
+        result,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      success: 0,
+      error: 'Unable to update profile',
+      errorReturned: error,
     });
   }
 });
