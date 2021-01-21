@@ -96,10 +96,16 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
   const [isTrainer, setIsTrainer] = useState(false);
   const [registerTrainerError, setRegisterTrainerError] = useState(null);
   const [registerTrainerSuccess, setRegistertrainerSuccess] = useState(null);
+  const [clicked, setIsClicked] = useState(false);
 
+  const toggleClick = () => {
+    console.log('in toggle click');
+    setIsClicked(!clicked);
+  };
   const onSubmit = async (values) => {
     console.log(values);
-    if (!isTrainer) registerUserAction({ history, values });
+    setIsClicked(!clicked);
+    if (!isTrainer) registerUserAction({ history, values, toggleClick });
     else {
       console.log(values);
       try {
@@ -115,6 +121,7 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
         console.log(result);
         if (result.data.success) history.push('/app/dashboard');
         else {
+          setIsClicked(!clicked);
           try {
             setRegisterTrainerError(result.data.error);
           } catch (error) {
@@ -122,6 +129,7 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
           }
         }
       } catch (err) {
+        setIsClicked(!clicked);
         console.log(err);
         try {
           setRegisterTrainerError(err.response.data.error);
@@ -167,6 +175,7 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
 
   useEffect(() => {
     if (error) {
+      toggleClick();
       NotificationManager.warning(
         error,
         'Registeration Error',
@@ -421,8 +430,25 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
                     <NavLink to="/Tutor/user/login">
                       Already Registered?
                     </NavLink>
-                    <Button color="primary" type="submit" className="register">
+                    {/* <Button color="primary" type="submit" className="register">
                       Register
+                    </Button> */}{' '}
+                    {console.log(isSubmitting)}
+                    <Button
+                      color="primary"
+                      type="submit"
+                      // onClick={onUserLogin}
+                      className={`btn-shadow btn-multiple-state ${
+                        clicked ? 'show-spinner' : ''
+                      }`}
+                      size="lg"
+                    >
+                      <span className="spinner d-inline-block">
+                        <span className="bounce1" />
+                        <span className="bounce2" />
+                        <span className="bounce3" />
+                      </span>
+                      <span className="label">Register</span>
                     </Button>
                   </div>
                 </Form>
