@@ -104,7 +104,7 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
   };
   const onSubmit = async (values) => {
     console.log(values);
-    setIsClicked(!clicked);
+    setIsClicked(true);
     if (!isTrainer) registerUserAction({ history, values, toggleClick });
     else {
       console.log(values);
@@ -175,7 +175,6 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
 
   useEffect(() => {
     if (error) {
-      toggleClick();
       NotificationManager.warning(
         error,
         'Registeration Error',
@@ -184,6 +183,7 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
         null,
         ''
       );
+      setIsClicked(false);
     }
   }, [error]);
 
