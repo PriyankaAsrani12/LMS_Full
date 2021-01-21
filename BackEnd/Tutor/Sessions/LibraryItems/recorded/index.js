@@ -449,65 +449,65 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
       }
       console.log('saved ');
 
-      cmd.run(
-        `
-        cd ${process.env.FILE_UPLOAD_PATH_CLIENT}
-    bnycdn cp -s ${bData[0].customer_storage_zone_user_key}  /${file.name} /${bData[0].customer_storage_zone_name}/${file.name}/
-    `,
-        (err, data, stderr) => {
-          if (err) {
-            console.log(err);
-            return res.status(400).json({
-              success: 0,
-              error: err,
-            });
-          }
-          console.log(data);
-          return res.status(200).json({
-            success: 1,
-            data,
-          });
-        }
-      );
+      //   cmd.run(
+      //     `
+      //     cd ${process.env.FILE_UPLOAD_PATH_CLIENT}
+      // bnycdn cp -s ${bData[0].customer_storage_zone_user_key}  /${file.name} /${bData[0].customer_storage_zone_name}/${file.name}/
+      // `,
+      //     (err, data, stderr) => {
+      //       if (err) {
+      //         console.log(err);
+      //         return res.status(400).json({
+      //           success: 0,
+      //           error: err,
+      //         });
+      //       }
+      //       console.log(data);
+      //       return res.status(200).json({
+      //         success: 1,
+      //         data,
+      //       });
+      //     }
+      //   );
     });
 
-    // const savedItem = await LibraryItem.create({
-    //   session_id: req.body.session_id,
-    //   session_type: 'Recorded Session',
-    //   customer_id: req.user.customer_id,
-    //   item_name: req.files.file.name,
-    //   item_type: req.body.fileType,
-    //   item_url: 'www.google.com',
-    //   item_size: req.files.file.size,
-    // });
+    const savedItem = await LibraryItem.create({
+      session_id: req.body.session_id,
+      session_type: 'Recorded Session',
+      customer_id: req.user.customer_id,
+      item_name: req.files.file.name,
+      item_type: req.body.fileType,
+      item_url: 'www.google.com',
+      item_size: req.files.file.size,
+    });
 
-    // if (!savedItem)
-    //   return res.status(400).json({
-    //     success: 0,
-    //     error: 'Unable to upload video',
-    //   });
-    // if (
-    //   (req.body.lesson_id && req.body.lesson_id != 'unknown_lesson_id') ||
-    //   req.body.lesson_id != ''
-    // ) {
-    //   const updatedLesson = await LessonTable.update(
-    //     {
-    //       [`lesson_${req.body.fileType}_id`]: savedItem.dataValues.item_id,
-    //     },
-    //     {
-    //       where: {
-    //         lesson_id: req.body.lesson_id,
-    //       },
-    //     }
-    //   );
-    //   console.log(updatedLesson);
-    // }
+    if (!savedItem)
+      return res.status(400).json({
+        success: 0,
+        error: 'Unable to upload video',
+      });
+    if (
+      (req.body.lesson_id && req.body.lesson_id != 'unknown_lesson_id') ||
+      req.body.lesson_id != ''
+    ) {
+      const updatedLesson = await LessonTable.update(
+        {
+          [`lesson_${req.body.fileType}_id`]: savedItem.dataValues.item_id,
+        },
+        {
+          where: {
+            lesson_id: req.body.lesson_id,
+          },
+        }
+      );
+      console.log(updatedLesson);
+    }
 
-    // return res.status(200).json({
-    //   success: 1,
-    //   item_id: savedItem.dataValues.item_id,
-    //   item_name: savedItem.dataValues.item_name,
-    // });
+    return res.status(200).json({
+      success: 1,
+      item_id: savedItem.dataValues.item_id,
+      item_name: savedItem.dataValues.item_name,
+    });
   } catch (err) {
     console.log(err);
     return res.status(400).json({
