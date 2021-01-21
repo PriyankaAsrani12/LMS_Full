@@ -358,17 +358,16 @@ router.post('/users/reset-password', async (req, res) => {
 });
 
 router.put('/users', auth, async (req, res) => {
+  console.log(req.files);
   try {
-    let flg = 0;
+    let flg = 0,
+      profile_name = '';
 
     // console.log(req.files.profile_picture,JSON.parse(req.body.values))
     if (req.files && req.files.profile_picture) {
-      console.log(req.files.profile_picture);
-
       const file = req.files.profile_picture;
       file.mv(`${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name}`, (err) => {
         if (err) {
-          flg = 1;
           console.log(err);
           return res.status(500).json({
             success: 0,
@@ -384,13 +383,34 @@ router.put('/users', auth, async (req, res) => {
             )}.webp`,
             '-q 80'
           )
-          .then((response) => console.log(response))
+          .then(async (response) => {
+            console.log(response);
+            profile_name = `${file.name.substr(
+              0,
+              file.name.lastIndexOf('.')
+            )}.webp`;
+
+            try {
+              const values = JSON.parse(req.body.values);
+              values.customer_profile_picture = profile_name;
+              const updatedUser = await User.update(values, {
+                where: { customer_id: req.user.customer_id },
+              });
+              return res.status(200).json({
+                success: 1,
+                user: updatedUser,
+              });
+            } catch (error) {
+              console.log(error);
+              return res.status(400).json({
+                success: 0,
+              });
+            }
+          })
           .catch((err) => console.log(err));
         console.log('profile picture updated');
       });
-    }
-
-    if (!flg) {
+    } else {
       const {
         customer_subdomain_name,
         customer_institute_name,
@@ -428,7 +448,7 @@ router.put('/users', auth, async (req, res) => {
           });
       }
       console.log(user);
-      // user.customer_profile_picture = customer_profile_picture;
+      if (profile_name) user.customer_profile_picture = profile_name;
       user.customer_subdomain_name = customer_subdomain_name;
       user.customer_institute_name = customer_institute_name;
       user.customer_about_me = customer_about_me;

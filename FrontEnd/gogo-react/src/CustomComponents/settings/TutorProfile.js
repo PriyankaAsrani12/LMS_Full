@@ -20,6 +20,7 @@ const TutorProfile = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const filePath = process.env.REACT_APP_FILE_UPLOAD_PATH_CLIENT;
 
   useEffect(() => {
     if (error) {
@@ -161,7 +162,7 @@ const TutorProfile = () => {
                 <Row className="ml-1">
                   {' '}
                   <img
-                    src={displayProfileImage}
+                    src={require(`${filePath}${userProfile.customer_profile_picture}`)}
                     style={{ width: '20%', marginLeft: '10px' }}
                   />
                   <label className="mr-auto ml-4">
