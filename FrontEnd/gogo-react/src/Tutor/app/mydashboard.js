@@ -90,6 +90,18 @@ const BlankPage = ({ intl, match }) => {
     console.log(today.getMonth(), today.getFullYear());
     return ret;
   };
+  function getStartDateOfWeek(w, y) {
+    var d = 1 + (w - 1) * 7; // 1st of January + 7 days for each week
+    const date = new Date(y, 0, d);
+
+    return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+  }
+
+  function getEndDateOfWeek(w, y) {
+    var d = 1 + (w - 1) * 7 + 7; // 1st of January + 7 days for each week
+    const date = new Date(y, 0, d);
+    return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+  }
 
   useEffect(() => {
     const getData = async () => {
@@ -173,8 +185,45 @@ const BlankPage = ({ intl, match }) => {
           setData1(d1);
 
           //for Week Wise
+          function getCurrentWeek() {
+            const today = new Date();
+            const firstDayOfYear = new Date(today.getFullYear(), 0, 1);
+            const pastDaysOfYear = (today - firstDayOfYear) / 86400000;
+            return Math.ceil(
+              (pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7
+            );
+          }
+          let currentWeekNo = getCurrentWeek();
+          let currentYear = new Date().getFullYear();
+          const weekLabels = [];
+          weekLabels.push(
+            `${getStartDateOfWeek(
+              currentWeekNo,
+              currentYear
+            )} to ${getEndDateOfWeek(currentWeekNo, currentYear)}`
+          );
+
+          for (let i = 1; i < 4; i++) {
+            if (currentWeekNo - i <= 0) {
+              currentWeekNo = 54;
+              currentYear--;
+              weekLabels.push(
+                `${getStartDateOfWeek(
+                  currentWeekNo,
+                  currentYear
+                )} to ${getEndDateOfWeek(currentWeekNo, currentYear)}`
+              );
+            } else
+              weekLabels.push(
+                `${getStartDateOfWeek(
+                  currentWeekNo - i,
+                  currentYear
+                )} to ${getEndDateOfWeek(currentWeekNo - i, currentYear)}`
+              );
+          }
+
           let d2 = {
-            labels: ['week1', 'week2', 'week3', 'week4'],
+            labels: weekLabels.reverse(),
             datasets: [],
           };
 
