@@ -37,135 +37,10 @@ const BlankPage = ({ intl, match }) => {
   const [error, setError] = useState(false);
   const [chartstatus, setchartstatus] = useState('Last 7 days');
 
-  const [data1, setData1] = useState({
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    /* scaleShowLabels: false, */
-    datasets: [
-      {
-        label: 'Registrations',
-        data: [32, 36, 29, 35, 32, 39, 28, 39, 44],
-        radius: 3,
-        tension: 0,
-        fill: false,
-        borderColor: '#5CCB00',
-        pointRadius: 6,
-        pointHoverRadius: 6,
-        pointBorderWidth: 2,
-        pointBackgroundColor: ' #FFFFFF',
-      },
+  const [data1, setData1] = useState({});
+  const [data2, setData2] = useState({});
+  const [data3, setData3] = useState({});
 
-      {
-        label: 'Enrollments',
-        data: [35, 26, 27, 23, 32, 30, 28, 39, 34],
-        tension: 0,
-        radius: 3,
-        fill: false,
-        borderColor: '#EC7600',
-        pointRadius: 6,
-        pointHoverRadius: 6,
-        pointBorderWidth: 2,
-        pointBackgroundColor: ' #FFFFFF',
-      },
-      {
-        label: 'Revenue',
-        data: [39, 28, 39, 44, 78, 65, 34],
-        radius: 3,
-        tension: 0,
-        fill: false,
-        borderColor: '#00FFFF',
-        pointRadius: 6,
-        pointHoverRadius: 6,
-        pointBorderWidth: 2,
-        pointBackgroundColor: ' #FFFFFF',
-      },
-    ],
-  });
-  const [data2, setData2] = useState({
-    labels: ['Week1', 'Week2', 'Week3', 'Week4'],
-    /* scaleShowLabels: false, */
-    datasets: [
-      {
-        label: 'Registrations',
-        data: [39, 28, 39, 44],
-        radius: 3,
-        tension: 0,
-        fill: false,
-        borderColor: '#5CCB00',
-        pointRadius: 6,
-        pointHoverRadius: 6,
-        pointBorderWidth: 2,
-        pointBackgroundColor: ' #FFFFFF',
-      },
-
-      {
-        label: 'Enrollments',
-        data: [30, 28, 39, 34],
-        tension: 0,
-        radius: 3,
-        fill: false,
-        borderColor: '#EC7600',
-        pointRadius: 6,
-        pointHoverRadius: 6,
-        pointBorderWidth: 2,
-        pointBackgroundColor: ' #FFFFFF',
-      },
-      {
-        label: 'Revenue',
-        data: [56, 67, 32, 12],
-        radius: 3,
-        tension: 0,
-        fill: false,
-        borderColor: '#00FFFF',
-        pointRadius: 6,
-        pointHoverRadius: 6,
-        pointBorderWidth: 2,
-        pointBackgroundColor: ' #FFFFFF',
-      },
-    ],
-  });
-  const [data3, setData3] = useState({
-    labels: ['Jan', 'Feb', 'March'],
-    /* scaleShowLabels: false, */
-    datasets: [
-      {
-        label: 'Registrations',
-        data: [49, 54, 12],
-        radius: 3,
-        tension: 0,
-        fill: false,
-        borderColor: '#5CCB00',
-        pointRadius: 6,
-        pointHoverRadius: 6,
-        pointBorderWidth: 2,
-        pointBackgroundColor: ' #FFFFFF',
-      },
-
-      {
-        label: 'Enrollments',
-        data: [71, 65, 45],
-        tension: 0,
-        radius: 3,
-        fill: false,
-        borderColor: '#EC7600',
-        pointRadius: 6,
-        pointHoverRadius: 6,
-        pointBorderWidth: 2,
-        pointBackgroundColor: ' #FFFFFF',
-      },
-      {
-        label: 'Revenue',
-        data: [65, 54, 12],
-        radius: 3,
-        tension: 0,
-        fill: false,
-        borderColor: '#00FFFF',
-        pointRadius: 6,
-        pointHoverRadius: 6,
-        pointBorderWidth: 2,
-        pointBackgroundColor: ' #FFFFFF',
-      },
-    ],
-  });
   useEffect(() => {
     if (error) {
       console.log(error);
@@ -173,14 +48,269 @@ const BlankPage = ({ intl, match }) => {
     }
   }, [error]);
 
+  const formatDate = (date, rev = false) => {
+    var dd = date.getDate();
+    var mm = date.getMonth() + 1;
+    var yyyy = date.getFullYear();
+    if (dd < 10) dd = '0' + dd;
+    if (mm < 10) mm = '0' + mm;
+    if (rev) date = yyyy + '-' + mm + '-' + dd;
+    else date = dd + '/' + mm + '/' + yyyy;
+    return date;
+  };
+
+  const Last7Days = (rev = false) => {
+    var result = [];
+    for (var i = 0; i < 7; i++) {
+      var d = new Date();
+      d.setDate(d.getDate() - i);
+      result.push(formatDate(d, rev));
+    }
+    return result.reverse();
+  };
+  const findIndex = (labels, label) => {
+    for (let i = 0; i < labels.length; i++) if (labels[i] == label) return i;
+  };
+  const getLast3MonthLabels = () => {
+    const ret = [];
+    var today = new Date();
+    var d;
+    var month;
+    var year;
+    for (var i = 2; i > 0; i -= 1) {
+      d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+      month = d.getMonth() + 1;
+      year = d.getFullYear();
+      let str = `${month}/${year}`;
+      ret.push(str);
+      console.log(month);
+      console.log(year);
+    }
+    ret.push(`${today.getMonth() + 1}/${today.getFullYear()}`);
+    console.log(today.getMonth(), today.getFullYear());
+    return ret;
+  };
+
   useEffect(() => {
     const getData = async () => {
       try {
         const result = await axiosInstance.get('/tutor/dashboard');
-        console.log(result);
+        console.log(result.data.success);
         if (result.data.success) {
           setTotalCourses(result.data.totalCourses[0].totalCourses);
           setEnrollments(result.data.enrollments[0].enrollments);
+          const GraphData = result.data.GraphData;
+
+          // d1 mai GraphData[0][0] ,GraphData[1][0], GraphData[2][0]
+          let d1 = { labels: Last7Days(), datasets: [] };
+          const checkLabels = Last7Days(true);
+          const a = [0, 0, 0, 0, 0, 0, 0];
+
+          //registration  weekwise
+          GraphData[0][0].forEach((doc) => {
+            const idx = findIndex(checkLabels, doc.label);
+            a[idx] = doc.totalCount;
+          });
+
+          const b = {
+            label: 'Registrations',
+            data: a,
+            radius: 3,
+            tension: 0,
+            fill: false,
+            borderColor: '#5CCB00',
+            pointRadius: 6,
+            pointHoverRadius: 6,
+            pointBorderWidth: 2,
+            pointBackgroundColor: ' #FFFFFF',
+          };
+          d1.datasets.push(b);
+
+          const a1 = [0, 0, 0, 0, 0, 0, 0];
+
+          //enrollments  weekwise
+          GraphData[1][0].forEach((doc) => {
+            const idx = findIndex(checkLabels, doc.label);
+            a1[idx] = doc.totalCount;
+          });
+
+          const b1 = {
+            label: 'Enrollments',
+            data: a1,
+            tension: 0,
+            radius: 3,
+            fill: false,
+            borderColor: '#EC7600',
+            pointRadius: 6,
+            pointHoverRadius: 6,
+            pointBorderWidth: 2,
+            pointBackgroundColor: ' #FFFFFF',
+          };
+          d1.datasets.push(b1);
+
+          //revenue  weekwise
+          const a2 = [0, 0, 0, 0, 0, 0, 0];
+
+          GraphData[2][0].forEach((doc) => {
+            const idx = findIndex(checkLabels, doc.label);
+            a2[idx] = doc.totalCount;
+          });
+
+          const b2 = {
+            label: 'Revenue',
+            data: a2,
+            radius: 3,
+            tension: 0,
+            fill: false,
+            borderColor: '#00FFFF',
+            pointRadius: 6,
+            pointHoverRadius: 6,
+            pointBorderWidth: 2,
+            pointBackgroundColor: ' #FFFFFF',
+          };
+          d1.datasets.push(b2);
+          console.log(d1);
+          setData1(d1);
+
+          //for Week Wise
+          let d2 = {
+            labels: ['week1', 'week2', 'week3', 'week4'],
+            datasets: [],
+          };
+
+          const p1 = [0, 0, 0, 0];
+          GraphData[0][1].forEach((doc) => {
+            p1[doc.weekNo] = doc.totalCount1;
+          });
+
+          const q1 = {
+            label: 'Registrations',
+            data: p1,
+            radius: 3,
+            tension: 0,
+            fill: false,
+            borderColor: '#5CCB00',
+            pointRadius: 6,
+            pointHoverRadius: 6,
+            pointBorderWidth: 2,
+            pointBackgroundColor: ' #FFFFFF',
+          };
+          d2.datasets.push(q1);
+
+          const p2 = [0, 0, 0, 0];
+          GraphData[1][1].forEach((doc) => {
+            p2[doc.weekNo] = doc.totalCount1;
+          });
+
+          const q2 = {
+            label: 'Enrollments',
+            data: p2,
+            tension: 0,
+            radius: 3,
+            fill: false,
+            borderColor: '#EC7600',
+            pointRadius: 6,
+            pointHoverRadius: 6,
+            pointBorderWidth: 2,
+            pointBackgroundColor: ' #FFFFFF',
+          };
+          d2.datasets.push(q2);
+
+          const p3 = [0, 0, 0, 0];
+          GraphData[2][1].forEach((doc) => {
+            p3[doc.weekNo] = doc.totalCount1;
+          });
+
+          const q3 = {
+            label: 'Revenue',
+            data: p3,
+            radius: 3,
+            tension: 0,
+            fill: false,
+            borderColor: '#00FFFF',
+            pointRadius: 6,
+            pointHoverRadius: 6,
+            pointBorderWidth: 2,
+            pointBackgroundColor: ' #FFFFFF',
+          };
+          d2.datasets.push(q3);
+          setData2(d2);
+
+          // last 3 months
+          const findMonthIndex = (monthLabels, y, m) => {
+            for (let i = 0; i < monthLabels.length; i++)
+              if (monthLabels[i] == `${m}/${y}`) return i;
+          };
+
+          const monthLabels = getLast3MonthLabels();
+          console.log(monthLabels);
+          let d3 = {
+            labels: monthLabels,
+            datasets: [],
+          };
+
+          const z1 = [0, 0, 0];
+          GraphData[0][2].forEach((doc) => {
+            const idx = findMonthIndex(monthLabels, doc.y, doc.m);
+            z1[idx] = doc.totalCount2;
+          });
+
+          const v1 = {
+            label: 'Registrations',
+            data: z1,
+            radius: 3,
+            tension: 0,
+            fill: false,
+            borderColor: '#5CCB00',
+            pointRadius: 6,
+            pointHoverRadius: 6,
+            pointBorderWidth: 2,
+            pointBackgroundColor: ' #FFFFFF',
+          };
+          d3.datasets.push(v1);
+
+          const z2 = [0, 0, 0];
+          GraphData[1][2].forEach((doc) => {
+            const idx = findMonthIndex(monthLabels, doc.y, doc.m);
+            z2[idx] = doc.totalCount2;
+          });
+
+          const v2 = {
+            label: 'Enrollments',
+            data: z2,
+            tension: 0,
+            radius: 3,
+            fill: false,
+            borderColor: '#EC7600',
+            pointRadius: 6,
+            pointHoverRadius: 6,
+            pointBorderWidth: 2,
+            pointBackgroundColor: ' #FFFFFF',
+          };
+          d3.datasets.push(v2);
+
+          const z3 = [0, 0, 0];
+          GraphData[2][2].forEach((doc) => {
+            const idx = findMonthIndex(monthLabels, doc.y, doc.m);
+            z3[idx] = doc.totalCount2;
+          });
+
+          const v3 = {
+            label: 'Revenue',
+            data: z3,
+            radius: 3,
+            tension: 0,
+            fill: false,
+            borderColor: '#00FFFF',
+            pointRadius: 6,
+            pointHoverRadius: 6,
+            pointBorderWidth: 2,
+            pointBackgroundColor: ' #FFFFFF',
+          };
+          d3.datasets.push(v3);
+          setData3(d3);
+
+          // const c = GraphData[1][0].map(doc => doc.totalCount);
         } else {
           try {
             setError(result.data.error);
@@ -189,6 +319,7 @@ const BlankPage = ({ intl, match }) => {
           }
         }
       } catch (error) {
+        console.log(error);
         try {
           setError(error.response.data.error);
         } catch (error) {
