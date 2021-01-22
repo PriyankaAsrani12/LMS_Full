@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { Formik, Form, Field } from 'formik';
 import {
@@ -17,7 +17,7 @@ import { NavLink, Redirect } from 'react-router-dom';
 import { Colxx } from '../../components/common/CustomBootstrap';
 import { connect } from 'react-redux';
 import { NotificationManager } from '../../components/common/react-notifications';
-
+import logo from './logo.png';
 import { registerUser } from '../../redux/actions';
 
 const initialValues = {
@@ -53,7 +53,11 @@ function DomainRegistration({
   registerUserAction,
   ...props
 }) {
+  const [clicked, setClicked] = useState(false);
+  const toggleClick = () => setClicked(false);
+
   const onSubmit = (values) => {
+    setClicked(true);
     console.log(values);
     const data = {
       customer_first_name: props.location.state.data.first_name,
@@ -65,7 +69,7 @@ function DomainRegistration({
       using_google: true,
     };
     values = data;
-    registerUserAction({ history, values });
+    registerUserAction({ history, values, toggleClick });
   };
   useEffect(() => {
     if (error) {
@@ -89,9 +93,16 @@ function DomainRegistration({
           </div>
           <div className="form-side">
             <NavLink to="/" className="white">
-              <span className="logo-single" />
+              {/* <span className="logo-single" /> */}
+              <img
+                src={logo}
+                style={{ height: '30%', width: '40%' }}
+                alt="Oyesters Logo"
+              />
             </NavLink>
-            <CardTitle className="mb-4">Register Your Domain</CardTitle>
+            <CardTitle className="mb-4" style={{ marginTop: '1.5rem' }}>
+              Register Your Domain
+            </CardTitle>
 
             <Formik
               initialValues={initialValues}
@@ -174,8 +185,25 @@ function DomainRegistration({
                     /> 
                     
                       </FormGroup> */}
-                  <Button color="primary" type="submit">
+                  {/* <Button color="primary" type="submit">
                     Complete Registration
+                  </Button> */}
+
+                  <Button
+                    color="primary"
+                    type="submit"
+                    // onClick={onUserLogin}
+                    className={`btn-shadow btn-multiple-state ${
+                      clicked ? 'show-spinner' : ''
+                    }`}
+                    size="lg"
+                  >
+                    <span className="spinner d-inline-block">
+                      <span className="bounce1" />
+                      <span className="bounce2" />
+                      <span className="bounce3" />
+                    </span>
+                    <span className="label"> Complete Registration</span>
                   </Button>
                 </Form>
               )}

@@ -101,7 +101,7 @@ const registerWithEmailPasswordAsync = async (values) => {
 
 function* registerWithEmailPassword({ payload }) {
   // const { email, password } = payload.user;
-  const { history } = payload.user;
+  const { history, toggleClick } = payload.user;
   // console.log(payload);
   try {
     const values = payload.user.values;
@@ -115,8 +115,10 @@ function* registerWithEmailPassword({ payload }) {
     } else {
       console.log(registerUser.error, 'here');
       try {
+        toggleClick();
         yield put(registerUserError(registerUser.data.error));
       } catch (error) {
+        toggleClick();
         try {
           yield put(registerUserError(registerUser.error));
         } catch (error) {
