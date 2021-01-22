@@ -410,7 +410,8 @@ router.get(
           `SELECT
          customer_career_summary as trainer_career_summary,
          CONCAT(customer_first_name,' ',customer_last_name) as trainer_full_name,
-         customer_occupation as trainer_occupation
+         customer_occupation as trainer_occupation,
+         customer_experience as trainer_experience
         FROM customer_tables WHERE customer_id=${req.user.customer_id}`,
           { type: db.QueryTypes.SELECT }
         );
