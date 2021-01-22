@@ -59,6 +59,9 @@ const Login = ({ loading, error, loginUserAction }) => {
   // const [password] = useState('gogo123');
   const history = useHistory();
   const dispatch = useDispatch();
+  const [clicked, setIsClicked] = useState(false);
+
+  const toggleClick = () => setIsClicked(false);
 
   useEffect(() => {
     if (error) {
@@ -71,8 +74,9 @@ const Login = ({ loading, error, loginUserAction }) => {
     console.log(setSubmitting);
     if (!loading) {
       console.log(values);
+      setIsClicked(true);
 
-      loginUserAction({ history, values });
+      loginUserAction({ history, values, toggleClick });
       // setSubmitting(false);
 
       // axios.post("http://localhost:5000/users/login" , {
@@ -100,7 +104,7 @@ const Login = ({ loading, error, loginUserAction }) => {
       customer_email: res.profileObj.email,
       using_google: true,
     };
-    loginUserAction({ history, values });
+    loginUserAction({ history, values, toggleClick });
   };
   const onFailure = (err) => {
     dispatch(loginUserError(err.error || 'unable to register'));
@@ -196,7 +200,7 @@ const Login = ({ loading, error, loginUserAction }) => {
                       type="submit"
                       // onClick={onUserLogin}
                       className={`btn-shadow btn-multiple-state ${
-                        isSubmitting ? 'show-spinner' : ''
+                        clicked ? 'show-spinner' : ''
                       }`}
                       size="lg"
                     >

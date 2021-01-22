@@ -52,7 +52,7 @@ function* loginWithEmailPassword({ payload }) {
     customer_password = '',
     using_google = false,
   } = payload.user.values;
-  const { history } = payload.user;
+  const { history, toggleClick } = payload.user;
   // console.log(payload);
   try {
     const loginUser = yield call(
@@ -68,9 +68,11 @@ function* loginWithEmailPassword({ payload }) {
       yield put(loginUserSuccess(item));
       history.push('/app/mydashboard');
     } else {
+      toggleClick();
       yield put(loginUserError(loginUser.error));
     }
   } catch (error) {
+    toggleClick();
     yield put(
       loginUserError(
         JSON.stringify(error) || 'Unable to proceed..Please Try Again'
