@@ -16,7 +16,7 @@ router.get('/', auth, async (req, res) => {
       { type: db.QueryTypes.SELECT }
     );
     const studentsEnrolled = await db.query(
-      `SELECT count(*) as students from student_tables where customer_id=${req.user.customer_id}`,
+      `SELECT DISTINCT count(student_id) as students from student_purchases where customer_id=${req.user.customer_id}`,
       { type: db.QueryTypes.SELECT }
     );
     return res.status(200).json({
