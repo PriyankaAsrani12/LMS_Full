@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
   Row,
-  CardTitle,
   CardBody,
   Card,
   Col,
-  Input,
   Badge,
   CardText,
   UncontrolledDropdown,
@@ -17,15 +15,12 @@ import {
 import { Scrollbars } from 'react-custom-scrollbars';
 
 import { FaFilter } from 'react-icons/fa';
-import { LineChart } from '../../../components/charts';
 import { FaBookOpen } from 'react-icons/fa';
 import { RiMoneyDollarCircleFill } from 'react-icons/ri';
 import { AiFillBank } from 'react-icons/ai';
 import { FaHandHoldingUsd } from 'react-icons/fa';
-import { lineChartData } from '../../../data/charts';
 import { Line } from 'react-chartjs-2';
 
-import Monitization_table from '../../../data/Monitization_table';
 import Table from './Table';
 import './style.css';
 

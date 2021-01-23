@@ -4,7 +4,6 @@ import { Colxx } from '../components/common/CustomBootstrap';
 import 'rc-switch/assets/index.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import Select from 'react-select';
-import { colourOptions } from '../data/data2';
 
 import axiosInstance from '../helpers/axiosInstance';
 import NotificationManager from '../components/common/react-notifications/NotificationManager';

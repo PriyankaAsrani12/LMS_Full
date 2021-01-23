@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useDebugValue } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Row,
   NavItem,
@@ -27,17 +27,12 @@ import { BiTime } from 'react-icons/bi';
 import { RiMailSendFill } from 'react-icons/ri';
 import { Scrollbars } from 'react-custom-scrollbars';
 
-import Communication_table from '../../../data/Communication_table';
-import { lineChartData } from '../../../data/charts';
-import { LineChart } from '../../../components/charts';
 import './style.css';
 import Table from './Table';
 import Communication_table2 from '../../../data/Communication_table2';
-import Communication_table3 from '../../../data/Communication_table3';
 
 import axiosInstance from '../../../helpers/axiosInstance';
 import NotificationManager from '../../../components/common/react-notifications/NotificationManager';
-import NoDataFound from '../../../CustomComponents/NoDataFound';
 
 const Communication = () => {
   const [activeFirstTab1, setActiveFirstTab1] = useState('8');
