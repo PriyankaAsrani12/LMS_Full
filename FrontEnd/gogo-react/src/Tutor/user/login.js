@@ -6,15 +6,9 @@ import './auth.css';
 import { Formik, Form, Field } from 'formik';
 import { NotificationManager } from '../../components/common/react-notifications';
 import * as Yup from 'yup';
-import { iconsmind, simplelineicons } from '../../data/icons';
-import { AiOutlineApple } from 'react-icons/ai';
 import { loginUser } from '../../redux/actions';
 import { Colxx } from '../../components/common/CustomBootstrap';
 import IntlMessages from '../../helpers/IntlMessages';
-import { adminRoot } from '../../constants/defaultValues';
-import axiosInstance from '../../helpers/axiosInstance';
-import axios from 'axios';
-import Apple from './apple.png';
 import Logo from './logo.png';
 import Google from './google.png';
 import { useHistory } from 'react-router-dom';
@@ -22,25 +16,6 @@ import { useGoogleLogin } from 'react-google-login';
 import { refreshTokenSetup } from './utils/refreshTokenSetup';
 import { loginUserError } from '../../redux/auth/actions';
 
-const validatePassword = (value) => {
-  let error;
-  if (!value) {
-    error = 'Please enter your password';
-  } else if (value.length < 4) {
-    error = 'Value must be longer than 3 characters';
-  }
-  return error;
-};
-
-const validateEmail = (value) => {
-  let error;
-  if (!value) {
-    error = 'Please enter your email address';
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-    error = 'Invalid email address';
-  }
-  return error;
-};
 const initialvalue = {
   customer_email: '',
   customer_password: '',

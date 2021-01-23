@@ -1,25 +1,19 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable no-use-before-define */
 import React, { useState } from 'react';
 import { injectIntl } from 'react-intl';
-import {BsChatSquareDots} from 'react-icons/bs'
-import {RiNotification4Line} from 'react-icons/ri'
-import {MdChat} from 'react-icons/md'
-import './navs.css'
+import './navs.css';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
   UncontrolledDropdown,
   DropdownItem,
   DropdownToggle,
   DropdownMenu,
-  Input, Row, Col
+  Row,
+  Col,
 } from 'reactstrap';
 
-import { NavLink,Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import IntlMessages from '../../helpers/IntlMessages';
 import {
   setContainerClassnames,
   clickOnMobileMenu,
@@ -27,43 +21,43 @@ import {
   changeLocale,
 } from '../../redux/actions';
 
-import {
-  menuHiddenBreakpoint,
-  searchPath,
-  localeOptions,
-  isDarkSwitchActive,
-  buyUrl,
-  adminRoot,
-} from '../../constants/defaultValues';
+import { searchPath, adminRoot } from '../../constants/defaultValues';
 import message from '../../data/message';
 import { MobileMenuIcon, MenuIcon } from '../../components/svg';
-import TopnavEasyAccess from './Topnav.EasyAccess';
 import TopnavNotifications from './Topnav.Notifications';
-import TopnavDarkSwitch from './Topnav.DarkSwitch';
-
-import { getDirection, setDirection } from '../../helpers/Utils';
-
 
 const Messages = ({ img, title, date }) => {
   return (
-    
     <div>
-      <div className="border-bottom-3 d-flex" style={{marginLeft:'-15px', marginRight:'-15px' }}>
-        
-          <Row className="ml-2">
-            <Col md={2}>
-          <img src={img} style={{width:'300%', borderRadius:'50%', display:'flex'}}/></Col>
+      <div
+        className="border-bottom-3 d-flex"
+        style={{ marginLeft: '-15px', marginRight: '-15px' }}
+      >
+        <Row className="ml-2">
+          <Col md={2}>
+            <img
+              src={img}
+              style={{ width: '300%', borderRadius: '50%', display: 'flex' }}
+            />
+          </Col>
           <Col md={10}>
-          <p className="font-weight-medium mb-1 ml-3 d-flex">{title}</p></Col>
-          <p className="text-muted mt-1 mb-0  text-small d-flex" style={{marginLeft:"70px"}}>{date}</p></Row>
-          
-      
+            <p className="font-weight-medium mb-1 ml-3 d-flex">{title}</p>
+          </Col>
+          <p
+            className="text-muted mt-1 mb-0  text-small d-flex"
+            style={{ marginLeft: '70px' }}
+          >
+            {date}
+          </p>
+        </Row>
       </div>
-      <DropdownItem divider style={{width:'200px',backgroundColor:'#F1F1F1', color:'#F1F1F1'}} />
-   </div>
+      <DropdownItem
+        divider
+        style={{ width: '200px', backgroundColor: '#F1F1F1', color: '#F1F1F1' }}
+      />
+    </div>
   );
 };
-
 
 const TopNav = ({
   intl,
@@ -71,74 +65,16 @@ const TopNav = ({
   containerClassnames,
   menuClickCount,
   selectedMenuHasSubItems,
-  locale,
   setContainerClassnamesAction,
   clickOnMobileMenuAction,
-  logoutUserAction,
-  changeLocaleAction,
 }) => {
-  const [isInFullScreen, setIsInFullScreen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [status, setstatus] = useState(true)
+  const [status, setstatus] = useState(true);
 
   const search = () => {
     history.push(`${searchPath}?key=${searchKeyword}`);
     setSearchKeyword('');
   };
-
-  const handleChangeLocale = (_locale, direction) => {
-    changeLocaleAction(_locale);
-
-    const currentDirection = getDirection().direction;
-    if (direction !== currentDirection) {
-      setDirection(direction);
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
-    }
-  };
-  const change = () => {
-    setstatus(!status)
-  }
-
-  const isInFullScreenFn = () => {
-    return (
-      (document.fullscreenElement && document.fullscreenElement !== null) ||
-      (document.webkitFullscreenElement &&
-        document.webkitFullscreenElement !== null) ||
-      (document.mozFullScreenElement &&
-        document.mozFullScreenElement !== null) ||
-      (document.msFullscreenElement && document.msFullscreenElement !== null)
-    );
-  };
-
-  const handleSearchIconClick = (e) => {
-    if (window.innerWidth < menuHiddenBreakpoint) {
-      let elem = e.target;
-      if (!e.target.classList.contains('search')) {
-        if (e.target.parentElement.classList.contains('search')) {
-          elem = e.target.parentElement;
-        } else if (
-          e.target.parentElement.parentElement.classList.contains('search')
-        ) {
-          elem = e.target.parentElement.parentElement;
-        }
-      }
-
-      if (elem.classList.contains('mobile-view')) {
-        search();
-        elem.classList.remove('mobile-view');
-        removeEventsSearch();
-      } else {
-        elem.classList.add('mobile-view');
-        addEventsSearch();
-      }
-    } else {
-      search();
-    }
-    e.stopPropagation();
-  };
-
 
   const handleDocumentClickSearch = (e) => {
     let isSearchClick = false;
@@ -172,46 +108,6 @@ const TopNav = ({
     document.removeEventListener('click', handleDocumentClickSearch, true);
   };
 
-  const addEventsSearch = () => {
-    document.addEventListener('click', handleDocumentClickSearch, true);
-  };
-
-  const handleSearchInputKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      search();
-    }
-  };
-
-  const toggleFullScreen = () => {
-    const isFS = isInFullScreenFn();
-
-    const docElm = document.documentElement;
-    if (!isFS) {
-      if (docElm.requestFullscreen) {
-        docElm.requestFullscreen();
-      } else if (docElm.mozRequestFullScreen) {
-        docElm.mozRequestFullScreen();
-      } else if (docElm.webkitRequestFullScreen) {
-        docElm.webkitRequestFullScreen();
-      } else if (docElm.msRequestFullscreen) {
-        docElm.msRequestFullscreen();
-      }
-    } else if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if (document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
-    } else if (document.mozCancelFullScreen) {
-      document.mozCancelFullScreen();
-    } else if (document.msExitFullscreen) {
-      document.msExitFullscreen();
-    }
-    setIsInFullScreen(!isFS);
-  };
-
-  const handleLogout = () => {
-    history.push('/user/login');
-  };
-
   const menuButtonClick = (e, _clickCount, _conClassnames) => {
     e.preventDefault();
 
@@ -236,141 +132,88 @@ const TopNav = ({
   return (
     <Row>
       <Col xs="12">
-    <nav className="navbar fixed-top navj">
-      <div className="d-flex align-items-center navbar-left">
-        <NavLink
-          to="#"
-          location={{}}
-          className="menu-button d-none d-md-block"
-          onClick={(e) =>
-            menuButtonClick(e, menuClickCount, containerClassnames)
-          }
-        >
-          <MenuIcon  className="menuicon"/>
-        </NavLink>
-        <NavLink
-          to="#"
-          location={{}}
-          className="menu-button-mobile d-xs-block d-sm-block d-md-none mr-4"
-          onClick={(e) => mobileMenuButtonClick(e, containerClassnames)}
-        >
-          <MobileMenuIcon />
-        </NavLink>
-          
-        <NavLink className="navbar-logo" id="logolink" to={adminRoot}>
-  
-          { !status ? <img src={require(`./white.png`)} className="Logo"/> : <img src={require(`./black.png`)} className="Logo"/>}
-          {console.log(status)}
-        </NavLink>
-            
-{/*         <div className="search"> 
-          <Input
-            name="searchKeyword"
-            id="searchKeyword"
-            placeholder={messages['menu.search']}
-            value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
-            onKeyPress={(e) => handleSearchInputKeyPress(e)}
-          />
-          <span
-            className="search-icon"
-            onClick={(e) => handleSearchIconClick(e)}
-          >
-            <i className="simple-icon-magnifier" />
-          </span>
-        </div> */}
-
-{/*         <div className="d-inline-block">
-          <UncontrolledDropdown className="ml-2">
-            <DropdownToggle
-              caret
-              color="light"
-              size="sm"
-              className="language-button"
+        <nav className="navbar fixed-top navj">
+          <div className="d-flex align-items-center navbar-left">
+            <NavLink
+              to="#"
+              location={{}}
+              className="menu-button d-none d-md-block"
+              onClick={(e) =>
+                menuButtonClick(e, menuClickCount, containerClassnames)
+              }
             >
-              <span className="name">{locale.toUpperCase()}</span>
-            </DropdownToggle>
-            <DropdownMenu className="mt-3" right>
-              {localeOptions.map((l) => {
-                return (
-                  <DropdownItem
-                    onClick={() => handleChangeLocale(l.id, l.direction)}
-                    key={l.id}
+              <MenuIcon className="menuicon" />
+            </NavLink>
+            <NavLink
+              to="#"
+              location={{}}
+              className="menu-button-mobile d-xs-block d-sm-block d-md-none mr-4"
+              onClick={(e) => mobileMenuButtonClick(e, containerClassnames)}
+            >
+              <MobileMenuIcon />
+            </NavLink>
+
+            <NavLink className="navbar-logo" id="logolink" to={adminRoot}>
+              {!status ? (
+                <img src={require(`./white.png`)} className="Logo" />
+              ) : (
+                <img src={require(`./black.png`)} className="Logo" />
+              )}
+              {console.log(status)}
+            </NavLink>
+          </div>
+
+          <div className="navbar-right">
+            <i className=" text-muted mt-3" />
+
+            <TopnavNotifications
+              className="noti mr-4"
+              style={{ fontSize: '25px' }}
+            />
+
+            <div className="header-icons d-inline-block align-middle">
+              <UncontrolledDropdown className="ml-auto">
+                <DropdownToggle
+                  className="header-icon notificationButton"
+                  color="empty"
+                >
+                  <i
+                    className="simple-icon-speech"
+                    style={{ fontSize: '20px' }}
+                  />
+                  <span className="count">2</span>
+                </DropdownToggle>
+                <DropdownMenu
+                  className="position-absolute mt-3 scroll"
+                  right
+                  id="notificationDropdown"
+                >
+                  <PerfectScrollbar
+                    options={{ suppressScrollX: true, wheelPropagation: false }}
                   >
-                    {l.name}
-                  </DropdownItem>
-                );
-              })}
-            </DropdownMenu>
-          </UncontrolledDropdown>
-        </div> */}
-
-      </div>
-
-      
-      <div className="navbar-right">
-
-         {/* <MdChat className="chat"/> */}<i className=" text-muted mt-3"/>
-         
-           <TopnavNotifications className="noti mr-4"  style={{fontSize:'25px'}}/>
-            {/* <IoIosNotificationsOutline className="notification"/> */}
-            {/* <RiNotification4Line /> */}
-        <div className="header-icons d-inline-block align-middle">
-{/*           <TopnavEasyAccess />
-          <TopnavNotifications /> */}
-          
-          <UncontrolledDropdown className="ml-auto">
-          <DropdownToggle
-            className="header-icon notificationButton"
-            color="empty"
-          >
-            <i className="simple-icon-speech" style={{fontSize:'20px'}} />
-            <span className="count">2</span>
-          </DropdownToggle>
-          <DropdownMenu
-            className="position-absolute mt-3 scroll"
-            right
-            id="notificationDropdown"
-          >
-            <PerfectScrollbar
-              options={{ suppressScrollX: true, wheelPropagation: false }}
-            >
-              {message.map((mess, index) => {
-                return (
-                  <NavLink to="/app/message">
-                    <Messages key={index} {...mess} />
-                  </NavLink>
-                );
-              })} 
-            </PerfectScrollbar>
-          </DropdownMenu>
-        </UncontrolledDropdown>
-
-        </div>
-        <div className="user d-inline-block">
-          <UncontrolledDropdown className="dropdown-menu-right">
-            <DropdownToggle className="p-0" color="empty">
-              <span className="img">
-                <img alt="Profile"  src="/assets/img/profiles/l-1.jpg" />
-              </span>
-            </DropdownToggle>
-            {/* <DropdownMenu className="mt-3" right>
-              <DropdownItem >Account</DropdownItem>
-              <DropdownItem>Features</DropdownItem>
-              <DropdownItem>History</DropdownItem>
-              <DropdownItem>Support</DropdownItem>
-            {/*   <DropdownItem> <TopnavDarkSwitch className="toggle ml-4 dark"  />
-         <span> Night Mode</span></DropdownItem> 
-              <DropdownItem divider />
-              <DropdownItem onClick={() => handleLogout()}>
-                Sign out
-              </DropdownItem>
-            </DropdownMenu> */}
-          </UncontrolledDropdown>
-        </div>
-      </div>
-    </nav>
-    </Col>
+                    {message.map((mess, index) => {
+                      return (
+                        <NavLink to="/app/message">
+                          <Messages key={index} {...mess} />
+                        </NavLink>
+                      );
+                    })}
+                  </PerfectScrollbar>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+            </div>
+            <div className="user d-inline-block">
+              <UncontrolledDropdown className="dropdown-menu-right">
+                <DropdownToggle className="p-0" color="empty">
+                  <span className="img">
+                    <img alt="Profile" src="/assets/img/profiles/l-1.jpg" />
+                  </span>
+                </DropdownToggle>
+              </UncontrolledDropdown>
+            </div>
+          </div>
+        </nav>
+      </Col>
     </Row>
   );
 };

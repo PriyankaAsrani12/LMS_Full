@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Row, Col, FormGroup, Label, Button, Input } from 'reactstrap';
 import { Colxx } from '../components/common/CustomBootstrap';
 import 'rc-switch/assets/index.css';
@@ -7,7 +7,6 @@ import Select from 'react-select';
 
 import axiosInstance from '../helpers/axiosInstance';
 import NotificationManager from '../components/common/react-notifications/NotificationManager';
-import { DropDownContext } from '../context/DropdownContext';
 import Loader from './settings/Loader';
 
 const RemoteSession = ({ closeModal, propHandle }) => {
@@ -20,13 +19,12 @@ const RemoteSession = ({ closeModal, propHandle }) => {
   );
   let [fees, setfees] = useState('Paid for Course Enrolled Students');
   let [course, setCourse] = useState([]);
-  let [defval, setdefval] = useState(false);
+  let [defval] = useState(false);
   let [occurance, setOccurance] = useState('Once');
   let [session_name, setSession_name] = useState('');
   let [description, setDescription] = useState('');
   let [trainer, setTrainer] = useState('');
   let [session_fee, setSession_fee] = useState('');
-  const [handleReloadTable] = useContext(DropDownContext);
   const [trainerData, setTrainerData] = useState([
     { value: 'You', label: 'customer_id' },
   ]);

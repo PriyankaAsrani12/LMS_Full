@@ -1,33 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  Breadcrumb,
-  BreadcrumbItem,
   Button,
-  Card,
-  CardBody,
   ModalBody,
   Modal,
-  CardTitle,
   ModalHeader,
   ModalFooter,
   Row,
-  UncontrolledCollapse,
-  FormGroup,
   Label,
   Input,
-  CardText,
-  Collapse,
-  Col,
 } from 'reactstrap';
-import axiosInstance from '../helpers/axiosInstance';
 
 function Make_modal(props) {
-  // console.log(props);
   const [modal, setModal] = useState(false);
   const [tagline, setTagline] = useState(props.tagline);
   const [tags, setTags] = useState(props.seotags);
   const [description, setDescription] = useState(props.description);
-  // console.log(description, tags, tagline, props.session_id);
 
   const toggle = () => setModal(!modal);
 

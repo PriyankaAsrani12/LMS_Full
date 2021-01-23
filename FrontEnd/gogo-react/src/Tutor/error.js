@@ -3,7 +3,8 @@ import { Row, Card, CardTitle } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { Colxx } from '../components/common/CustomBootstrap';
 import IntlMessages from '../helpers/IntlMessages';
-import {adminRoot} from '../constants/defaultValues'
+import logo from './user/logo.png';
+
 const Error = () => {
   useEffect(() => {
     document.body.classList.add('background');
@@ -24,12 +25,12 @@ const Error = () => {
             <Colxx xxs="12" md="10" className="mx-auto my-auto">
               <Card className="auth-card">
                 <div className="position-relative image-side ">
-                  <p className="text-white h2">MAGIC IS IN THE DETAILS</p>
+                  <p className="text-white h2">Oyesters Training</p>
                   <p className="white mb-0">Yes, it is indeed!</p>
                 </div>
                 <div className="form-side">
                   <NavLink to="/" className="white">
-                    <span className="logo-single" />
+                    <img src={logo} style={{ height: '30%', width: '40%' }} />
                   </NavLink>
                   <CardTitle className="mb-4">
                     <IntlMessages id="pages.error-title" />
@@ -38,8 +39,8 @@ const Error = () => {
                     <IntlMessages id="pages.error-code" />
                   </p>
                   <p className="display-1 font-weight-bold mb-5">404</p>
-                  <NavLink to={adminRoot} className="btn btn-primary btn-shadow btn-lg">
-                    <IntlMessages id="pages.go-back-home" />
+                  <NavLink to="/" className="btn btn-primary btn-shadow btn-lg">
+                    GO BACK HOME
                   </NavLink>
                 </div>
               </Card>

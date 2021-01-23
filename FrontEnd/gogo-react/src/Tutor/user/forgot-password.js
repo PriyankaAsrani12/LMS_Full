@@ -76,7 +76,6 @@ const ForgotPassword = ({
           </div>
           <div className="form-side">
             <NavLink to="/" className="white">
-              {/*  <span className="logo-single" /> */}
               <img src={Logo} className="image" alt="1111" />
             </NavLink>
             <CardTitle className="mb-4">
@@ -101,9 +100,6 @@ const ForgotPassword = ({
                   </FormGroup>
 
                   <div className="d-flex justify-content-between align-items-center">
-                    {/*                     <NavLink to="/user/forgot-password">
-                      <IntlMessages id="user.forgot-password-question" />
-                    </NavLink> */}
                     <Button
                       color="primary"
                       className={`btn-shadow btn-multiple-state ${

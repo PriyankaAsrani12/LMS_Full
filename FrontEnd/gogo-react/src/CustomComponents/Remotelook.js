@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Colxx, Separator } from '../components/common/CustomBootstrap';
+import { Colxx } from '../components/common/CustomBootstrap';
 import {
   Button,
   Card,

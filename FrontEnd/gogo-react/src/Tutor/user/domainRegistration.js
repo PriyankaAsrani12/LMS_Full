@@ -11,9 +11,8 @@ import {
   InputGroupAddon,
   InputGroup,
   InputGroupText,
-  Input,
 } from 'reactstrap';
-import { NavLink, Redirect } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Colxx } from '../../components/common/CustomBootstrap';
 import { connect } from 'react-redux';
 import { NotificationManager } from '../../components/common/react-notifications';
@@ -23,8 +22,6 @@ import { registerUser } from '../../redux/actions';
 const initialValues = {
   institutename: '',
   subdomain: '',
-  // otp_in_mobile: "",
-  // otp_in_email:""
 };
 
 const validation = Yup.object().shape({
@@ -36,14 +33,6 @@ const validation = Yup.object().shape({
     .min(2, 'Subdomain should be min 2 characters')
     .max(50, 'please enter correct subdomian')
     .required('Subdomain is required'),
-  // otp_in_mobile: Yup.string()
-  // .min(4, "Please Enter valid otp")
-  // .max(6, "Please Enter correct otp")
-  // .required("OTP is Required"),
-  // otp_in_email: Yup.string()
-  // .min(4, "Please Enter valid otp")
-  // .max(6, "Please Enter correct otp")
-  // .required("OTP is Required")
 });
 
 function DomainRegistration({
@@ -93,7 +82,6 @@ function DomainRegistration({
           </div>
           <div className="form-side">
             <NavLink to="/" className="white">
-              {/* <span className="logo-single" /> */}
               <img
                 src={logo}
                 style={{ height: '30%', width: '40%' }}
@@ -109,15 +97,7 @@ function DomainRegistration({
               onSubmit={onSubmit}
               validationSchema={validation}
             >
-              {({
-                handleSubmit,
-                setFieldValue,
-                setFieldTouched,
-                values,
-                errors,
-                touched,
-                isSubmitting,
-              }) => (
+              {({ errors, touched }) => (
                 <Form
                   className="av-tooltip tooltip-label-bottom"
                   autoComplete="true"
@@ -148,46 +128,6 @@ function DomainRegistration({
                       </div>
                     ) : null}
                   </FormGroup>
-                  {/* <FormGroup className="form-group has-float-label">
-                    <Label>
-                      OTP in Mobile
-                    </Label> 
-                    <Field
-                      className="form-control"
-                      name="otp_in_mobile"
-                    />
-                    {errors.otp_in_mobile && touched.otp_in_mobile ? (
-                      <div className="invalid-feedback d-block">
-                        {errors.otp_in_mobile}
-                      </div>
-                    ) : null}
-                  </FormGroup>
-                  <FormGroup className="form-group has-float-label">
-                    <Label>
-                      OTP in Email
-                    </Label> 
-                    <Field
-                      className="form-control"
-                      name="otp_in_email"
-                    /> 
-                    {errors.otp_in_email && touched.otp_in_email ? (
-                      <div className="invalid-feedback d-block">
-                        {errors.otp_in_email}
-                      </div>
-                    ) : null}
-                  </FormGroup>  */}
-                  {/* <FormGroup className="form-group has-float-label">
-                    <Label>
-                      SubDomain
-                    </Label> 
-                    <Field
-                      
-                    /> 
-                    
-                      </FormGroup> */}
-                  {/* <Button color="primary" type="submit">
-                    Complete Registration
-                  </Button> */}
 
                   <Button
                     color="primary"
@@ -214,8 +154,6 @@ function DomainRegistration({
     </Row>
   );
 }
-
-// export default DomainRegistration;
 
 const mapStateToProps = ({ authUser }) => {
   const { loading, error } = authUser;

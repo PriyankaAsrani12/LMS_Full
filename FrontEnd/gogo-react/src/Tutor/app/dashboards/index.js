@@ -6,8 +6,6 @@ const DashboardDefault = React.lazy(() => import('./default'));
 
 const Dashboards = ({ match }) => (
   <>
-    {console.log(match)}
-
     <Suspense fallback={<div className="loading" />}>
       <Switch>
         <Redirect exact from={`${match.url}/`} to={`${match.url}/default`} />

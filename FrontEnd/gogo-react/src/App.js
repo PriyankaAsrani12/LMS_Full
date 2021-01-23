@@ -14,9 +14,6 @@ import { isMultiColorActive, adminRoot } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
 import { ProtectedRoute, UserRole } from './helpers/authHelper';
 
-const ViewHome = React.lazy(() =>
-  import(/* webpackChunkName: "views" */ './Tutor/home')
-);
 const ViewApp = React.lazy(() =>
   import(/* webpackChunkName: "views-app" */ './Tutor/app')
 );
@@ -25,9 +22,6 @@ const ViewUser = React.lazy(() =>
 );
 const ViewError = React.lazy(() =>
   import(/* webpackChunkName: "views-error" */ './Tutor/error')
-);
-const ViewUnauthorized = React.lazy(() =>
-  import(/* webpackChunkName: "views-error" */ './Tutor/unauthorized')
 );
 
 class App extends React.Component {
@@ -73,20 +67,10 @@ class App extends React.Component {
                     exact
                     render={(props) => <ViewError {...props} />}
                   />
-                  <Route
-                    path="/unauthorized"
-                    exact
-                    render={(props) => <ViewUnauthorized {...props} />}
-                  />
-                  <Route
-                    path="/home"
-                    exact
-                    render={(props) => <ViewHome {...props} />}
-                  />
 
                   <Redirect exact from="/" to={'/Tutor/user'} />
 
-                  {/* <Redirect to="/error" /> */}
+                  <Redirect to="/error" />
                 </Switch>
               </Router>
             </Suspense>

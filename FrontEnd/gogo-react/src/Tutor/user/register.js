@@ -1,5 +1,4 @@
-import React, { createRef, useState, useEffect } from 'react';
-import { iconsmind, simplelineicons } from '../../data/icons';
+import React, { useState, useEffect } from 'react';
 import './auth.css';
 import {
   Row,
@@ -7,27 +6,20 @@ import {
   CardTitle,
   FormGroup,
   Label,
-  Input,
   Button,
   InputGroupAddon,
   InputGroup,
   InputGroupText,
 } from 'reactstrap';
 import * as Yup from 'yup';
-import { Wizard, Steps, Step } from 'react-albus';
-import BottomNavigation from '../../components/wizard/BottomNavigation';
-import Apple from './apple.png';
 import Logo from './logo.png';
-import { NavLink, Redirect } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import { registerUser } from '../../redux/actions';
 import { Formik, Form, Field } from 'formik';
-import { AiOutlineApple } from 'react-icons/ai';
 import IntlMessages from '../../helpers/IntlMessages';
 import Google from './google.png';
 import { Colxx } from '../../components/common/CustomBootstrap';
-import { adminRoot } from '../../constants/defaultValues';
-import axios from 'axios';
 import { NotificationManager } from '../../components/common/react-notifications';
 import { useHistory } from 'react-router-dom';
 import { useGoogleLogin } from 'react-google-login';

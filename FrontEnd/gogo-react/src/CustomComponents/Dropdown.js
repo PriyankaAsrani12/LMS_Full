@@ -1,16 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react';
-import {
-  Row,
-  Button,
-  Input,
-  Modal,
-  InputGroupAddon,
-  InputGroup,
-} from 'reactstrap';
+import React, { useState, useContext } from 'react';
+import { Row, Button, Input, Modal } from 'reactstrap';
 import Select from 'react-select';
 import CustomSelectInput from '../components/common/CustomSelectInput';
 import { Colxx } from '../components/common/CustomBootstrap';
-import { menuHiddenBreakpoint, searchPath } from '../constants/defaultValues';
 import './Customcss.css';
 import SessionInput from './SessionInput';
 import { DropDownContext } from '../context/DropdownContext';
@@ -30,96 +22,18 @@ const selectSort = [
   { label: 'Registrations', value: 'session_registration', key: 3 },
 ];
 
-const CustomSelect = ({ intl }) => {
+const CustomSelect = () => {
   const [
     selectedFilter,
     setSelectedFilter,
     selectedSort,
     setSelectedSort,
-    search,
     setSearch,
     handleReloadTable,
   ] = useContext(DropDownContext);
-  // const [selectedSort, setSelectedSort] = useState('');
-  const [searchKeyword, setSearchKeyword] = useState('');
-  // const [search, setSearch] = useState('');
   const [modalLarge, setModalLarge] = useState(false);
 
   const handleToggle = () => setModalLarge(!modalLarge);
-
-  const handleSearchInputKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      search();
-    }
-  };
-
-  // const search = () => {
-  //   // history.push(`${searchPath}?key=${searchKeyword}`);
-  //   setSearchKeyword('');
-  // };
-
-  // const handleSearchIconClick = (e) => {
-  //   if (window.innerWidth < menuHiddenBreakpoint) {
-  //     let elem = e.target;
-  //     if (!e.target.classList.contains('search')) {
-  //       if (e.target.parentElement.classList.contains('search')) {
-  //         elem = e.target.parentElement;
-  //       } else if (
-  //         e.target.parentElement.parentElement.classList.contains('search')
-  //       ) {
-  //         elem = e.target.parentElement.parentElement;
-  //       }
-  //     }
-
-  //     if (elem.classList.contains('mobile-view')) {
-  //       search();
-  //       elem.classList.remove('mobile-view');
-  //       removeEventsSearch();
-  //     } else {
-  //       elem.classList.add('mobile-view');
-  //       addEventsSearch();
-  //     }
-  //   } else {
-  //     search();
-  //   }
-  //   e.stopPropagation();
-  // };
-
-  // const removeEventsSearch = () => {
-  //   document.removeEventListener('click', handleDocumentClickSearch, true);
-  // };
-
-  // const handleDocumentClickSearch = (e) => {
-  //   let isSearchClick = false;
-  //   if (
-  //     e.target &&
-  //     e.target.classList &&
-  //     (e.target.classList.contains('navbar') ||
-  //       e.target.classList.contains('simple-icon-magnifier'))
-  //   ) {
-  //     isSearchClick = true;
-  //     if (e.target.classList.contains('simple-icon-magnifier')) {
-  //       search();
-  //     }
-  //   } else if (
-  //     e.target.parentElement &&
-  //     e.target.parentElement.classList &&
-  //     e.target.parentElement.classList.contains('search')
-  //   ) {
-  //     isSearchClick = true;
-  //   }
-
-  //   if (!isSearchClick) {
-  //     const input = document.querySelector('.mobile-view');
-  //     if (input && input.classList) input.classList.remove('mobile-view');
-  //     removeEventsSearch();
-  //     setSearchKeyword('');
-  //   }
-  // };
-
-  // const addEventsSearch = () => {
-  //   document.addEventListener('click', handleDocumentClickSearch, true);
-  // };
 
   const onSearchKey = (e) => {
     if (e.key === 'Enter') {
@@ -127,17 +41,6 @@ const CustomSelect = ({ intl }) => {
       setSearch(e.target.value.toLowerCase());
     }
   };
-
-  // useEffect(() => {
-  //   console.log(selectedSort, selectedFilter, search);
-  // }, [
-  //   selectedFilter,
-  //   setSelectedFilter,
-  //   selectedSort,
-  //   setSelectedSort,
-  //   search,
-  //   setSearch,
-  // ]);
 
   return (
     <>

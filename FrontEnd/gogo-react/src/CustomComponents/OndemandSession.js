@@ -19,7 +19,6 @@ const CreatesessionSchema = Yup.object().shape({
   session_description: Yup.string().required('Description is required!'),
   session_fee: Yup.number().required('Fees is required'),
 });
-const options = [{ value: 'you', label: 'You' }];
 
 const OndemandSession = ({ closeModal, propHandle }) => {
   const [checkedSecondarySmall, setCheckedSecondarySmall] = useState(true);

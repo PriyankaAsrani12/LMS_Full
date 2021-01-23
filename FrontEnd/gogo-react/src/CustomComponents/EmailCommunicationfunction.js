@@ -1,31 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Card,
   Row,
   Input,
   Col,
   Nav,
-  CardBody,
   NavItem,
   TabContent,
   Button,
-  FormGroup,
   TabPane,
-  CardImg,
 } from 'reactstrap';
-import { Colxx } from '../components/common/CustomBootstrap';
 import Switch from 'rc-switch';
 import './Customcss.css';
-import EmailCommunication from './EmailCommunication';
 import { NavLink } from 'react-router-dom';
 import classnames from 'classnames';
-import img from './bebinca-thumb.jpg';
 import Email from './communication/Email';
 import DirectMessage from './communication/DirectMessage';
 
 function Emailcommunicationfunction() {
-  const [accountverification, setAccountverification] = useState(false);
-  const [accountverificationtheme, setAccountverificationtheme] = useState('1');
   const [activeFirstTab, setActiveFirstTab] = useState('1');
 
   const [emailontext, setemailontext] = useState(false);
@@ -80,10 +72,6 @@ function Emailcommunicationfunction() {
             <h6> Whatsapp</h6>
           </NavLink>
         </NavItem>
-        {/* <FormGroup className="mb-4 d-flex float-right ml-auto" id="search">
-                    <Input type="email" className="d-flex" id="exampleEmail" placeholder="Search anything" />
-                    <Button id="searchbutton" className="d-flex ml-2">Search</Button>
-                  </FormGroup> */}
       </Nav>
       <TabContent activeTab={activeFirstTab}>
         <TabPane tabId="1">

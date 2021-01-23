@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Row, Button, Modal } from 'reactstrap';
+import { Modal } from 'reactstrap';
 import SessionInput from './SessionInput';
 import logo from './session.svg';
-//here a image is need to be added vedant will give it
 
 const CreateSession = () => {
   const [modalLarge, setModalLarge] = useState(false);
@@ -32,7 +31,6 @@ const CreateSession = () => {
       <br />
       <br />
       <br />
-      {/* <Button color="primary" onClick={() => setModalLarge(true)} className="mb-2 p-3" >Create Session </Button>  */}
       <Modal isOpen={modalLarge} size="lg" toggle={toggleModal}>
         <SessionInput closeModal={toggleModal} value="true" />
       </Modal>
