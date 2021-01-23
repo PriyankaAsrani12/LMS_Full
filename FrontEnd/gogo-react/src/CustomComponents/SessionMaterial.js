@@ -4,11 +4,8 @@ import {
   Card,
   CardBody,
   Modal,
-  ModalBody,
-  Form,
   CardTitle,
   ModalHeader,
-  ModalFooter,
   Row,
   UncontrolledCollapse,
   FormGroup,
@@ -27,10 +24,8 @@ import { BsPlusCircle } from 'react-icons/bs';
 import { FaRegNewspaper } from 'react-icons/fa';
 import { BiChevronDown } from 'react-icons/bi';
 import { FiUpload } from 'react-icons/fi';
-import { IoMdRemoveCircleOutline } from 'react-icons/io';
 import { VscLibrary } from 'react-icons/vsc';
 
-import IntlMessages from '../helpers/IntlMessages';
 import './Customcss.css';
 import { Colxx } from '../components/common/CustomBootstrap';
 import { iconsmind } from '../data/icons';

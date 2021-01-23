@@ -2,10 +2,6 @@ import React, { useState } from 'react';
 import {
   Row,
   Card,
-  CardBody,
-  FormGroup,
-  Label,
-  Button,
   CardHeader,
   Nav,
   NavItem,
@@ -18,7 +14,6 @@ import { Colxx } from '../components/common/CustomBootstrap';
 import OndemandSession from './OndemandSession';
 import RemoteSession from './RemoteSession';
 import classnames from 'classnames';
-import RemotesessionLook from './RemotesessionLook';
 
 function SessionInput({ closeModal, propHandle }) {
   const [activeFirstTab, setActiveFirstTab] = useState('1');

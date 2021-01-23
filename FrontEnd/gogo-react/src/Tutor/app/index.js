@@ -3,47 +3,24 @@ import { Route, withRouter, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import AppLayout from '../../layout/AppLayout';
-// import { ProtectedRoute, UserRole } from '../../helpers/authHelper';
 
-const Dashboards = React.lazy(() =>
-  import(/* webpackChunkName: "dashboards" */ './dashboards')
-);
+const Dashboards = React.lazy(() => import('./dashboards'));
 const Pages = React.lazy(() => import('../../CustomComponents/Library/index'));
 const LiveSession = React.lazy(() =>
-  import(/* webpackChunkName: "pages" */ '../../CustomComponents/Remotelook')
+  import('../../CustomComponents/Remotelook')
 );
 const RecordedSession = React.lazy(() =>
-  import(
-    /* webpackChunkName: "pages" */ '../../CustomComponents/SessionMaterial'
-  )
+  import('../../CustomComponents/SessionMaterial')
 );
-const Applications = React.lazy(() =>
-  import(/* webpackChunkName: "applications" */ './applications')
-);
+
 const Ui = React.lazy(() =>
-  import(
-    /* webpackChunkName: "ui" */ '../../CustomComponents/EmailCommunicationfunction'
-  )
+  import('../../CustomComponents/EmailCommunicationfunction')
 );
-const Menu = React.lazy(() =>
-  import(/* webpackChunkName: "menu" */ './menu')
-); /*'./blank-page')
-); */
-/* const BlankPage = React.lazy(() =>
-  import(/* webpackChunkName: "blank-page" */ const Mydash = React.lazy(
-  () => import(/* webpackChunkName: "blank-page" */ './mydashboard')
-);
-const Themepage = React.lazy(() =>
-  import(
-    /* webpackChunkName: "blank-page" */ '../../CustomComponents/ThemePage'
-  )
-);
-const Message = React.lazy(() =>
-  import(/* webpackChunkName: "blank-page" */ './message')
-);
-const Preview = React.lazy(() =>
-  import(/* webpackChunkName: "blank-page" */ '../../CustomComponents/preview')
-);
+const Menu = React.lazy(() => import('./menu'));
+const Mydash = React.lazy(() => import('./mydashboard'));
+const Themepage = React.lazy(() => import('../../CustomComponents/ThemePage'));
+const Message = React.lazy(() => import('./message'));
+
 const Support = React.lazy(() =>
   import(/* webpackChunkName: "blank-page" */ '../../CustomComponents/support')
 );
@@ -68,11 +45,6 @@ const Abuse = React.lazy(() =>
 
 const Validate = React.lazy(() => import('./Validate'));
 
-const SessionDetail = React.lazy(() =>
-  import(
-    /* webpackChunkName: "blank-page" */ '../../CustomComponents/RemotesessionLook'
-  )
-);
 const App = ({ match }) => {
   return (
     <AppLayout>
@@ -89,31 +61,17 @@ const App = ({ match }) => {
               path={`${match.url}/dashboard`}
               render={(props) => <Dashboards {...props} />}
             />
-            {/* <Route
-              path={`${match.url}/blankpage`}
-              render={(props) => <BlankPage {...props} />}
-            /> */}
-            <Route
-              path={`${match.url}/applications`}
-              render={(props) => <Applications {...props} />}
-            />
+
             <Route
               path={`${match.url}/mydashboard`}
               render={(props) => <Mydash {...props} />}
             />
-            <Route
-              path={`${match.url}/preview`}
-              render={(props) => <Preview {...props} />}
-            />
+
             <Route
               path={`${match.url}/support`}
               render={(props) => <Support {...props} />}
             />
-            {/* <ProtectedRoute
-                    path={`${match.url}/applications`}
-                    component={Applications}
-                    roles={[UserRole.Admin]}
-            /> */}
+
             <Route
               path={`${match.url}/library`}
               render={(props) => <Pages {...props} />}
@@ -142,10 +100,7 @@ const App = ({ match }) => {
               path={`${match.url}/message`}
               render={(props) => <Message {...props} />}
             />
-            <Route
-              path={`${match.url}/sessiondetail`}
-              render={(props) => <SessionDetail {...props} />}
-            />
+
             <Route
               path={`${match.url}/privacy`}
               render={(props) => <Privacy {...props} />}
