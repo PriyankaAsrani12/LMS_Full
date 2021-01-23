@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Row, FormGroup, Label, Button, Input, Col } from 'reactstrap';
 import { Formik, Form, Field } from 'formik';
-import { FormikReactSelect } from '../containers/form-validations/FormikFields';
 import * as Yup from 'yup';
 import 'rc-switch/assets/index.css';
 import TagsInput from 'react-tagsinput';
