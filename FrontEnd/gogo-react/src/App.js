@@ -7,7 +7,6 @@ import {
   Redirect,
 } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
-import './helpers/Firebase';
 import AppLocale from './lang';
 import ColorSwitcher from './components/common/ColorSwitcher';
 import { NotificationContainer } from './components/common/react-notifications';
@@ -30,7 +29,6 @@ const ViewError = React.lazy(() =>
 const ViewUnauthorized = React.lazy(() =>
   import(/* webpackChunkName: "views-error" */ './Tutor/unauthorized')
 );
-
 
 class App extends React.Component {
   constructor(props) {
@@ -85,9 +83,9 @@ class App extends React.Component {
                     exact
                     render={(props) => <ViewHome {...props} />}
                   />
-                  
-                  <Redirect exact from="/" to={"/Tutor/user"} />
-                 
+
+                  <Redirect exact from="/" to={'/Tutor/user'} />
+
                   {/* <Redirect to="/error" /> */}
                 </Switch>
               </Router>

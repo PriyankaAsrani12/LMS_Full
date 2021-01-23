@@ -15,7 +15,6 @@ import {
   addMessageToConversation,
 } from '../../redux/actions';
 import ChatApplicationMenu from '../../containers/applications/ChatApplicationMenu';
-import ChatHeading from '../../components/applications/ChatHeading';
 import MessageCard from '../../components/applications/MessageCard';
 import SaySomething from '../../components/applications/SaySomething';
 
@@ -119,16 +118,9 @@ const ChatApp = ({
     <>
       <Row className="app-row">
         <Colxx xxs="12" className="chat-app">
-          {/* {loadingConversations && selectedUser && (
-            <ChatHeading
-              name={selectedUser.name}
-              thumb={selectedUser.thumb}
-              lastSeenDate={selectedUser.lastSeenDate}
-            />
-          )} */}
-
           {selectedConversation && (
-            <PerfectScrollbar style={{height:'500px'}}
+            <PerfectScrollbar
+              style={{ height: '500px' }}
               ref={scrollBarRef}
               // containerRef={(ref) => {}}
               options={{ suppressScrollX: true, wheelPropagation: false }}

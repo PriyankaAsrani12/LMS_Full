@@ -1,5 +1,4 @@
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
-import { auth } from '../../helpers/Firebase';
 import {
   LOGIN_USER,
   REGISTER_USER,
@@ -141,11 +140,7 @@ export function* watchLogoutUser() {
 }
 
 const logoutAsync = async (history) => {
-  await auth
-    .signOut()
-    .then((user) => user)
-    .catch((error) => error);
-  history.push(adminRoot);
+  return;
 };
 
 function* logout({ payload }) {
@@ -173,11 +168,6 @@ const forgotPasswordAsync = async (email) => {
       return err;
     }
   }
-
-  // return await auth
-  //   .sendPasswordResetEmail(email)
-  //   .then((user) => user)
-  //   .catch((error) => error);
 };
 
 function* forgotPassword({ payload }) {
@@ -219,10 +209,6 @@ const resetPasswordAsync = async (resetPasswordCode, newPassword) => {
       return err;
     }
   }
-  // return await auth
-  //   .confirmPasswordReset(resetPasswordCode, newPassword)
-  //   .then((user) => user)
-  //   .catch((error) => error);
 };
 
 function* resetPassword({ payload }) {
