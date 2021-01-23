@@ -25,7 +25,6 @@ const data = [
     icon: 'simple-icon-phone',
     label: 'Communication',
     to: `${adminRoot}/communication`,
-    label: 'menu.badges',
   },
 
   {
