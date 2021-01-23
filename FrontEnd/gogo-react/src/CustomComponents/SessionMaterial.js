@@ -30,6 +30,7 @@ import { FiUpload } from 'react-icons/fi';
 import { IoMdRemoveCircleOutline } from 'react-icons/io';
 import { VscLibrary } from 'react-icons/vsc';
 
+import IntlMessages from '../helpers/IntlMessages';
 import './Customcss.css';
 import { Colxx } from '../components/common/CustomBootstrap';
 import { iconsmind } from '../data/icons';
@@ -37,6 +38,8 @@ import Avatar from './avatarnew.png';
 import Make_modal from './Make_modal';
 import axiosInstance from '../helpers/axiosInstance';
 import NotificationManager from '../components/common/react-notifications/NotificationManager';
+import Quiz from './quiz';
+import Preview from './quiz/Preview';
 
 export default class SessionMaterial extends Component {
   constructor(props) {
@@ -45,6 +48,7 @@ export default class SessionMaterial extends Component {
     this.deleteTask = this.deleteTask.bind(this);
     this.state = {
       error: null,
+      previewModal: false,
       uploadPercentage: 0,
       displayThumbnail: '',
       session_thumbnail: '',
@@ -75,7 +79,7 @@ export default class SessionMaterial extends Component {
               assignment: '',
               handouts: '',
               thumbnail: '',
-              quiz: '',
+              quiz: [],
               tmpvideoName: '',
               tmpassignmentname: '',
               tmphandoutsname: '',
@@ -274,14 +278,23 @@ export default class SessionMaterial extends Component {
   };
 
   toggle = () => {
-    this.setState({ modal: true });
+    this.setState({ modal: !this.state.modal });
   };
   toggle2 = () => {
     this.setState({ modal: false });
   };
+  togglePreviewModal = () =>
+    this.setState({ previewModal: !this.state.previewModal });
   addop = () => {
     this.setState((prevState) => ({ option: [...prevState.option, ''] }));
   };
+
+  updateQuiz = (chapterNo, lessonNo, quiz) => {
+    const newSessionMaterial = [...this.state.SessionMaterial];
+    newSessionMaterial[chapterNo].lesson[lessonNo].quiz = quiz;
+    this.setState({ ...this.state, SessionMaterial: newSessionMaterial });
+  };
+
   removeop = (i) => {
     let option = [...this.state.option];
     option.splice(i, 1);
@@ -381,7 +394,7 @@ export default class SessionMaterial extends Component {
           assignment: '',
           notes: '',
           thumbnail: '',
-          quiz: '',
+          quiz: [],
         },
       ],
     };
@@ -548,6 +561,40 @@ export default class SessionMaterial extends Component {
       }
     }
   }
+
+  validateQuiz = (quiz) => {
+    for (let i = 0; i < quiz.length; i++) {
+      if (!quiz[i].question)
+        return {
+          success: 0,
+          error: `Question ${i + 1} statement not provided`,
+        };
+      if (quiz[i].answerType.value == 2 || quiz[i].answerType.value == 3)
+        if (quiz[i].answers.length <= 0)
+          return {
+            success: 0,
+            error: `Question ${i + 1} options not provided`,
+          };
+    }
+    return { success: 1 };
+  };
+
+  uploadQuiz = async (index, lessonIndex, quiz) => {
+    console.log(index, lessonIndex, quiz);
+
+    const data = this.validateQuiz(quiz);
+    console.log(data);
+    if (!data.success) {
+      this.setState({ error: data.error });
+    } else {
+      const newSessionMaterial = [...this.state.SessionMaterial];
+      newSessionMaterial[index].lesson[lessonIndex].quiz = quiz;
+      this.setState({
+        ...this.state,
+        SessionMaterial: newSessionMaterial,
+      });
+    }
+  };
   changeChapterAttribute(props, index) {
     const newarray = this.state.SessionMaterial;
     newarray[index].name = props.target.value;
@@ -1532,17 +1579,48 @@ export default class SessionMaterial extends Component {
                                                     The Attachment must be in
                                                     .pdf format.
                                                   </p>{' '}
-                                                  <Link to="/app/preview">
-                                                    <Button
-                                                      className="d-flex mt-2"
-                                                      style={{
-                                                        borderRadius: '3px',
-                                                        height: '35px',
-                                                      }}
-                                                    >
-                                                      Preview
-                                                    </Button>
-                                                  </Link>
+                                                  <Modal
+                                                    isOpen={
+                                                      this.state.previewModal
+                                                    }
+                                                    toggle={
+                                                      this.togglePreviewModal
+                                                    }
+                                                    wrapClassName="modal-right"
+                                                    backdrop="static"
+                                                  >
+                                                    <ModalHeader
+                                                      toggle={
+                                                        this.togglePreviewModal
+                                                      }
+                                                    ></ModalHeader>
+                                                    <Preview
+                                                      quiz={
+                                                        this.state
+                                                          .SessionMaterial[
+                                                          index
+                                                        ].lesson[lessonindex]
+                                                          .quiz
+                                                      }
+                                                    />
+                                                  </Modal>
+                                                  {/* <Link to="/app/preview"> */}
+                                                  <Button
+                                                    className="d-flex mt-2"
+                                                    style={{
+                                                      borderRadius: '3px',
+                                                      height: '35px',
+                                                    }}
+                                                    onClick={() =>
+                                                      this.setState({
+                                                        previewModal: !this
+                                                          .state.previewModal,
+                                                      })
+                                                    }
+                                                  >
+                                                    Preview
+                                                  </Button>
+                                                  {/* </Link> */}
                                                 </Row>
                                                 <Row className="text-center">
                                                   <label className="input-label-1">
@@ -1560,113 +1638,33 @@ export default class SessionMaterial extends Component {
                                                     <p id="ufl">
                                                       Upload from Library
                                                     </p>
+
                                                     <Modal
                                                       isOpen={this.state.modal}
                                                       toggle={this.toggle}
+                                                      wrapClassName="modal-right"
+                                                      backdrop="static"
                                                     >
                                                       <ModalHeader
                                                         toggle={this.toggle}
-                                                      >
-                                                        Modal title
-                                                      </ModalHeader>
-                                                      <Form
-                                                        onSubmit={(e) => {
-                                                          e.preventDefault();
-                                                          console.log(
-                                                            this.state.option
-                                                          );
-                                                        }}
-                                                      >
-                                                        {' '}
-                                                        <ModalBody>
-                                                          <Input
-                                                            type="select"
-                                                            name="select"
-                                                            id="exampleSelect"
-                                                          >
-                                                            <option>
-                                                              Select ...
-                                                            </option>
-                                                            <option>
-                                                              Checkbox
-                                                            </option>
-                                                            <option>
-                                                              Radio button
-                                                            </option>
-                                                          </Input>
-                                                          <label>
-                                                            Add Question
-                                                          </label>
-                                                          <Input
-                                                            placeholder="Please don't forget '?' at the end..."
-                                                            required
-                                                          />
-
-                                                          {this.state.option.map(
-                                                            (val, myindex) => (
-                                                              <>
-                                                                <label className="mt-3">
-                                                                  Options{' '}
-                                                                  {myindex + 1}
-                                                                </label>
-                                                                <Row>
-                                                                  <Col md={10}>
-                                                                    <Input
-                                                                      placeholder="Example: my answer one"
-                                                                      onChange={this.handlemyChange.bind(
-                                                                        this,
-                                                                        myindex
-                                                                      )}
-                                                                      required
-                                                                    />
-                                                                  </Col>
-                                                                  <Col md={2}>
-                                                                    {' '}
-                                                                    <IoMdRemoveCircleOutline
-                                                                      style={{
-                                                                        color:
-                                                                          '#E74C3C',
-                                                                        cursor:
-                                                                          'pointer',
-                                                                        fontSize:
-                                                                          '20px',
-                                                                      }}
-                                                                      onClick={this.removeop.bind(
-                                                                        this,
-                                                                        myindex
-                                                                      )}
-                                                                    />
-                                                                  </Col>
-                                                                </Row>{' '}
-                                                              </>
-                                                            )
-                                                          )}
-                                                        </ModalBody>
-                                                        <ModalFooter>
-                                                          <Button
-                                                            color="secondary"
-                                                            onClick={this.addop.bind(
-                                                              this
-                                                            )}
-                                                          >
-                                                            Add Options
-                                                          </Button>
-                                                          <Button
-                                                            color="primary"
-                                                            type="submit"
-                                                          >
-                                                            Submit
-                                                          </Button>{' '}
-                                                          <Button
-                                                            color="secondary"
-                                                            onClick={
-                                                              this.toggle2
-                                                            }
-                                                          >
-                                                            Cancel
-                                                          </Button>
-                                                        </ModalFooter>
-                                                      </Form>
+                                                      ></ModalHeader>
+                                                      <Quiz
+                                                        questions={
+                                                          this.state
+                                                            .SessionMaterial[
+                                                            index
+                                                          ].lesson[lessonindex]
+                                                            .quiz
+                                                        }
+                                                        uploadQuiz={
+                                                          this.uploadQuiz
+                                                        }
+                                                        chapterNo={index}
+                                                        lessonNo={lessonindex}
+                                                        updateQuiz={
+                                                          this.updateQuiz
+                                                        }
+                                                      />
                                                     </Modal>
                                                   </label>
                                                 </Row>
