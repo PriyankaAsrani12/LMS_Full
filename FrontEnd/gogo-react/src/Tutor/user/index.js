@@ -2,21 +2,28 @@ import React, { Suspense } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import UserLayout from '../../layout/UserLayout';
 // import DomainRegistration from './domainRegistration';
+import retry from '../../retry';
 
 const Login = React.lazy(() =>
-  import(/* webpackChunkName: "user-login" */ './login')
+  retry(() => import(/* webpackChunkName: "user-login" */ './login'))
 );
 const Register = React.lazy(() =>
-  import(/* webpackChunkName: "user-register" */ './register')
+  retry(() => import(/* webpackChunkName: "user-register" */ './register'))
 );
 const DomainRegistration = React.lazy(() =>
-  import(/* webpackChunkName: "user-register" */ './domainRegistration')
+  retry(() =>
+    import(/* webpackChunkName: "user-register" */ './domainRegistration')
+  )
 );
 const ForgotPassword = React.lazy(() =>
-  import(/* webpackChunkName: "user-forgot-password" */ './forgot-password')
+  retry(() =>
+    import(/* webpackChunkName: "user-forgot-password" */ './forgot-password')
+  )
 );
 const ResetPassword = React.lazy(() =>
-  import(/* webpackChunkName: "user-reset-password" */ './reset-password')
+  retry(() =>
+    import(/* webpackChunkName: "user-reset-password" */ './reset-password')
+  )
 );
 
 const User = ({ match }) => {
@@ -25,10 +32,9 @@ const User = ({ match }) => {
       <Suspense fallback={<div className="loading" />}>
         <Switch>
           <Redirect exact from={`${match.url}/`} to={`${match.url}/login`} />
-{console.log(match.url)}
+          {console.log(match.url)}
           <Route
             path={`${match.url}/login`}
-            
             render={(props) => <Login {...props} />}
           />
           <Route

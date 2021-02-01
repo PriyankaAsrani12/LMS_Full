@@ -13,15 +13,16 @@ import { NotificationContainer } from './components/common/react-notifications';
 import { isMultiColorActive, adminRoot } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
 import { ProtectedRoute, UserRole } from './helpers/authHelper';
+import retry from './retry';
 
 const ViewApp = React.lazy(() =>
-  import(/* webpackChunkName: "views-app" */ './Tutor/app')
+  retry(() => import(/* webpackChunkName: "views-app" */ './Tutor/app'))
 );
 const ViewUser = React.lazy(() =>
-  import(/* webpackChunkName: "views-user" */ './Tutor/user')
+  retry(() => import(/* webpackChunkName: "views-user" */ './Tutor/user'))
 );
 const ViewError = React.lazy(() =>
-  import(/* webpackChunkName: "views-error" */ './Tutor/error')
+  retry(() => import(/* webpackChunkName: "views-error" */ './Tutor/error'))
 );
 
 class App extends React.Component {

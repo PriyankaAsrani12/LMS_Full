@@ -3,47 +3,56 @@ import { Route, withRouter, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import AppLayout from '../../layout/AppLayout';
+import retry from '../../retry';
 
-const Dashboards = React.lazy(() => import('./dashboards'));
-const Pages = React.lazy(() => import('../../CustomComponents/Library/index'));
+const Dashboards = React.lazy(() => retry(() => import('./dashboards')));
+const Pages = React.lazy(() =>
+  retry(() => import('../../CustomComponents/Library/index'))
+);
 const LiveSession = React.lazy(() =>
-  import('../../CustomComponents/Remotelook')
+  retry(() => import('../../CustomComponents/Remotelook'))
 );
 const RecordedSession = React.lazy(() =>
-  import('../../CustomComponents/SessionMaterial')
+  retry(() => import('../../CustomComponents/SessionMaterial'))
 );
 
 const Ui = React.lazy(() =>
-  import('../../CustomComponents/EmailCommunicationfunction')
+  retry(() => import('../../CustomComponents/EmailCommunicationfunction'))
 );
-const Menu = React.lazy(() => import('./menu'));
-const Mydash = React.lazy(() => import('./mydashboard'));
-const Themepage = React.lazy(() => import('../../CustomComponents/ThemePage'));
-const Message = React.lazy(() => import('./message'));
+const Menu = React.lazy(() => retry(() => import('./menu')));
+const Mydash = React.lazy(() => retry(() => import('./mydashboard')));
+const Themepage = React.lazy(() =>
+  retry(() => import('../../CustomComponents/ThemePage'))
+);
+const Message = React.lazy(() => retry(() => import('./message')));
 
 const Support = React.lazy(() =>
-  import(/* webpackChunkName: "blank-page" */ '../../CustomComponents/support')
+  retry(() =>
+    import(
+      /* webpackChunkName: "blank-page" */ '../../CustomComponents/support'
+    )
+  )
 );
 const Privacy = React.lazy(() =>
-  import(/* webpackChunkName: "blank-page" */ './privacy')
+  retry(() => import(/* webpackChunkName: "blank-page" */ './privacy'))
 );
 const Cookie = React.lazy(() =>
-  import(/* webpackChunkName: "blank-page" */ './cookie')
+  retry(() => import(/* webpackChunkName: "blank-page" */ './cookie'))
 );
 const Terms = React.lazy(() =>
-  import(/* webpackChunkName: "blank-page" */ './terms')
+  retry(() => import(/* webpackChunkName: "blank-page" */ './terms'))
 );
 const IRP = React.lazy(() =>
-  import(/* webpackChunkName: "blank-page" */ './irp')
+  retry(() => import(/* webpackChunkName: "blank-page" */ './irp'))
 );
 const Anti = React.lazy(() =>
-  import(/* webpackChunkName: "blank-page" */ './antispam')
+  retry(() => import(/* webpackChunkName: "blank-page" */ './antispam'))
 );
 const Abuse = React.lazy(() =>
-  import(/* webpackChunkName: "blank-page" */ './abuse')
+  retry(() => import(/* webpackChunkName: "blank-page" */ './abuse'))
 );
 
-const Validate = React.lazy(() => import('./Validate'));
+const Validate = React.lazy(() => retry(() => import('./Validate')));
 
 const App = ({ match }) => {
   return (

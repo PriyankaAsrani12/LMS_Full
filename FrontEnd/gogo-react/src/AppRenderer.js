@@ -3,8 +3,11 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import { configureStore } from './redux/store';
+import retry from './retry';
 
-const App = React.lazy(() => import(/* webpackChunkName: "App" */ './App'));
+const App = React.lazy(() =>
+  retry(() => import(/* webpackChunkName: "App" */ './App'))
+);
 
 ReactDOM.render(
   <Provider store={configureStore()}>

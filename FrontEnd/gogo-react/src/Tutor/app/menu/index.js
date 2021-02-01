@@ -1,8 +1,10 @@
 import React, { Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
+import retry from '../../../retry';
+
 const MenuTypes = React.lazy(() =>
-  import(/* webpackChunkName: "menu-types" */ './types')
+  retry(() => import(/* webpackChunkName: "menu-types" */ './types'))
 );
 
 const UI = ({ match }) => (

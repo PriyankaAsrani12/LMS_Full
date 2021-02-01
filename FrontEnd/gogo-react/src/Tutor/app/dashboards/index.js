@@ -1,8 +1,9 @@
 import React, { Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import './index.css';
+import retry from '../../../retry';
 
-const DashboardDefault = React.lazy(() => import('./default'));
+const DashboardDefault = React.lazy(() => retry(() => import('./default')));
 
 const Dashboards = ({ match }) => (
   <>
