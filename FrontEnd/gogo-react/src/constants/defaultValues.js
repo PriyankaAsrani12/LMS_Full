@@ -14,7 +14,7 @@ export const localeOptions = [
 export const currentUser = {
   id: 1,
   title: 'Sarah Kortney',
-  img: '/assets/img/profiles/l-1.jpg',
+  img: '%PUBLIC_URL%/assets/img/profiles/l-1.jpg',
   date: 'Last seen today 15:24',
   role: UserRole.Admin,
 };

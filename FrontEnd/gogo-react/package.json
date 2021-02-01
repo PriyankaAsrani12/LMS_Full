@@ -3,6 +3,7 @@
   "version": "5.2.0",
   "description": "Gogo - React Bootstrap 4 Admin Dashboard Template",
   "private": true,
+  "homepage": "http://lms.oyesters.in",
   "proxy": "http://localhost:5000",
   "dependencies": {
     "@babel/runtime": "^7.12.5",

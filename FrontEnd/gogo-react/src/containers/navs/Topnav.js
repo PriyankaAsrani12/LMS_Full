@@ -206,7 +206,10 @@ const TopNav = ({
               <UncontrolledDropdown className="dropdown-menu-right">
                 <DropdownToggle className="p-0" color="empty">
                   <span className="img">
-                    <img alt="Profile" src="/assets/img/profiles/l-1.jpg" />
+                    <img
+                      alt="Profile"
+                      src="%PUBLIC_URL%/assets/img/profiles/l-1.jpg"
+                    />
                   </span>
                 </DropdownToggle>
               </UncontrolledDropdown>
