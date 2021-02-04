@@ -25,6 +25,7 @@ import { searchPath, adminRoot } from '../../constants/defaultValues';
 import message from '../../data/message';
 import { MobileMenuIcon, MenuIcon } from '../../components/svg';
 import TopnavNotifications from './Topnav.Notifications';
+import profile from './img2.jpg';
 
 const Messages = ({ img, title, date }) => {
   return (
@@ -208,7 +209,7 @@ const TopNav = ({
                   <span className="img">
                     <img
                       alt="Profile"
-                      src="%PUBLIC_URL%/assets/img/profiles/l-1.jpg"
+                      src={profile}
                     />
                   </span>
                 </DropdownToggle>
