@@ -165,7 +165,7 @@ const sendInvitationMail = (
       subject: 'Invitation Mail',
       htmlbody: `You are invited as trainer
             <h2>Register Here</h2>
-            <a href=\`http://65.0.185.168:3000/Tutor/user/register?email=${invited_user_email}&first_name=${invited_user_first_name}&last_name=${invited_user_last_name}&user_role=${invited_user_role}&customer_id=${customer_id}\`>Reset</a>
+            <a href=\`http://13.233.214.77:3000/Tutor/user/register?email=${invited_user_email}&first_name=${invited_user_first_name}&last_name=${invited_user_last_name}&user_role=${invited_user_role}&customer_id=${customer_id}\`>Reset</a>
   `,
     })
   );

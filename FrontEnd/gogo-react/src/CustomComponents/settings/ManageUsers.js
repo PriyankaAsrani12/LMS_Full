@@ -27,6 +27,7 @@ const ManageUsers = () => {
   const [modal, setModal] = useState(false);
 
   const toggle = () => setModal(!modal);
+  const handleReload = () => setRealod(!reload);
 
   const [data, setData] = useState([]);
 
@@ -82,6 +83,8 @@ const ManageUsers = () => {
         } catch (error) {
           setError('unable to invite user');
         }
+      } finally {
+        handleReload();
       }
     }
   };
@@ -129,10 +132,9 @@ const ManageUsers = () => {
         }
       }
     };
-    setTimeout(() => {
-      getInvitedUsers();
-    }, 1500);
-  }, []);
+    getInvitedUsers();
+  }, [reload]);
+
   const cols = [
     {
       Header: 'Name',
@@ -205,6 +207,8 @@ const ManageUsers = () => {
       } catch (error) {
         setError('unable to delete tutor');
       }
+    } finally {
+      handleReload();
     }
   };
   return (
@@ -216,6 +220,53 @@ const ManageUsers = () => {
       >
         Invite User
       </Button>
+      <Modal isOpen={modal} toggle={toggle}>
+        <ModalHeader toggle={toggle}>Modal title</ModalHeader>
+        <Form>
+          <ModalBody>
+            <label>First Name</label>
+            <Input
+              type="text"
+              placeholder="Example: John"
+              name="invited_user_first_name"
+              value={inviteUser.invited_user_first_name}
+              onChange={handleInviteUserChange}
+            />
+            <label>Last Name</label>
+            <Input
+              type="text"
+              placeholder="Example: Doe"
+              name="invited_user_last_name"
+              value={inviteUser.invited_user_last_name}
+              onChange={handleInviteUserChange}
+            />
+            <label>Role</label>
+            <Input
+              type="text"
+              placeholder="Example: Tutor"
+              name="invited_user_role"
+              value={inviteUser.invited_user_role}
+              onChange={handleInviteUserChange}
+            />
+            <label>Email</label>
+            <Input
+              type="email"
+              placeholder="Example: johndoe@gmail.com"
+              name="invited_user_email"
+              value={inviteUser.invited_user_email}
+              onChange={handleInviteUserChange}
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={handleInviteUserSubmit}>
+              Submit
+            </Button>{' '}
+            <Button color="secondary" onClick={toggle}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </Form>
+      </Modal>
       {!data.length ? (
         <NoDataFound />
       ) : (
@@ -231,53 +282,6 @@ const ManageUsers = () => {
               </Card>
             </Col>
           </Row>
-          <Modal isOpen={modal} toggle={toggle}>
-            <ModalHeader toggle={toggle}>Modal title</ModalHeader>
-            <Form>
-              <ModalBody>
-                <label>First Name</label>
-                <Input
-                  type="text"
-                  placeholder="Example: John"
-                  name="invited_user_first_name"
-                  value={inviteUser.invited_user_first_name}
-                  onChange={handleInviteUserChange}
-                />
-                <label>Last Name</label>
-                <Input
-                  type="text"
-                  placeholder="Example: Doe"
-                  name="invited_user_last_name"
-                  value={inviteUser.invited_user_last_name}
-                  onChange={handleInviteUserChange}
-                />
-                <label>Role</label>
-                <Input
-                  type="text"
-                  placeholder="Example: Tutor"
-                  name="invited_user_role"
-                  value={inviteUser.invited_user_role}
-                  onChange={handleInviteUserChange}
-                />
-                <label>Email</label>
-                <Input
-                  type="email"
-                  placeholder="Example: johndoe@gmail.com"
-                  name="invited_user_email"
-                  value={inviteUser.invited_user_email}
-                  onChange={handleInviteUserChange}
-                />
-              </ModalBody>
-              <ModalFooter>
-                <Button color="primary" onClick={handleInviteUserSubmit}>
-                  Submit
-                </Button>{' '}
-                <Button color="secondary" onClick={toggle}>
-                  Cancel
-                </Button>
-              </ModalFooter>
-            </Form>
-          </Modal>
         </>
       )}
     </>
