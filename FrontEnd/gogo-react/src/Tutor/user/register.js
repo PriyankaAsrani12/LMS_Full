@@ -141,7 +141,7 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
       res.profileObj.imageUrl
     );
     const data = {
-      first_name: res.profileObj.name[0],
+      first_name: res.profileObj.name,
       last_name: res.profileObj.name.substr(
         res.profileObj.name.indexOf(' ') + 1
       ),
