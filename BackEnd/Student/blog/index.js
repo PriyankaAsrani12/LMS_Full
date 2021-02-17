@@ -21,7 +21,7 @@ router.get('/', verifyToken, async (req, res) => {
     if (!isEnabled[0].customer_blogs)
       return res.status(200).json({
         success: 0,
-        isEnabled,
+        isEnabled: isEnabled[0].customer_blogs,
       });
 
     const sql = `SELECT 
@@ -35,7 +35,7 @@ router.get('/', verifyToken, async (req, res) => {
     return res.status(200).json({
       success: 1,
       result,
-      isEnabled: true,
+      isEnabled: isEnabled[0].customer_blogs,
     });
   } catch (error) {
     console.log(error);
