@@ -131,7 +131,7 @@ const CourseTab = () => {
                   {totalStudents}
                 </CardText>
                 <CardText className="font-weight-bold para text-light">
-                  Total Students Enrolled
+                  Total Purchases Made
                 </CardText>
               </Col>
             </Row>
