@@ -389,7 +389,7 @@ const BlankPage = ({ intl, match }) => {
                 <Col md="12">
                   <FaUsers id="users" />
                   <h1 id="number">{enrollments}</h1>
-                  <CardText id="small">Enrollments till now</CardText>
+                  <CardText id="small">Registrations till now</CardText>
                 </Col>
               </Row>
             </CardBody>
