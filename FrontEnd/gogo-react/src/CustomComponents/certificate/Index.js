@@ -93,7 +93,9 @@ const Index = () => {
         id="default"
         className="font-weight-bold"
         onClick={() =>
-          window.open('http://13.233.214.77:5000/tutor/certificates')
+          window.open(
+            `${window.location.protocol}//${window.location.hostname}/tutor/certificates`
+          )
         }
       >
         Create A Certificate Template
