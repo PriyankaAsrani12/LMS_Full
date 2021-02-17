@@ -59,7 +59,7 @@ router.get('/session', auth, async (req, res) => {
     s.session_name,
     c.communication_email,
     c.communication_email_days
-    FROM session_tables as s INNER JOIN communication_tables as c ON s.session_id=c.session_id `;
+    FROM session_tables as s INNER JOIN communication_tables as c ON s.session_id=c.session_id AND s.customer_id=${req.user.customer_id} `;
     const result = await db.query(sql, { type: db.QueryTypes.SELECT });
     return res.status(200).json({
       success: 1,
@@ -81,7 +81,7 @@ router.get('/directmessage', auth, async (req, res) => {
     s.session_name,
     c.communication_message,
     c.communication_message_days
-    FROM session_tables as s INNER JOIN communication_tables as c ON s.session_id=c.session_id `;
+    FROM session_tables as s INNER JOIN communication_tables as c ON s.session_id=c.session_id AND s.customer_id=${req.user.customer_id}`;
     const result = await db.query(sql, { type: db.QueryTypes.SELECT });
     return res.status(200).json({
       success: 1,
