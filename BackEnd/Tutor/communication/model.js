@@ -39,6 +39,14 @@ const Communication = db.define('communication_table', {
     type: DataTypes.INTEGER,
     defaultValue: 999,
   },
+  communication_message_body:{
+    type:DataTypes.TEXT("long"),
+    allowNull:false
+  },
+  communication_email_body:{
+    type:DataTypes.TEXT("long"),
+    allowNull:false
+  }
 });
 
 db.sync();

@@ -126,6 +126,10 @@ const Session = db.define('session_table', {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  modified_by:{
+    type:DataTypes.STRING,
+    allowNull: false
+  }
 });
 
 db.sync();

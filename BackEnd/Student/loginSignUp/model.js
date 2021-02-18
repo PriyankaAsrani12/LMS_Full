@@ -10,10 +10,10 @@ const Student = db.define('student_table', {
   },
   customer_id: {
     type: INTEGER,
-    // references: {
-    //     model: 'customer_table',
-    //     key:'customer_id'
-    // },
+    references: {
+        model: 'customer_tables',
+        key:'customer_id'
+    },
   },
   ref_id: {
     type: INTEGER,
@@ -32,7 +32,7 @@ const Student = db.define('student_table', {
     allowNull: true,
   },
   student_phone_number: {
-    type: INTEGER,
+    type: STRING(255),
     allowNull: true,
   },
   student_email: {
@@ -40,7 +40,7 @@ const Student = db.define('student_table', {
     allowNull: false,
   },
   student_password: {
-    type: STRING,
+    type: STRING(255),
     allowNull: true,
   },
   student_profile_picture: {

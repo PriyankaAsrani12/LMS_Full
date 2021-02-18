@@ -90,7 +90,7 @@ const User = db.define('customer_table', {
   },
   customer_subscription: {
     type: DataTypes.STRING,
-    allowNull: true,
+    defaultValue:"Trial"
   },
   customer_facebook_id: {
     type: DataTypes.STRING,
@@ -110,11 +110,11 @@ const User = db.define('customer_table', {
   },
   customer_email_verified: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false,
+    defaultValue: 0,
   },
   customer_phone_verified: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false,
+    defaultValue: 0,
   },
   customer_zoom_jwt_token: {
     type: DataTypes.STRING,

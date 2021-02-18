@@ -38,19 +38,19 @@ const LessonTable = db.define('lesson_table', {
     allowNull: false,
   },
   lesson_video_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.INTEGER(255),
     allowNull: true,
   },
   lesson_assignment_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.INTEGER(255),
     allowNull: true,
   },
   lesson_quiz_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.INTEGER(255),
     allowNull: true,
   },
   lesson_handouts_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.INTEGER(255),
     allowNull: true,
   },
 });

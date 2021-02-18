@@ -1,8 +1,8 @@
 const { DataTypes, INTEGER, STRING, BOOLEAN } = require('sequelize');
 const { db } = require('../../common/db/sql');
 
-const CouponModel = db.define('coupon_table', {
-  promocode_id: {
+const CouponModel = db.define('couponcodes_table', {
+  couponcode_id: {
     type: INTEGER,
     primaryKey: true,
     autoIncrement: true,
@@ -14,38 +14,38 @@ const CouponModel = db.define('coupon_table', {
     //   key:'customer_id'
     // }
   },
-  promocode_name: {
+  couponcode_name: {
     type: STRING,
     allowNull: false,
   },
-  promocode_discount_type: {
+  couponcode_discount_type: {
     type: STRING,
     allowNull: false,
   },
-  promocode_discount_value: {
+  couponcode_discount_value: {
     type: INTEGER,
     allowNull: false,
   },
-  promocode_available_session_ids: {
+  couponcode_available_session_ids: {
     type: STRING,
     // references: {
     //   model: 'session_tables',
     //   key:'session_id'
     // }
   },
-  promocode_status: {
+  couponcode_status: {
     type: BOOLEAN,
     allowNull: true,
   },
-  promocode_start_date: {
+  couponcode_start_date: {
     type: STRING,
     allowNull: true,
   },
-  promocode_end_date: {
+  couponcode_end_date: {
     type: STRING,
     allowNull: true,
   },
-  promocode_condition: {
+  couponcode_condition: {
     type: INTEGER,
     allowNull: true,
   },
