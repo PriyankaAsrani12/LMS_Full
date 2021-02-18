@@ -271,8 +271,8 @@ const OndemandSession = ({ closeModal, propHandle }) => {
                 id="exampleSelect"
               >
                 <option>Choose Something</option>
-                <option>Free for Course Enrolled Students</option>
-                <option>Paid for Course Enrolled Students</option>
+                <option>Free </option>
+                <option>Paid </option>
               </Input>
             </Col>
             <Col md={6}>

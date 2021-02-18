@@ -1,8 +1,7 @@
 import axios from 'axios';
 
 const Instance = axios.create({
-  // baseURL: `${window.location.protocol}//${window.location.hostname}`,
-  baseURL:'http://localhost:5000',
+  baseURL: `${window.location.protocol}//${window.location.hostname}:5000`,
   credentials: 'include',
   withCredentials: true,
 });
