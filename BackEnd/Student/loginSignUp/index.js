@@ -107,7 +107,7 @@ router.post('/login', async (req, res) => {
       student_password = '',
       using_google = false,
     } = req.body.values;
-
+console.log(req.body);
     const sqlCheck = await Student.findOne({
       where: {
         student_email,

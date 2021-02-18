@@ -10,3 +10,4 @@ router.use('/cart', require('./cart'));
 router.use('/affiliates', require('./affiliate'));
 
 module.exports = router;
+// /student/auth/login
