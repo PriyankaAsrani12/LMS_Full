@@ -9,24 +9,24 @@ const ReferalLink = db.define('referal_link', {
   },
   customer_id: {
     type: INTEGER,
-    // references: {
-    //     model: 'customer_table',
-    //     key:'customer_id'
-    // }
+    references: {
+      model: 'customer_table',
+      key: 'customer_id',
+    },
   },
   student_id: {
     type: INTEGER,
-    // references: {
-    //     model: 'student_table',
-    //     key:'student_id'
-    // }
+    references: {
+      model: 'student_table',
+      key: 'student_id',
+    },
   },
   session_id: {
     type: INTEGER,
-    // references: {
-    //     model: 'session_table',
-    //     key:'session_id'
-    // }
+    references: {
+      model: 'session_table',
+      key: 'session_id',
+    },
   },
   link_whatsapp: {
     type: STRING,

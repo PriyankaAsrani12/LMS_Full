@@ -46,6 +46,7 @@ router.get('/', auth, async (req, res) => {
     });
   }
 });
+
 router.post('/invite', auth, async (req, res) => {
   try {
     const {
@@ -284,4 +285,5 @@ router.post('/delete', auth, async (req, res) => {
     });
   }
 });
+
 module.exports = router;

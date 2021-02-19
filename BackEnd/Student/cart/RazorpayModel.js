@@ -10,17 +10,17 @@ const RazorpayModel = db.define('payment_data', {
   },
   purchase_id: {
     type: INTEGER,
-    // references: {
-    //   model: 'purchase_tables',
-    //   key:'purchase_id'
-    // }
+    references: {
+      model: 'purchase_tables',
+      key: 'purchase_id',
+    },
   },
   customer_id: {
     type: INTEGER,
-    // references: {
-    //   model: 'customer_tables',
-    //   key:'customer_id'
-    // }
+    references: {
+      model: 'customer_tables',
+      key: 'customer_id',
+    },
   },
   razorpay_payment_id: {
     type: STRING,

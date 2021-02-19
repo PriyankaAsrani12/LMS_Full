@@ -49,15 +49,6 @@ const CouponModel = db.define('couponcodes_table', {
     type: INTEGER,
     allowNull: true,
   },
-  created_at: {
-    type: DataTypes.DATE(6),
-    defaultValue: new Date().getTime(),
-  },
-
-  modified_at: {
-    type: DataTypes.DATE(6),
-    defaultValue: new Date().getTime(),
-  },
 });
 
 db.sync();

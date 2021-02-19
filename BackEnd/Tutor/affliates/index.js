@@ -2,6 +2,7 @@ const { db } = require('../../common/db/sql');
 
 const router = require('express').Router();
 const auth = require('../middleware/deepakAuth');
+require('./model');
 
 router.get('/', auth, async (req, res) => {
   try {

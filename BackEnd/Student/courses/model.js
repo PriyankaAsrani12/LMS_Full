@@ -9,24 +9,24 @@ const Course = db.define('student_purchase', {
   },
   student_id: {
     type: INTEGER,
-    // references: {
-    //   model: 'student_table',
-    //   key: 'student_id',
-    // },
+    references: {
+      model: 'student_table',
+      key: 'student_id',
+    },
   },
   customer_id: {
     type: INTEGER,
-    // references: {
-    //   model: 'customer_table',
-    //   key: 'customer_id',
-    // },
+    references: {
+      model: 'customer_table',
+      key: 'customer_id',
+    },
   },
   session_id: {
     type: INTEGER,
-    // references: {
-    //   model: 'session_table',
-    //   key: 'session_id',
-    // },
+    references: {
+      model: 'session_table',
+      key: 'session_id',
+    },
   },
   purchase_type: {
     type: STRING,
@@ -50,15 +50,6 @@ const Course = db.define('student_purchase', {
   purchase_amount: {
     type: STRING,
     allowNull: false,
-  },
-  created_at: {
-    type: DataTypes.DATE(6),
-    defaultValue: new Date().getTime(),
-  },
-
-  modified_at: {
-    type: DataTypes.DATE(6),
-    defaultValue: new Date().getTime(),
   },
 });
 

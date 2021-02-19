@@ -1,5 +1,7 @@
-const { DataTypes, INTEGER, STRING, BOOLEAN } = require('sequelize');
+const { INTEGER, STRING, BOOLEAN } = require('sequelize');
 const { db } = require('../../common/db/sql');
+
+require('../../Student/loginSignUp/model');
 
 const Affliate = db.define('affiliate_table', {
   affiliate_id: {
@@ -9,24 +11,24 @@ const Affliate = db.define('affiliate_table', {
   },
   customer_id: {
     type: INTEGER,
-    // references: {
-    //     model: 'customer_tables',
-    //     key:'customer_id'
-    // }
+    references: {
+      model: 'customer_tables',
+      key: 'customer_id',
+    },
   },
   student_id: {
     type: STRING,
-    // references: {
-    //   model: 'student_tables',
-    //   key:'student_id'
-    // }
+    references: {
+      model: 'student_tables',
+      key: 'student_id',
+    },
   },
   student_name: {
     type: STRING,
-    // references: {
-    //   model: 'student_tables',
-    //   key:'student_name'
-    // }
+    references: {
+      model: 'student_tables',
+      key: 'student_name',
+    },
   },
   affiliate_name: {
     type: STRING,
@@ -34,17 +36,17 @@ const Affliate = db.define('affiliate_table', {
   },
   course_name: {
     type: STRING,
-    // references: {
-    //     model: 'session_tables',
-    //     key:'session_name'
-    // }
+    references: {
+      model: 'session_tables',
+      key: 'session_name',
+    },
   },
   course_id: {
     type: INTEGER,
-    // references: {
-    //     model: 'session_tables',
-    //     key:'course_id'
-    // }
+    references: {
+      model: 'session_tables',
+      key: 'course_id',
+    },
   },
   affiliate_brought_student_name: {
     type: STRING,
@@ -52,10 +54,10 @@ const Affliate = db.define('affiliate_table', {
   },
   affiliate_brought_student_id: {
     type: INTEGER,
-    // references: {
-    //     model: 'student_tables',
-    //     key:'student_id'
-    // }
+    references: {
+      model: 'student_tables',
+      key: 'student_id',
+    },
   },
   affiliate_purchase_status: {
     type: BOOLEAN,
@@ -68,15 +70,6 @@ const Affliate = db.define('affiliate_table', {
   affiliate_rewards_given: {
     type: INTEGER,
     allowNull: true,
-  },
-  created_at: {
-    type: DataTypes.DATE(6),
-    defaultValue: new Date().getTime(),
-  },
-
-  modified_at: {
-    type: DataTypes.DATE(6),
-    defaultValue: new Date().getTime(),
   },
 });
 

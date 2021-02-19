@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { User } = require('../loginSignup/customer/models');
 const auth = require('../middleware/deepakAuth');
 const { db } = require('../../common/db/sql');
+require('../../Student/courses/model');
 
 router.get('/', auth, async (req, res) => {
   try {

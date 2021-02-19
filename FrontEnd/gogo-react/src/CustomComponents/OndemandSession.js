@@ -278,7 +278,7 @@ const OndemandSession = ({ closeModal, propHandle }) => {
             <Col md={6}>
               <FormGroup className="error-l-75">
                 <Label>Fees</Label>
-                {select == 'Free for Course Enrolled Students' ? (
+                {select == 'Free' ? (
                   <Input disabled />
                 ) : (
                   <Field className="form-control" name="session_fee" />

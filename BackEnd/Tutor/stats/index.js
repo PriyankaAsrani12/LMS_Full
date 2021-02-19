@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const auth = require('../middleware/deepakAuth');
 const { db } = require('../../common/db/sql');
+require('../../Student/courses/model');
+require('../../Student/loginSignUp/model');
 
 router.get('/', auth, async (req, res) => {
   try {
