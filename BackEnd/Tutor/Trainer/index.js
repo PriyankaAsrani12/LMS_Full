@@ -31,48 +31,74 @@ router.get('/', auth, async (req, res) => {
 });
 
 router.post('/', auth, async (req, res) => {
+  const trainerArray = JSON.parse(req.body.values);
+
+  console.log(trainerArray);
   // return res.send('hi');
   try {
-    let flg = 0;
-    //save files
-
-    if (!flg) {
-      await Trainer.destroy({ where: { customer_id: req.user.customer_id } });
-      const trainerArray = JSON.parse(req.body.values);
-      trainerArray.forEach((doc) => console.log(doc));
-      trainerArray.forEach(async (trainer) => {
-        try {
-          const result = await Trainer.create({
-            customer_id: req.user.customer_id,
-            trainer_image_url: 'google.com',
-            trainer_full_name: trainer.fullname,
-            trainer_occupation: trainer.occupation,
-            trainer_phone_number: trainer.phone,
-            trainer_email: trainer.email,
-            trainer_address: trainer.address,
-            trainer_website_url: trainer.website,
-            trainer_linkedin_id: trainer.linkedin,
-            trainer_twitter_id: trainer.twitter,
-            trainer_facebook_id: trainer.facebook,
-            trainer_instagram_id: trainer.instagram,
-            trainer_career_summary: trainer.career_summary,
-            trainer_experience: trainer.experience,
-          });
-          if (!result)
+    trainerArray.forEach((doc) => console.log(doc));
+    trainerArray.forEach(async (trainer) => {
+      try {
+        if (trainer.trainer_id.length >= 12) {
+          //Create Trainer
+          try {
+            await Trainer.create({
+              customer_id: req.user.customer_id,
+              trainer_image_url: 'google.com',
+              trainer_full_name: trainer.fullname,
+              trainer_occupation: trainer.occupation,
+              trainer_phone_number: trainer.phone,
+              trainer_email: trainer.email,
+              trainer_address: trainer.address,
+              trainer_website_url: trainer.website,
+              trainer_linkedin_id: trainer.linkedin,
+              trainer_twitter_id: trainer.twitter,
+              trainer_facebook_id: trainer.facebook,
+              trainer_instagram_id: trainer.instagram,
+              trainer_career_summary: trainer.career_summary,
+              trainer_experience: trainer.experience,
+            });
+          } catch (error) {
             return res.status(500).json({
               success: 0,
               error: "can not upload trainer's data",
+              errorReturned: JSON.stringify(err),
             });
-        } catch (err) {
-          console.log('inner catch', err);
-          return res.status(500).json({
-            success: 0,
-            error: "can not upload trainer's data",
-            errorReturned: JSON.stringify(err),
-          });
+          }
+        } else {
+          //Update Trainer
+          try {
+            await Trainer.update(
+              {
+                trainer_image_url: 'google.com',
+                trainer_full_name: trainer.fullname,
+                trainer_occupation: trainer.occupation,
+                trainer_phone_number: trainer.phone,
+                trainer_email: trainer.email,
+                trainer_address: trainer.address,
+                trainer_website_url: trainer.website,
+                trainer_linkedin_id: trainer.linkedin,
+                trainer_twitter_id: trainer.twitter,
+                trainer_facebook_id: trainer.facebook,
+                trainer_instagram_id: trainer.instagram,
+                trainer_career_summary: trainer.career_summary,
+                trainer_experience: trainer.experience,
+              },
+              { where: { trainer_id: trainer.trainer_id } }
+            );
+          } catch (error) {
+            return res.status(500).json({
+              success: 0,
+              error: "can not upload trainer's data",
+              errorReturned: JSON.stringify(err),
+            });
+          }
         }
-      });
-    }
+      } catch (err) {
+        console.log('inner catch', err);
+      }
+    });
+
     if (req.files) {
       const filesArray = Object.keys(req.files).map((key) => req.files[key]);
       // console.log(filesArray)
@@ -102,10 +128,9 @@ router.post('/', auth, async (req, res) => {
         console.log('profile picture updated');
       });
     }
-    if (!flg)
-      return res.status(200).json({
-        success: 1,
-      });
+    return res.status(200).json({
+      success: 1,
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).json({
@@ -140,6 +165,22 @@ router.get('/specific', auth, async (req, res) => {
     return res.status(400).json({
       success: 0,
       error: 'Could not find trainer data',
+    });
+  }
+});
+
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    if (!req.params.id)
+      return res.status(400).json({
+        success: 0,
+        error: 'Trainer id not provided',
+      });
+    await Trainer.destroy({ where: { trainer_id: req.params.id } });
+  } catch (error) {
+    return res.status(400).json({
+      success: 0,
+      error: 'Unable to delete Trainer',
     });
   }
 });

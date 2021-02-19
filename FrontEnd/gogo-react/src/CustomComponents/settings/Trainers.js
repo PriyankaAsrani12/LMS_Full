@@ -210,8 +210,26 @@ const Trainer = () => {
   };
 
   // handle click event of the Remove button
-  const handleRemoveClick1 = (index) => {
+  const handleRemoveClick1 = async (index) => {
     const list = [...inputList1];
+    console.log(isNaN(inputList1[index].trainer_id.length));
+    if (isNaN(inputList1[index].trainer_id.length)) {
+      const result = await axiosInstance.delete(
+        `/tutor/trainer/${inputList1[index].trainer_id}`
+      );
+      console.log(result);
+      if (!result.data.success) {
+        try {
+          setError(result.data.error);
+        } catch (error) {
+          try {
+            setError(error.response.data.error);
+          } catch (error) {
+            setError('Unable to delete trainer');
+          }
+        }
+      }
+    }
     list.splice(index, 1);
     setInputList1(list);
   };
@@ -221,7 +239,7 @@ const Trainer = () => {
     setInputList1([
       ...inputList1,
       {
-        trainer_id: null,
+        trainer_id: `new_trainer_${inputList1.length + 1}`,
         fullname: '',
         phone: '',
         email: '',
@@ -243,7 +261,6 @@ const Trainer = () => {
   return (
     <div style={{ marginBottom: '20rem' }}>
       {inputList1.map((x, i) => {
-        console.log(i);
         return (
           <>
             <Card className="box mb-4">
