@@ -10,7 +10,7 @@ const ChapterTable = db.define('chapter_table', {
   session_id: {
     type: DataTypes.INTEGER(255),
     references: {
-      model: 'sesion_table',
+      model: 'session_tables',
       key: 'session_id',
     },
   },

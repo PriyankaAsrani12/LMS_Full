@@ -1,8 +1,6 @@
 const { INTEGER, STRING, BOOLEAN } = require('sequelize');
 const { db } = require('../../common/db/sql');
 
-require('../../Student/loginSignUp/model');
-
 const Affliate = db.define('affiliate_table', {
   affiliate_id: {
     type: INTEGER,
@@ -17,7 +15,7 @@ const Affliate = db.define('affiliate_table', {
     },
   },
   student_id: {
-    type: STRING,
+    type: INTEGER,
     references: {
       model: 'student_tables',
       key: 'student_id',
@@ -25,10 +23,6 @@ const Affliate = db.define('affiliate_table', {
   },
   student_name: {
     type: STRING,
-    references: {
-      model: 'student_tables',
-      key: 'student_name',
-    },
   },
   affiliate_name: {
     type: STRING,
@@ -36,16 +30,12 @@ const Affliate = db.define('affiliate_table', {
   },
   course_name: {
     type: STRING,
-    references: {
-      model: 'session_tables',
-      key: 'session_name',
-    },
   },
   course_id: {
     type: INTEGER,
     references: {
       model: 'session_tables',
-      key: 'course_id',
+      key: 'session_id',
     },
   },
   affiliate_brought_student_name: {

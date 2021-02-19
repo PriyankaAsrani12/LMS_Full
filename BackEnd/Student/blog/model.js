@@ -11,14 +11,14 @@ const Blog = db.define('blog_table', {
   customer_id: {
     type: INTEGER,
     references: {
-      model: 'customer_table',
+      model: 'customer_tables',
       key: 'customer_id',
     },
   },
   student_id: {
     type: INTEGER,
     references: {
-      model: 'student_table',
+      model: 'student_tables',
       key: 'student_id',
     },
   },

@@ -1,7 +1,7 @@
 const { db } = require('../../common/db/sql');
 const { DataTypes, INTEGER, STRING, BOOLEAN } = require('sequelize');
 
-const Course = db.define('student_purchase', {
+const Course = db.define('purchase_table', {
   purchase_id: {
     type: INTEGER,
     primaryKey: true,
@@ -10,23 +10,19 @@ const Course = db.define('student_purchase', {
   student_id: {
     type: INTEGER,
     references: {
-      model: 'student_table',
+      model: 'student_tables',
       key: 'student_id',
     },
   },
   customer_id: {
     type: INTEGER,
     references: {
-      model: 'customer_table',
+      model: 'customer_tables',
       key: 'customer_id',
     },
   },
   session_id: {
-    type: INTEGER,
-    references: {
-      model: 'session_table',
-      key: 'session_id',
-    },
+    type: STRING,
   },
   purchase_type: {
     type: STRING,
@@ -37,7 +33,7 @@ const Course = db.define('student_purchase', {
     allowNull: false,
   },
   purchase_units_taken: {
-    type: INTEGER,
+    type: STRING,
   },
   purchased_for_email: {
     type: STRING,

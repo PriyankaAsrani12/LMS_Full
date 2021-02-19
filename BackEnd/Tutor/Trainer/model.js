@@ -11,7 +11,7 @@ const Trainer = db.define('trainer_profile', {
   customer_id: {
     type: INTEGER,
     references: {
-      model: 'customer_table',
+      model: 'customer_tables',
       key: 'customer_id',
     },
   },

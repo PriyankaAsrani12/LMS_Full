@@ -11,7 +11,7 @@ const LessonTable = db.define('lesson_table', {
   session_id: {
     type: DataTypes.INTEGER,
     references: {
-      model: 'session_table',
+      model: 'session_tables',
       key: 'session_id',
     },
   },
@@ -25,7 +25,7 @@ const LessonTable = db.define('lesson_table', {
   chapter_id: {
     type: DataTypes.INTEGER,
     references: {
-      model: 'chapter_table',
+      model: 'chapter_tables',
       key: 'chapter_id',
     },
   },

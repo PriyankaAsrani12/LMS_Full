@@ -7,29 +7,25 @@ const LibraryItem = db.define('library_items', {
     primaryKey: true,
     autoIncrement: true,
   },
+
+  customer_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'customer_tables',
+      key: 'customer_id',
+    },
+  },
   session_id: {
     type: DataTypes.INTEGER(255),
     allowNull: false,
     references: {
-      model: 'session_table',
+      model: 'session_tables',
       key: 'session_id',
     },
   },
   session_type: {
     type: DataTypes.STRING,
     allowNull: false,
-    references: {
-      model: 'session_table',
-      key: 'session_type',
-    },
-  },
-  customer_id: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    references: {
-      model: 'customer_tables',
-      key: 'customer_id',
-    },
   },
   item_name: {
     type: DataTypes.STRING,

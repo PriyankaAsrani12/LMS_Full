@@ -10,21 +10,21 @@ const ReferalLink = db.define('referal_link', {
   customer_id: {
     type: INTEGER,
     references: {
-      model: 'customer_table',
+      model: 'customer_tables',
       key: 'customer_id',
     },
   },
   student_id: {
     type: INTEGER,
     references: {
-      model: 'student_table',
+      model: 'student_tables',
       key: 'student_id',
     },
   },
   session_id: {
     type: INTEGER,
     references: {
-      model: 'session_table',
+      model: 'session_tables',
       key: 'session_id',
     },
   },
