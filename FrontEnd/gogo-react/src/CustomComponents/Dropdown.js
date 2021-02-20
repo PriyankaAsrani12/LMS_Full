@@ -28,6 +28,7 @@ const CustomSelect = () => {
     setSelectedFilter,
     selectedSort,
     setSelectedSort,
+    search,
     setSearch,
     handleReloadTable,
   ] = useContext(DropDownContext);
@@ -37,7 +38,7 @@ const CustomSelect = () => {
 
   const onSearchKey = (e) => {
     if (e.key === 'Enter') {
-      console.log(e.target.value.toLowerCase());
+      // console.log(e.target.value.toLowerCase());
       setSearch(e.target.value.toLowerCase());
     }
   };
@@ -53,12 +54,13 @@ const CustomSelect = () => {
               id="search1"
               placeholder="Search"
               onKeyPress={(e) => onSearchKey(e)}
+              
             />
             <Button
               className="searchme"
-              onClick={(e) =>
+              onClick={(e) =>{
                 setSearch(document.getElementById('search1').value)
-              }
+              }}
             >
               Search
             </Button>

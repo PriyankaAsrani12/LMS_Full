@@ -271,8 +271,8 @@ const OndemandSession = ({ closeModal, propHandle }) => {
                 id="exampleSelect"
               >
                 <option>Choose Something</option>
-                <option>Free </option>
                 <option>Paid </option>
+                <option>Free</option>
               </Input>
             </Col>
             <Col md={6}>
@@ -281,7 +281,7 @@ const OndemandSession = ({ closeModal, propHandle }) => {
                 {select == 'Free' ? (
                   <Input disabled />
                 ) : (
-                  <Field className="form-control" name="session_fee" />
+                  <Field type="number" className="form-control" name="session_fee" />
                 )}
                 {errors.session_fee && touched.session_fee ? (
                   <div className="invalid-feedback d-block">

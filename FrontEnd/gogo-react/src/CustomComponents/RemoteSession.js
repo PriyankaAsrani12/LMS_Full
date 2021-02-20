@@ -412,7 +412,7 @@ const RemoteSession = ({ closeModal, propHandle }) => {
               <FormGroup className="error-l-75">
                 <Label>Fees</Label>
                 {fees == 'Free for Course Enrolled Students' ? (
-                  <Input disabled />
+                  <Input value={""} disabled />
                 ) : (
                   <Input
                     type="number"
