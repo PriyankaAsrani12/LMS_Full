@@ -10,10 +10,11 @@ const Student = db.define('student_table', {
   },
   customer_id: {
     type: INTEGER,
-    references: {
-        model: 'customer_tables',
-        key:'customer_id'
-    },
+    defaultValue: 1,
+    // references: {
+    //     model: 'customer_tables',
+    //     key:'customer_id'
+    // },
   },
   ref_id: {
     type: INTEGER,

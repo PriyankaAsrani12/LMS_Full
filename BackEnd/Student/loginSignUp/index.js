@@ -29,7 +29,7 @@ router.post('/register', async (req, res) => {
       using_google = false,
       customer_id,
     } = req.body.values;
-
+console.log(customer_id);
     //Don't change it to let otherwise DB is will not connect
     sqlCheck = await Student.findOne({
       where: {

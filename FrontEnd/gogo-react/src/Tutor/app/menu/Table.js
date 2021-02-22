@@ -21,8 +21,7 @@ const Table = ({ columns, data }) => {
       initialState: { pageIndex: 0, pageSize: 6 },
     },
     useSortBy,
-    usePagination
-  );
+    usePagination);
   return (
     <>
       <table {...getTableProps()} className="r-table table">
@@ -68,7 +67,10 @@ const Table = ({ columns, data }) => {
           })}
         </tbody>
       </table>
-
+{/* <div>
+  <button onClick={()=>{canPreviousPage()}}>Previous</button>
+  <button onClick={()=>{canNextPage()}} >Next</button>
+</div> */}
       {/* <DatatablePagination
             page={pageIndex}
             pages={pageCount}

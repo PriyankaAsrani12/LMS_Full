@@ -106,7 +106,7 @@ router.put('/', auth, async (req, res) => {
         success: 0,
         error: 'Data Incomplete',
       });
-    const result = User.update(
+    const result =await User.update(
       {
         [field]: value,
       },
@@ -138,11 +138,12 @@ router.put('/toggle', auth, async (req, res) => {
   try {
     const values = req.body.values;
 
-    const result = Communication.update(values, {
+    const result =  Communication.update(values, {
       where: {
         session_id: values.session_id,
       },
     });
+
     console.log(result);
     if (!result)
       return res.status(400).json({
@@ -152,6 +153,7 @@ router.put('/toggle', auth, async (req, res) => {
     return res.status(200).json({
       success: 1,
     });
+
   } catch (error) {
     console.log(error);
     return res.status(400).json({

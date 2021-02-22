@@ -58,6 +58,7 @@ const Email = () => {
       const result = await axiosInstance.put('/tutor/communication', {
         values,
       });
+      console.log(result);
       if (result.data.success) {
         setMailonSignup(value);
       } else {
@@ -82,6 +83,7 @@ const Email = () => {
       const result = await axiosInstance.put('/tutor/communication', {
         values,
       });
+      console.log(result);
       if (result.data.success) {
         setPurchaseEmail(value);
       } else {
