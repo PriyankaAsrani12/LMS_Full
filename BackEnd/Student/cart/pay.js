@@ -1,10 +1,12 @@
 const router=require("express").Router()
 const Razorpay=require("razorpay");
 const shortid=require("shortid")
+const fs =require("fs")
 let razorpay=new Razorpay({
     key_id:"rzp_test_VRw137IijSL6i7",
     key_secret:"IHUmnB2HrihuA602m4dQ4oAX"
 })
+
 
 router.post('/pay_item', async (req, res) => {
     const {price}=req.body;
@@ -24,6 +26,13 @@ router.post('/pay_item', async (req, res) => {
 	try {
 		const response = await razorpay.orders.create(options)
 		console.log(response)
+		fs.writeFile("data.json", JSON.stringify(response), err => { 
+     
+			// Checking for errors 
+			if (err) throw err;  
+		   
+			console.log("Done writing"); // Success 
+		});
 		res.json({
 			id: response.id,
 			currency: response.currency,

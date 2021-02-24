@@ -58,7 +58,7 @@ const Email = () => {
       const result = await axiosInstance.put('/tutor/communication', {
         values,
       });
-      console.log(result);
+      console.log(result.data.success==1);
       if (result.data.success) {
         setMailonSignup(value);
       } else {
