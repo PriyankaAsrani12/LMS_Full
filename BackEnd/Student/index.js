@@ -8,6 +8,7 @@ router.use('/referal', require('./referalLink'));
 router.use('/mycourses', require('./mycourses'));
 router.use('/cart', require('./cart'));
 router.use('/affiliates', require('./affiliate'));
-router.use("/info",require("./loginSignUp/info"))
+router.use("/info",require("./loginSignUp/info"));
+router.use("/comment",require("./Comment"))
 module.exports = router;
 // /student/auth/login
