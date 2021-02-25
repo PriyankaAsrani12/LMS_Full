@@ -163,6 +163,25 @@ console.log(req.body);
   }
 });
 
+
+router.get("/logout",verifyToken,async(req,res,next)=>{
+  try{
+    
+    res.clearCookie("auth-token");
+    return res.status(200).json({
+      sucess:1,
+      msg:"Logout sucessfully"
+    })
+
+  }
+  catch(e){
+    res.status(401).json({
+      msg:"unable to logout",
+      err:e
+    })
+  }
+})
+
 router.post('/forgotPassword', async (req, res) => {
   try {
     const { email } = req.body.values;
