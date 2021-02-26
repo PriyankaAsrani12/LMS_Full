@@ -16,6 +16,7 @@ const Save=require("./saveModel");
 const Wish=require("./wishModel");
 
 
+
 router.put("/update_cart_item",verifyToken,async(req,res)=>{
     
     console.log(req.body.course);
@@ -39,39 +40,44 @@ router.put("/update_cart_item",verifyToken,async(req,res)=>{
     }
 })
 
-router.post("/add_to_cart",verifyToken,async (req,res)=>{
+router.put("/add_to_cart",verifyToken,async (req,res)=>{
     try{
-      const { session_id } = req.body.values;
-          console.log(req.body.values);
-       
+      const { student_cart_items } = req.body.values;
           
-    //   const isExist=await Cart.findOne({
-    //     where: { student_id: 1, session_id :1},
-    //   });
-
-    //   if(isExist){
-    //       //  Run update query
-    //   const result = await Cart.update(
-    //     { where: { student_id: 1, session_id:1 } }
-    //   );
-
-    //     console.log(result);
-    //     return res.status(200).json({
-    //       success: 1,
-    //       result,
-    //     });
-    //   }else {
-              //    run create query
-        
-              const result = await Cart.create({
-                student_id:req.user.student_id,
-                session_id
-              });
-              console.log(result);
-              return res.status(200).json({
-                success: 1,
-              });
-        //    }
+       
+          const sql1 = `SELECT 
+          s.student_cart_items
+          FROM
+          student_tables AS s
+          WHERE  
+          s.student_id=${req.user.student_id}
+         `;
+            const result = await db.query(sql1, { type: db.QueryTypes.SELECT });
+            console.log(result[0].student_cart_items);
+            if(result[0].student_cart_items!=0){
+                result[0].student_cart_items=JSON.parse(result[0].student_cart_items)
+                result[0].student_cart_items.push(student_cart_items)
+                let cart_item=JSON.stringify(result[0].student_cart_items);
+                console.log(typeof(cart_item));
+                const data=await Student.update(
+                    {student_cart_items:cart_item},
+                    {where:{student_id:req.user.student_id}}
+                    )
+                return res.status(200).json({
+                    success: 1,
+                    result:data
+                }) 
+            }
+            
+            let cart_item=JSON.stringify([student_cart_items]);
+            const data=await Student.update(
+            {student_cart_items:cart_item},
+            {where:{student_id:req.user.student_id}}
+            )
+            console.log(data);
+            res.status(200).json({
+                data:data
+            })
    }
     catch (e){
         res.status(401).send({
@@ -85,42 +91,105 @@ router.post("/add_to_cart",verifyToken,async (req,res)=>{
 
 router.get("/cart_list",verifyToken,async(req,res)=>{
     try{
-        const sql = `SELECT 
-                 s.session_id,
-                 s.session_name,
-                 s.session_description,
-                 s.session_fee,
-                 s.session_thumbnail,
-                 c.cart_item_id
+        const sql1 = `SELECT 
+                 
+                 s.student_cart_items
                  FROM
-                 session_tables AS s INNER JOIN cart_tables AS c ON  c.session_id=s.session_id 
+                 student_tables AS s 
                  WHERE  
-                 c.student_id=${req.user.student_id}
+                 s.student_id=${req.user.student_id}
                 `;
-       const result = await db.query(sql, { type: db.QueryTypes.SELECT });
-        // const cart=await Cart.findAll({
-            // where: {student_id:1},
-            // include: [{
-            //     model:"session_tables",
-            //     as:""
-            // }]
-        // })
-        // console.log(result);
-        return res.status(200).json({
-                  success: 1,
-                  result,
+
+             
+       const result = await db.query(sql1, { type: db.QueryTypes.SELECT });
+        let results=JSON.parse(result[0].student_cart_items)
+        let dataIs=[];
+        results.map(async (data,index)=>{
+            
+                const sql2=`SELECT
+                s.session_id,
+                s.session_name,
+                s.session_description,
+                s.session_fee
+                FROM 
+                session_tables AS s  
+                WHERE
+                 s.session_id=${data} 
+                `
+            let info = await db.query(sql2,{ type: db.QueryTypes.SELECT });
+            
+            dataIs.push(info);
+            if(dataIs.length==results.length){
+                return res.status(200).json({
+                    success: 1,
+                    dataIs,
                 });
-        
+            }
+         })
+            // console.log(dataIs,"Jitul");
+            // if(dataIs.length>0){
+                
+            // }
         // res.status(200).json({cart:cart});
 
     }
     catch (e){
-        res.status(401).send({
+        res.status(401).json({
             message: "Unable to show from cart list",
             err:e
         })
     }
 
+})
+
+
+router.post("/remove_item_cart_list",verifyToken,async(req,res)=>{
+    
+        try{
+            
+            const sql1 = `SELECT 
+                     
+                     s.student_cart_items
+                     FROM
+                     student_tables AS s 
+                     WHERE  
+                     s.student_id=${req.user.student_id}
+                    `;
+    
+                 
+           const result = await db.query(sql1, { type: db.QueryTypes.SELECT });
+            let results=JSON.parse(result[0].student_cart_items)
+            console.log(req.body.cart_item_id);
+            dataIs=results.filter(data=>data!=req.body.cart_item_id )
+    
+            const data=await Student.update(
+                {student_cart_items:JSON.stringify(dataIs)},
+                {where:{student_id:req.user.student_id}}
+                )
+                console.log(data);
+                
+    
+             if(data){
+                res.status(200).json({
+                    dataIs:data,
+                    id:req.body.cart_item_id
+                })
+             }
+    
+                // console.log(dataIs,"Jitul");
+                // if(dataIs.length>0){
+                    
+                // }
+            
+    
+        }
+        catch (e){
+            res.status(401).json({
+                message: "Unable to show from cart list",
+                err:e
+            })
+        }
+    
 })
 
 
@@ -147,135 +216,154 @@ router.get("/remove_cart_list",verifyToken,async(req,res)=>{
 
 
 
-router.post("/remove_item_cart_list",verifyToken,async(req,res)=>{
-    try{
-        const cart=await Cart.destroy({
-            where:{cart_item_id:req.body.cart_item_id,
-            student_id:req.user.student_id},
-            restartIdentity: true,
-        })
-        console.log(cart);
-        // res.status(200).json({cart:cart})
 
-    }
-    catch (e){
-        res.status(401).send({
-            message: "Unable to remove item from the  cart list",
-            err:e
-        })
-    }
-
-})
 
 
 // wish 
 
-router.post("/add_to_wish",verifyToken,async (req,res)=>{
+router.put("/add_to_wish",verifyToken,async (req,res)=>{
     
-        
-    // try{
-    
-
-        try{
-            const {session_id}=req.body.item;
-        const result = await Wish.create({
-            student_id:req.user.student_id,
-            session_id
-          });
-          console.log(result);
-          return res.status(200).json({
-            success: 1,
-            result
-          });
-        }
-        catch(e){
-            res.status(401).send({
+    try{
+        const { student_wish_list_items } = req.body.values;
+            
+         
+            const sql1 = `SELECT 
+            s.student_wish_list_items
+            FROM
+            student_tables AS s
+            WHERE  
+            s.student_id=${req.user.student_id}
+           `;
+              const result = await db.query(sql1, { type: db.QueryTypes.SELECT });
+              console.log(result[0].student_wish_list_items);
+              if(result[0].student_wish_list_items!=0){
+                  result[0].student_wish_list_items=JSON.parse(result[0].student_wish_list_items)
+                  result[0].student_wish_list_items.push(student_wish_list_items)
+                  let cart_item=JSON.stringify(result[0].student_wish_list_items);
+                  console.log(typeof(cart_item));
+                  const data=await Student.update(
+                      {student_wish_list_items:cart_item},
+                      {where:{student_id:req.user.student_id}}
+                      )
+                  return res.status(200).json({
+                    success: 1,
+                    result:data
+                  }) 
+              }
+              
+              let cart_item=JSON.stringify([student_wish_list_items]);
+              const data=await Student.update(
+              {student_wish_list_items:cart_item},
+              {where:{student_id:req.user.student_id}}
+              )
+              console.log(data);
+              res.status(200).json({
+                  data:data
+              })
+     }
+      catch (e){
+          res.status(401).send({
               message: "Unable to add to cart list",
-                 err:e
-                })
-        }
-        
-        // res.status(200).json({save:save})
-    // }
-    // catch (e){
-    //     res.status(401).send({
-    //         message: "Unable to add to save list",
-    //         err:e
-    //     })
-    // }
-    // try{
-        
-    //     let {student_id, session_id}=req.body.courses
-    //     const wish=await Wish.create({
-    //       student_id:1,
-    //       session_id:session_id
-    //     })
-        
-    //     res.status(200).json({wish:wish});
-    // }
-    // catch (e){
-    //     res.status(401).send({
-    //         message: "Unable to add to cart list",
-    //         err:e
-    //     })
-    // }
-
+              err:e
+          })
+      }
 })
 router.get("/wish_list",verifyToken,async (req,res)=>{
 
-   try{
-    const sql = `SELECT 
-    s.session_id,
-    s.session_name,
-    s.session_description,
-    s.session_fee,
-    s.session_thumbnail,
-    c.wish_item_id
-    FROM
-    session_tables AS s INNER JOIN wish_tables AS c ON  c.session_id=s.session_id 
-    WHERE  
-    c.student_id=${req.user.student_id}
-   `;
-const result = await db.query(sql, { type: db.QueryTypes.SELECT });
+    try{
+        const sql1 = `SELECT 
+                 
+                 s.student_wish_list_items
+                 FROM
+                 student_tables AS s 
+                 WHERE  
+                 s.student_id=${req.user.student_id}
+                `;
 
-    return res.status(200).json({
-    success: 1,
-    result});
-    }catch(e){
-        res.status(401).send({
-            message: "Unable to get save list",
+             
+       const result = await db.query(sql1, { type: db.QueryTypes.SELECT });
+        let results=JSON.parse(result[0].student_wish_list_items)
+        let dataIs=[];
+        results.map(async (data,index)=>{
+            
+                const sql2=`SELECT
+                s.session_id,
+                s.session_name,
+                s.session_description,
+                s.session_fee
+                FROM 
+                session_tables AS s  
+                WHERE
+                 s.session_id=${data} 
+                `
+            let info = await db.query(sql2,{ type: db.QueryTypes.SELECT });
+            
+            dataIs.push(info);
+            if(dataIs.length==results.length){
+                return res.status(200).json({
+                    success: 1,
+                    dataIs,
+                });
+            }
+         })
+            // console.log(dataIs,"Jitul");
+            // if(dataIs.length>0){
+                
+            // }
+        // res.status(200).json({cart:cart});
+
+    }
+    catch (e){
+        res.status(401).json({
+            message: "Unable to show from cart list",
             err:e
         })
     }
-    // try{
-    //     const wish=await Wish.findAll({});
-        
-    //     res.status(200).json({wish:wish});
-    // }
-    // catch (e){
-    //     res.status(401).send({
-    //         message: "Unable to get wish list",
-    //         err:e
-    //     })
-    // }
 })
 
 router.post("/remove_item_wish_list",verifyToken,async (req,res)=>{
 
     try{
-        const wish=await Wish.destroy({
-            where:{wish_item_id:req.body.wish_item_id,
-            student_id:req.user.student_id},
-            restartIdentity: true,
+        
+        const sql1 = `SELECT 
+                 
+                 s.student_wish_list_items
+                 FROM
+                 student_tables AS s 
+                 WHERE  
+                 s.student_id=${req.user.student_id}
+                `;
+
+             
+       const result = await db.query(sql1, { type: db.QueryTypes.SELECT });
+        let results=JSON.parse(result[0].student_wish_list_items)
+        console.log(req.body.wish_item_id);
+        dataIs=results.filter(data=>data!=req.body.wish_item_id )
+        console.log(dataIs);
+        const data=await Student.update(
+            {student_wish_list_items:JSON.stringify(dataIs)},
+            {where:{student_id:req.user.student_id}}
+            )
             
-        });
+         if(data){
+            res.status(200).json({
+                dataIs:dataIs,
+                id:req.body.wish_item_id
+            })
+         }   
+
+         
+
+            // console.log(dataIs,"Jitul");
+            // if(dataIs.length>0){
+                
+            // }
         
-        res.status(200).send(req.body.wish_item_id);
-        
+
     }
     catch (e){
-        res.status(401).send({
-            message: "Unable to get save list",
+        res.status(401).json({
+            message: "Unable to show from cart list",
             err:e
         })
     }
@@ -301,63 +389,149 @@ router.get("/remove_wish_list",verifyToken,async (req,res)=>{
 })
 
 
-router.post("/add_to_save",verifyToken,async (req,res)=>{
+router.put("/add_to_save",verifyToken,async (req,res)=>{
     try{
+        const { student_saved_for_later } = req.body.values;
+            
+         
+            const sql1 = `SELECT 
+            s.student_saved_for_later
+            FROM
+            student_tables AS s
+            WHERE  
+            s.student_id=${req.user.student_id}
+           `;
+              const result = await db.query(sql1, { type: db.QueryTypes.SELECT });
+              console.log(result[0].student_saved_for_later);
+              if(result[0].student_saved_for_later!=0){
+                  result[0].student_saved_for_later=JSON.parse(result[0].student_saved_for_later)
+                  result[0].student_saved_for_later.push(student_saved_for_later)
+                  let cart_item=JSON.stringify(result[0].student_saved_for_later);
+                  console.log(typeof(cart_item));
+                  const data=await Student.update(
+                      {student_saved_for_later:cart_item},
+                      {where:{student_id:req.user.student_id}}
+                      )
+                  return res.status(200).json({
+                      success: 1,
+                      result:data
+                  }) 
+              }
+              
+              let cart_item=JSON.stringify([student_saved_for_later]);
+              const data=await Student.update(
+              {student_saved_for_later:cart_item},
+              {where:{student_id:req.user.student_id}}
+              )
+              console.log(data);
+              res.status(200).json({
+                  data:data
+              })
+     }
+      catch (e){
+          res.status(401).send({
+              message: "Unable to add to cart list",
+              err:e
+          })
+      }
+})
 
-        const {session_id}=req.body.item;
-        const result = await Save.create({
-            student_id:req.user.student_id,
-            session_id
-          });
-          console.log(result);
-          return res.status(200).json({
-            success: 1,
-            result
-          });
-        
-        // res.status(200).json({save:save})
+router.get("/save_list",verifyToken,async (req,res)=>{
+    try{
+        const sql1 = `SELECT 
+                 
+                 s.student_saved_for_later
+                 FROM
+                 student_tables AS s 
+                 WHERE  
+                 s.student_id=${req.user.student_id}
+                `;
+
+             
+       const result = await db.query(sql1, { type: db.QueryTypes.SELECT });
+        let results=JSON.parse(result[0].student_saved_for_later)
+        let dataIs=[];
+        results.map(async (data,index)=>{
+            
+                const sql2=`SELECT
+                s.session_id,
+                s.session_name,
+                s.session_description,
+                s.session_fee
+                FROM 
+                session_tables AS s  
+                WHERE
+                 s.session_id=${data} 
+                `
+            let info = await db.query(sql2,{ type: db.QueryTypes.SELECT });
+            
+            dataIs.push(info);
+            if(dataIs.length==results.length){
+                return res.status(200).json({
+                    success: 1,
+                    dataIs,
+                });
+            }
+         })
+            // console.log(dataIs,"Jitul");
+            // if(dataIs.length>0){
+                
+            // }
+        // res.status(200).json({cart:cart});
+
     }
     catch (e){
-        res.status(401).send({
-            message: "Unable to add to save list",
+        res.status(401).json({
+            message: "Unable to show from cart list",
             err:e
         })
     }
 
 })
 
-router.get("/save_list",verifyToken,async (req,res)=>{
+
+router.post("/remove_item_save_list",verifyToken,async (req,res)=>{
     try{
-        const sql = `SELECT 
-        s.session_id,
-        s.session_name,
-        s.session_description,
-        s.session_fee,
-        s.session_thumbnail,
-        c.save_item_id
-        FROM
-        session_tables AS s INNER JOIN save_tables AS c ON  c.session_id=s.session_id 
-        WHERE  
-        c.student_id=${req.user.student_id}
-       `;
-        const result = await db.query(sql, { type: db.QueryTypes.SELECT });
-        // const cart=await Cart.findAll({
-        // where: {student_id:1},
-        // include: [{
-        //     model:"session_tables",
-        //     as:""
-        // }]
-        // })
-        // console.log(result);
-        return res.status(200).json({
-                success: 1,
-                result,
-            });
         
+        const sql1 = `SELECT 
+                 
+                 s.student_saved_for_later
+                 FROM
+                 student_tables AS s 
+                 WHERE  
+                 s.student_id=${req.user.student_id}
+                `;
+
+             
+       const result = await db.query(sql1, { type: db.QueryTypes.SELECT });
+        let results=JSON.parse(result[0].student_saved_for_later)
+        console.log(req.body.save_item_id);
+        dataIs=results.filter(data=>data!=req.body.save_item_id )
+
+        const data=await Student.update(
+            {student_saved_for_later:JSON.stringify(dataIs)},
+            {where:{student_id:req.user.student_id}}
+            )
+            console.log(data);
+            
+
+         if(data){
+            res.status(200).json({
+                dataIs:data,
+                id:req.body.save_item_id
+            })
+         }
+
+            // console.log(dataIs,"Jitul");
+            // if(dataIs.length>0){
+                
+            // }
+        
+
     }
     catch (e){
-        res.status(401).send({
-            message: "Unable to get save list",
+        res.status(401).json({
+            message: "Unable to show from cart list",
             err:e
         })
     }
@@ -383,26 +557,7 @@ router.get("/remove_save_list",verifyToken,async (req,res)=>{
     }
 
 })
-router.post("/remove_item_save_list",verifyToken,async (req,res)=>{
-    try{
-        const save=await Save.destroy({
-            where:{save_item_id:req.body.save_item_id,
-            student_id:req.user.student_id},
-            restartIdentity: true,
-            
-        });
-        
-        res.status(200).send(save);
-        
-    }
-    catch (e){
-        res.status(401).send({
-            message: "Unable to get save list",
-            err:e
-        })
-    }
 
-})
 
 // razor pay
 router.use("/",require("./pay"))
