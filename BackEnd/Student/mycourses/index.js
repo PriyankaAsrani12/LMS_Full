@@ -120,6 +120,7 @@ router.get('/:id', verifyToken, async (req, res) => {
       success: 1,
       sessionData: sessionData[0],
       ans,
+      id:req.params.id
     });
   } catch (err) {
     console.log(err);
