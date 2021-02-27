@@ -61,17 +61,28 @@ console.log(customer_id);
       { type: db.QueryTypes.SELECT }
     );
 
+    console.log(customer[0].communication_email_signup,"Jitul");
+    console.log(customer,"Jitul");
+    console.log(customer,"Jitul");
+    console.log(customer,"Jitul");
+
+    console.log(customer,"Jitul");console.log(customer,"Jitul");
+    console.log(customer,"Jitul");
+    console.log(customer,"Jitul");
+    console.log(customer,"Jitul");
+    console.log(customer,"Jitul");
     console.log(customer);
 
-    if (customer.communication_email_signup) {
+
+    if (customer[0].communication_email_signup) {
       let temp = await sendWelcomeEmail(student_email, name);
-      console.log('🚀', temp);
+      console.log('Jitul', temp);
     }
 
     // sending sms
-    if (!using_google && customer.communication_message_signup) {
+    if (!using_google && customer[0].communication_message_signup) {
       const result = await sendsms(student_phone_number, 'test');
-      console.log(result);
+       console.log(result);
     }
     const user = await Student.create({
       student_first_name,
@@ -82,10 +93,10 @@ console.log(customer_id);
       student_password,
     });
 
-    //  res.status(200).json({
-    //     success:1,
-    //     message:"User Successfully Created"
-    // });
+     res.status(200).json({
+        success:1,
+        message:"User Successfully Created"
+    });
     res.redirect(307, '/student/auth/login');
   } catch (err) {
     console.log(err);
