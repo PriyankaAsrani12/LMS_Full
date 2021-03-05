@@ -97,7 +97,7 @@ router.get("/cart_list",verifyToken,async(req,res)=>{
                  FROM
                  student_tables AS s 
                  WHERE  
-                 s.student_id=${req.user.student_id}
+                 s.student_id='${req.user.student_id}'
                 `;
 
              

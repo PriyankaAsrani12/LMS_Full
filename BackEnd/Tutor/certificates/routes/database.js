@@ -31,7 +31,8 @@ route.post('/imageupload', async (req, res) => {
 
   console.log('file name-------------');
   console.log(req.files.certiimage.name);
-  let imgname = req.files.certiimage.name;
+  try{
+    let imgname = req.files.certiimage.name;
 
   const file = req.files.certiimage;
   file.mv(`${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name}`, (err) => {
@@ -41,10 +42,20 @@ route.post('/imageupload', async (req, res) => {
         error: 'Could not save image',
       });
     console.log('imaged saved successfully');
-    res
+       res
       .status(200)
-      .send({ status: true, name: imgname, image_url: `Url of Certiimage` });
+      .send({ status: true,
+         name: imgname, 
+         image_url: `Url of Certiimage`,
+        data:`${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name}` });
   });
+  }
+  catch (err){
+    res.json({
+      msg:"Error",
+      err:err
+    })
+  }
 });
 
 //string opertaions image path and releveant things in template2 database
@@ -59,11 +70,13 @@ route.post('/template', async (req, res) => {
       image_url,
       customer_id: req.user.customer_id,
     });
+
     if (!value)
       return res.status(400).json({
         status: false,
         error: 'could not save template',
       });
+
     return res.status(200).json({
       status: true,
       value,

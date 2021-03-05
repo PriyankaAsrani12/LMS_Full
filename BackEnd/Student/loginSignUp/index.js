@@ -61,15 +61,15 @@ console.log(customer_id);
       { type: db.QueryTypes.SELECT }
     );
 
-    console.log(customer);
+    console.log(customer[0].communication_email_signup,"send email");
 
-    if (customer.communication_email_signup) {
+    if (customer[0].communication_email_signup) {
       let temp = await sendWelcomeEmail(student_email, name);
       console.log('🚀', temp);
     }
 
     // sending sms
-    if (!using_google && customer.communication_message_signup) {
+    if (!using_google && customer[0].communication_message_signup) {
       const result = await sendsms(student_phone_number, 'test');
       console.log(result);
     }

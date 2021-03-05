@@ -20,9 +20,10 @@ let state = {
 };
 
 async function getop() {
+
   await $.get('api/database/2/abcd', async (data) => {
-    // console.log(data[0].temp.operations);
-    operations = await data.temp.operations;
+   console.log(data[0].temp.operations);
+  operations = await data.temp.operations;
   });
 }
 

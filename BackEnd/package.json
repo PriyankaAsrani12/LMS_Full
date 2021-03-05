@@ -15,6 +15,7 @@
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
+    "csvtojson": "^2.0.10",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
@@ -37,6 +38,7 @@
     "shortid": "^2.2.16",
     "urlencode": "^1.1.0",
     "validator": "^13.1.17",
-    "webp-converter": "^2.3.1"
+    "webp-converter": "^2.3.1",
+    "xlsx": "^0.16.9"
   }
 }

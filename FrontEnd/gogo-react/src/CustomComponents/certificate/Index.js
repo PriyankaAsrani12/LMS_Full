@@ -94,7 +94,7 @@ const Index = () => {
         className="font-weight-bold"
         onClick={() =>
           window.open(
-            `${window.location.protocol}//${window.location.hostname}/tutor/certificates`
+            `${window.location.protocol}//${window.location.hostname}:5000/tutor/certificates`
           )
         }
       >

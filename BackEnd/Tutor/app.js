@@ -24,5 +24,5 @@ router.use('/affliates', require('./affliates'));
 router.use('/dashboard', require('./dashboard'));
 router.use('/monetization', require('./monetization'));
 router.use('/stats/communication', require('./stats/communication'));
-
+// router.use("/",require("./certificates/upload/upload"));
 module.exports = router;

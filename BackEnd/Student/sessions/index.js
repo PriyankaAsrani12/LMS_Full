@@ -188,6 +188,9 @@ router.get('/trainer/:id', verifyToken, async (req, res) => {
 //   }
 // });
 
+
+
+
 router.get('/details/:id', verifyToken, async (req, res) => {
   try {
     if (!req.params.id)
@@ -249,6 +252,7 @@ router.get('/details/:id', verifyToken, async (req, res) => {
         error: 'Unable to find trainer data',
       });
 
+
     const sql3 = `SELECT item_id,item_name from library_items WHERE session_id=${req.params.id}`;
     const LibraryItems = await db.query(sql3, { type: db.QueryTypes.SELECT });
 
@@ -257,8 +261,31 @@ router.get('/details/:id', verifyToken, async (req, res) => {
       type: db.QueryTypes.SELECT,
     });
     let cart_item_status = null;
+
+    // check enrollment
+    const sql5=`
+    SELECT
+    student_cart_items,
+    student_wish_list_items
+    FROM 
+    student_tables
+    WHERE
+    student_id=${req.user.student_id}
+    `
+    const enrollment=await db.query(sql5,{
+      type: db.QueryTypes.SELECT,
+    })
+
+
+
+
+
+
     if (status && status[0] && status[0].cart_item_status)
       cart_item_status = status[0].cart_item_status;
+
+
+      // course content
 
     const ans = [];
 
@@ -323,9 +350,11 @@ router.get('/details/:id', verifyToken, async (req, res) => {
       session: sessionData[0],
       trainerData: TrainerData[0],
       ans,
-      cart_item_status,
+      enrollment,
     });
-  } catch (err) {
+  }
+  
+  catch (err) {
     console.log(err);
     return res.status(500).json({
       success: 0,

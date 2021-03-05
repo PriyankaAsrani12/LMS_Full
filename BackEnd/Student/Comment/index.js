@@ -2,9 +2,10 @@ const router=require("express").Router()
 const verifyToken=require("../middlewares/verifyToken");
 const Comment=require("./model");
 const {db}=require("../../common/db/sql")
-router.get('/', verifyToken,async(req,res,next)=>{
+router.get('/:id', verifyToken,async(req,res,next)=>{
     try{
-
+        let lesson=req.params.id;
+        console.log(lesson,"lesson id is herer");
         const sql=`SELECT
         c.comment_content,
         c.comment_img_url,
@@ -20,9 +21,13 @@ router.get('/', verifyToken,async(req,res,next)=>{
         student_tables AS s INNER JOIN  comment_tables AS c ON c.student_id=s.student_id
         WHERE
         c.student_id=${req.user.student_id}
+        AND
+        c.lesson_id=${lesson}
         ORDER BY c.updatedAt DESC
         `
+        
         const result=await db.query(sql,{type:db.QueryTypes.SELECT});
+        
         return res.status(200).json({
             sucess:1,
             result
@@ -30,7 +35,8 @@ router.get('/', verifyToken,async(req,res,next)=>{
 
     }
     catch (e){
-        res.status(401).json({
+        console.log(e);
+        res.status(200).json({
             msg:"Unable to get data",
             err:e
         })
