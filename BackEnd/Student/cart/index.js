@@ -102,7 +102,9 @@ router.get("/cart_list",verifyToken,async(req,res)=>{
 
              
        const result = await db.query(sql1, { type: db.QueryTypes.SELECT });
-        let results=JSON.parse(result[0].student_cart_items)
+       console.log(JSON.parse(result[0].student_cart_items).length);
+        if(JSON.parse(result[0].student_cart_items).length){
+            let results=JSON.parse(result[0].student_cart_items)
         let dataIs=[];
         results.map(async (data,index)=>{
             
@@ -126,6 +128,12 @@ router.get("/cart_list",verifyToken,async(req,res)=>{
                 });
             }
          })
+        }else{
+            return res.status(200).json({
+                success: 1,
+                dataIs:[],
+            });
+        }
             // console.log(dataIs,"Jitul");
             // if(dataIs.length>0){
                 
@@ -158,9 +166,10 @@ router.post("/remove_item_cart_list",verifyToken,async(req,res)=>{
     
                  
            const result = await db.query(sql1, { type: db.QueryTypes.SELECT });
-            let results=JSON.parse(result[0].student_cart_items)
-            console.log(req.body.cart_item_id);
-            dataIs=results.filter(data=>data!=req.body.cart_item_id )
+            if(result[0].student_cart_items!=0){
+                let results=JSON.parse(result[0].student_cart_items)
+                console.log(req.body.cart_item_id);
+                dataIs=results.filter(data=>data!=req.body.cart_item_id )
     
             const data=await Student.update(
                 {student_cart_items:JSON.stringify(dataIs)},
@@ -176,6 +185,12 @@ router.post("/remove_item_cart_list",verifyToken,async(req,res)=>{
                 })
              }
     
+            }else{
+                res.status(200).json({
+                    dataIs:[],
+                    id:req.body.cart_item_id
+                })
+            }
                 // console.log(dataIs,"Jitul");
                 // if(dataIs.length>0){
                     
@@ -282,7 +297,8 @@ router.get("/wish_list",verifyToken,async (req,res)=>{
 
              
        const result = await db.query(sql1, { type: db.QueryTypes.SELECT });
-        let results=JSON.parse(result[0].student_wish_list_items)
+        if(JSON.parse(result[0].student_wish_list_items).length){
+            let results=JSON.parse(result[0].student_wish_list_items)
         let dataIs=[];
         results.map(async (data,index)=>{
             
@@ -306,6 +322,12 @@ router.get("/wish_list",verifyToken,async (req,res)=>{
                 });
             }
          })
+        }else{
+            return res.status(200).json({
+                success: 1,
+                dataIs:[],
+            });
+        }
             // console.log(dataIs,"Jitul");
             // if(dataIs.length>0){
                 
@@ -336,7 +358,8 @@ router.post("/remove_item_wish_list",verifyToken,async (req,res)=>{
 
              
        const result = await db.query(sql1, { type: db.QueryTypes.SELECT });
-        let results=JSON.parse(result[0].student_wish_list_items)
+        if(result[0].student_wish_list_items!=0){
+            let results=JSON.parse(result[0].student_wish_list_items)
         console.log(req.body.wish_item_id);
         dataIs=results.filter(data=>data!=req.body.wish_item_id )
         console.log(dataIs);
@@ -351,6 +374,12 @@ router.post("/remove_item_wish_list",verifyToken,async (req,res)=>{
                 id:req.body.wish_item_id
             })
          }   
+        }else{
+            res.status(200).json({
+                dataIs:[],
+                id:req.body.wish_item_id
+            })            
+        }
 
          
 
@@ -449,7 +478,9 @@ router.get("/save_list",verifyToken,async (req,res)=>{
 
              
        const result = await db.query(sql1, { type: db.QueryTypes.SELECT });
-        let results=JSON.parse(result[0].student_saved_for_later)
+       console.log(result)
+        if(JSON.parse(result[0].student_saved_for_later).length){
+            let results=JSON.parse(result[0].student_saved_for_later)
         let dataIs=[];
         results.map(async (data,index)=>{
             
@@ -473,6 +504,12 @@ router.get("/save_list",verifyToken,async (req,res)=>{
                 });
             }
          })
+        }else{
+            return res.status(200).json({
+                success: 1,
+                dataIs:[],
+            });
+        }
             // console.log(dataIs,"Jitul");
             // if(dataIs.length>0){
                 
@@ -504,7 +541,8 @@ router.post("/remove_item_save_list",verifyToken,async (req,res)=>{
 
              
        const result = await db.query(sql1, { type: db.QueryTypes.SELECT });
-        let results=JSON.parse(result[0].student_saved_for_later)
+        if(result[0].student_saved_for_later!=0){
+            let results=JSON.parse(result[0].student_saved_for_later)
         console.log(req.body.save_item_id);
         dataIs=results.filter(data=>data!=req.body.save_item_id )
 
@@ -522,6 +560,12 @@ router.post("/remove_item_save_list",verifyToken,async (req,res)=>{
             })
          }
 
+        }else{
+            res.status(200).json({
+                dataIs:[],
+                id:req.body.save_item_id
+            })
+        }
             // console.log(dataIs,"Jitul");
             // if(dataIs.length>0){
                 
