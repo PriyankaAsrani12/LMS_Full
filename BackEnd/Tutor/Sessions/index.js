@@ -678,7 +678,6 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
       );
 
     cmd.run(`
-    bnycdn cp -s ${bData[0].customer_storage_zone_user_key} -R ./${file.name} /${bData[0].customer_storage_zone_name}/${file.name}/
      bnycdn cp -s ${bData[0].customer_storage_zone_user_key} -R ./${file.name} /${bData[0].customer_storage_zone_name}/${file.name}/
     `,
      async (err, data, stderr) => {
