@@ -4,7 +4,7 @@ import { useTable, usePagination, useSortBy } from 'react-table';
 import classnames from 'classnames';
 import PopoverItem from './PopOverItem';
 import { LibraryContext } from '../../context/LibraryContext';
-
+import "./lib.css";
 const Table = ({ columns, data, divided = false }) => {
   const [handleReloadTable] = useContext(LibraryContext);
   const {
@@ -31,7 +31,7 @@ const Table = ({ columns, data, divided = false }) => {
       <table
         style={{ maxWidth: '1100px', margin: '0 auto' }}
         {...getTableProps()}
-        className={`r-table table ${classnames({ 'table-divided': divided })} `}
+        className={`r-table table ${classnames({ 'table-divided': divided })} lib_table`}
       >
         <thead>
           {headerGroups.map((headerGroup) => (

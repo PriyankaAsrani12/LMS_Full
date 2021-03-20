@@ -159,8 +159,10 @@ export default class SessionMaterial extends Component {
   }
   componentDidMount() {
     try {
+      console.log(this.props.location.state,"tyooyoyoy");
       if (isNaN(this.props.location.state.uniquesessionid))
-        this.props.history.push('/app/dashboard/default');
+        // this.props.history.push('/app/dashboard/default');
+        console.log("no1 ");
 
       let { uniquesessionid, trainer_id } = this.props.location.state;
       if (trainer_id == 'customer_id') trainer_id = 999;
@@ -176,7 +178,7 @@ export default class SessionMaterial extends Component {
             console.log(trainer);
             this.setState({
               ...this.state,
-              data: {
+              data:{
                 name: session.session_name,
                 type: session.session_type,
                 date: session.session_start_date,
@@ -205,9 +207,11 @@ export default class SessionMaterial extends Component {
         .catch((err) => {
           console.log(err);
           this.props.history.push('/app/dashboard/default');
+          console.log("no2");
         });
     } catch (e) {
       this.props.history.push('/app/dashboard/default');
+      console.log("no3");
     }
   }
   createMarkup = (data) => {
@@ -308,6 +312,7 @@ export default class SessionMaterial extends Component {
     this.setState({ showMessage3: false });
     this.setState({ showMessage4: false });
   };
+  
   onButtonClickHandler2 = () => {
     this.setState({ showMessage2: true });
     this.setState({ showMessage: false });
@@ -922,7 +927,7 @@ export default class SessionMaterial extends Component {
             Trainer Profile
           </CardTitle>
           <CardBody>
-            <nav>
+            <nav className="detail_text_style">
               <Row>
                 <Colxx
                   md="4"

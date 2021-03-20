@@ -68,6 +68,7 @@ const BlankPage = ({ intl, match }) => {
     }
     return result.reverse();
   };
+
   const findIndex = (labels, label) => {
     for (let i = 0; i < labels.length; i++) if (labels[i] == label) return i;
   };
@@ -114,12 +115,14 @@ const BlankPage = ({ intl, match }) => {
           const GraphData = result.data.GraphData;
 
           // d1 mai GraphData[0][0] ,GraphData[1][0], GraphData[2][0]
+
           let d1 = { labels: Last7Days(), datasets: [] };
           const checkLabels = Last7Days(true);
           const a = [0, 0, 0, 0, 0, 0, 0];
 
           //registration  weekwise
           GraphData[0][0].forEach((doc) => {
+            console.log(doc.label,"label");
             const idx = findIndex(checkLabels, doc.label);
             a[idx] = doc.totalCount;
           });

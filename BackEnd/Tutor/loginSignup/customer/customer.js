@@ -127,7 +127,7 @@ router.post('/users', async (req, res) => {
     const response = await axios.post(
       'https://bunnycdn.com/api/storagezone',
       data,
-      { headers }
+      {headers} 
     );
 
     const storageZoneId = response.data.Id;
@@ -149,10 +149,11 @@ router.post('/users', async (req, res) => {
     const pullZone = await axios.post(
       'https://bunnycdn.com/api/pullzone',
       pullZoneData,
-      { headers }
+       {headers} 
     );
     const pullZoneId = response.data.Id;
 
+console.log("pull zone ",pullZone.data);
     req.body.values.customer_pull_zone_id = pullZoneId;
     req.body.values.customer_pull_zone_name = pullZone.data.Name;
 
@@ -166,7 +167,7 @@ router.post('/users', async (req, res) => {
 
     cmd.run(
       `
-    bnycdn key -t storages set ${pullZone.data.Name} ${response.data.Password}
+      bnycdn key -t storages set ${pullZone.data.Name} ${response.data.Password}
     `,
       async (err, data, stderr) => {
         if (err)
@@ -174,7 +175,7 @@ router.post('/users', async (req, res) => {
             success: 0,
             error: err,
           });
-        console.log(data, '\n', data.substr(24));
+
         req.body.values.customer_storage_zone_user_key = data.substr(24);
 
         // run update query here
@@ -221,7 +222,7 @@ router.post('/users/login', async (req, res) => {
         error: 'Email not registered',
       });
     } else {
-      if (!using_google) {
+      if (!using_google){
         let storedPassword = sqlCheck.dataValues.customer_password;
         const matchPassword = bcrypt.compareSync(
           customer_password,

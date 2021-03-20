@@ -9,6 +9,7 @@ const webp = require('webp-converter');
 const { ChapterTable } = require('./LibraryItems/recorded/chapter_table_model');
 const { LessonTable } = require('./LibraryItems/recorded/lesson_table_model');
 const Communication = require('../communication/model');
+const cmd = require('node-cmd');
 
 router.post('/createLiveSession', auth, async (req, res) => {
   console.log('❓', req.body);
@@ -626,6 +627,7 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
     const thumbnail = req.files.thumbnail;
     const session_id = req.body.session_id;
 
+    
     if (!req.files.thumbnail)
       return res.status(400).json({
         success: 0,
@@ -645,6 +647,7 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
           error: 'unable to upload thumbnail',
           errorReturned: JSON.stringify(err),
         });
+
       webp
         .cwebp(
           `${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name}`,
@@ -668,6 +671,24 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
         success: 0,
         error: 'unable to upload thumbnail',
       });
+
+      const bData = await db.query(
+        `SELECT customer_storage_zone_user_key,customer_storage_zone_name FROM customer_tables WHERE customer_id=${req.user.customer_id} `,
+        { type: db.QueryTypes.SELECT }
+      );
+
+    cmd.run(`
+    bnycdn cp -s ${bData[0].customer_storage_zone_user_key} -R ./${file.name} /${bData[0].customer_storage_zone_name}/${file.name}/
+     bnycdn cp -s ${bData[0].customer_storage_zone_user_key} -R ./${file.name} /${bData[0].customer_storage_zone_name}/${file.name}/
+    `,
+     async (err, data, stderr) => {
+        if (err) console.log(err,"upload error");
+        else {
+        console.log("data is ",data);
+        
+        }
+      })
+    
     return res.status(200).json({
       success: 1,
     });

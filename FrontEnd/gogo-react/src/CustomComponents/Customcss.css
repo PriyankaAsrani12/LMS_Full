@@ -300,3 +300,9 @@ input[type='file'] {
   margin-left: auto;
   margin-right: auto;
 }
+
+
+.detail_text_style p{
+  text-align: start;
+
+}
