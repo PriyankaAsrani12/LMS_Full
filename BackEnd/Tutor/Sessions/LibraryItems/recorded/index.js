@@ -164,6 +164,7 @@ Router.get('/:id/trainer/:trainer_id', auth, async (req, res) => {
 });
 
 Router.post('/', auth, async (req, res) => {
+  
   const chapterData = req.body.values.SessionMaterial;
   console.log(chapterData);
   chapterData.forEach((doc) => console.log(doc.lesson));
@@ -450,26 +451,26 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
       }
       console.log('saved ');
 
-      //   cmd.run(
-      //     `
-      //     cd ${process.env.FILE_UPLOAD_PATH_CLIENT}
-      // bnycdn cp -s ${bData[0].customer_storage_zone_user_key}  /${file.name} /${bData[0].customer_storage_zone_name}/${file.name}/
-      // `,
-      //     (err, data, stderr) => {
-      //       if (err) {
-      //         console.log(err);
-      //         return res.status(400).json({
-      //           success: 0,
-      //           error: err,
-      //         });
-      //       }
-      //       console.log(data);
-      //       return res.status(200).json({
-      //         success: 1,
-      //         data,
-      //       });
-      //     }
-      //   );
+        cmd.run(
+          `
+          cd ${process.env.FILE_UPLOAD_PATH_CLIENT}
+      bnycdn cp -s ${bData[0].customer_storage_zone_user_key} -R /${file.name} /${bData[0].customer_storage_zone_name}/${file.name}/
+      `,
+          (err, data, stderr) => {
+            if (err) {
+              console.log(err);
+              return res.status(400).json({
+                success: 0,
+                error: err,
+              });
+            }
+            console.log(data);
+            return res.status(200).json({
+              success: 1,
+              data,
+            });
+          }
+        );
     });
 
     const savedItem = await LibraryItem.create({

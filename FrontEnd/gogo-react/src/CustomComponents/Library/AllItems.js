@@ -7,6 +7,9 @@ import Loader from '../settings/Loader';
 import NoDataFound from '../NoDataFound';
 import { LibraryContext } from '../../context/LibraryContext';
 
+
+import "./lib.css";
+
 const AllItems = ({ columns }) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
@@ -63,6 +66,6 @@ const AllItems = ({ columns }) => {
   if (!isLoaded) return <Loader />;
 
   if (!data.length) return <NoDataFound />;
-  return <Table columns={columns} data={data} divided />;
+  return <Table  columns={columns} data={data} divided />;
 };
 export default AllItems;
