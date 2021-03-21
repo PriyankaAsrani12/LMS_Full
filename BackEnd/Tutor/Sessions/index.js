@@ -639,8 +639,9 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
         error: 'session id not provided',
       });
 
+      // require("../../upload")
     const file = req.files.thumbnail;
-    file.mv(`${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name}`, (err) => {
+    file.mv(`../../${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}`, (err) => {
       if (err)
         return res.status(500).json({
           success: 0,
@@ -650,8 +651,8 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
 
       webp
         .cwebp(
-          `${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name}`,
-          `${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name.substr(
+          `$../../${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}`,
+          `$../../${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name.substr(
             0,
             file.name.lastIndexOf('.')
           )}.webp`,
@@ -680,7 +681,7 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
       // bnycdn cp -s zone1 ./upload/"+file+" ./teststoragezone123/upload/"+file
 // const com= cmd.runSync(asd);
   const command=  cmd.runSync(`
-     bnycdn cp -s ${bData[0].customer_storage_zone_user_key}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}
+     bnycdn cp -s ${bData[0].customer_storage_zone_user_key}  ../..//upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}
     `,
      async (err, data, stderr) => {
         if (err) console.log(err,"upload error");
