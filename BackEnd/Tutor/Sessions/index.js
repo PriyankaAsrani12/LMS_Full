@@ -680,7 +680,7 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
 
       let nameis=file.name.split('.').slice(0, -1).join('.');
       let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
-  console.log(newname);
+    console.log(newname);
   const command=  cmd.runSync(`
      bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/upload/${newname}
 
