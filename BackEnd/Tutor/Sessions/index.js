@@ -689,8 +689,18 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
         if (err) console.log(err,"upload error");
         else {
         console.log("data is ",data);
+        
+        
         }
       })
+                cmd.runSync(`
+                rm   ../../upload/${file.name}
+                `,
+                async (err, data, stderr) => {
+                    if (err) console.log(err,"upload error");
+                    else {
+                    console.log("data is ",data);
+                }})
 
       console.log(command,"jitulteron");
     return res.status(200).json({
