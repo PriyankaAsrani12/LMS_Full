@@ -5,7 +5,7 @@ const { LibraryItem } = require('../model');
 const { ChapterTable } = require('./chapter_table_model');
 const { LessonTable } = require('./lesson_table_model');
 const cmd = require('node-cmd');
-
+const path =require("path");
 Router.get('/:id/trainer/:trainer_id', auth, async (req, res) => {
   try {
     if (!req.params.id)
@@ -451,26 +451,20 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
       }
       console.log('saved ');
 
-        cmd.run(
-          `
-          cd ${process.env.FILE_UPLOAD_PATH_CLIENT}
-      bnycdn cp -s ${bData[0].customer_storage_zone_user_key} -R /${file.name} /${bData[0].customer_storage_zone_name}/${file.name}/
-      `,
-          (err, data, stderr) => {
-            if (err) {
-              console.log(err);
-              return res.status(400).json({
-                success: 0,
-                error: err,
-              });
-            }
-            console.log(data);
-            return res.status(200).json({
-              success: 1,
-              data,
-            });
-          }
-        );
+      let nameis=file.name.split('.').slice(0, -1).join('.');
+      let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
+    console.log(newname);
+  const command=  cmd.runSync(`
+     bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/upload/${newname}
+    `,
+     async (err, data, stderr) => {
+        if (err) console.log(err,"upload error");
+        else {
+        console.log("data is ",data);
+        
+        }
+      })
+  console.log(command);
     });
 
     const savedItem = await LibraryItem.create({
