@@ -681,8 +681,16 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
 // const com= cmd.runSync(asd);
   const command=  cmd.runSync(`
      bnycdn cp -s ${bData[0].customer_storage_zone_user_key}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}
-    `)
-      console.log(command);
+    `,
+     async (err, data, stderr) => {
+        if (err) console.log(err,"upload error");
+        else {
+        console.log("data is ",data);
+        
+        }
+      })
+
+      console.log(command,"jitulteron");
     return res.status(200).json({
       success: 1,
     });
