@@ -677,8 +677,10 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
         { type: db.QueryTypes.SELECT }
       );
 
-    cmd.run(`
-     bnycdn cp -s ${bData[0].customer_storage_zone_user_key}  ./${process.env.FILE_UPLOAD_PATH_CLIENT} /${bData[0].customer_storage_zone_name}/${file.name}/
+      // bnycdn cp -s zone1 ./upload/"+file+" ./teststoragezone123/upload/"+file
+// const com= cmd.runSync(asd);
+  const command=  cmd.run(`
+     bnycdn cp -s ${bData[0].customer_storage_zone_user_key}  ./${bData[0].customer_storage_zone_name}/thumbnails/${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}
     `,
      async (err, data, stderr) => {
         if (err) console.log(err,"upload error");
@@ -687,7 +689,7 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
         
         }
       })
-    
+      console.log(command);
     return res.status(200).json({
       success: 1,
     });
