@@ -1,3 +1,4 @@
+
 const Router = require('express').Router();
 const auth = require('../../../middleware/deepakAuth');
 const { db } = require('../../../../common/db/sql');
@@ -440,7 +441,7 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
     console.log(bData);
     const file = req.files.file;
 
-    file.mv(`${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name}`, (err) => {
+    file.mv(`./${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}`, (err) => {
       if (err) {
         console.error(err);
         return res.status(500).json({
@@ -455,7 +456,7 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
       let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
     console.log(newname);
   const command=  cmd.runSync(`
-     bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/upload/${newname}
+     bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/recordedvideos/upload/${newname}
     `,
      async (err, data, stderr) => {
         if (err) console.log(err,"upload error");
