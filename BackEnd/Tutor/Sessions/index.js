@@ -10,7 +10,7 @@ const { ChapterTable } = require('./LibraryItems/recorded/chapter_table_model');
 const { LessonTable } = require('./LibraryItems/recorded/lesson_table_model');
 const Communication = require('../communication/model');
 const cmd = require('node-cmd');
-
+const path=require('path');
 router.post('/createLiveSession', auth, async (req, res) => {
   console.log('❓', req.body);
   // return res.status(200).json({ success: 1 });
@@ -677,11 +677,12 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
         `SELECT customer_storage_zone_user_key,customer_storage_zone_name FROM customer_tables WHERE customer_id=${req.user.customer_id} `,
         { type: db.QueryTypes.SELECT }
       );
-console.log(`${bData[0].customer_storage_zone_user_key} and ${bData[0].customer_storage_zone_name}`)
-  const command=  cmd.runSync(`
 
-    
-     bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/upload/${file.name}
+      let nameis=file.name.split('.').slice(0, -1).join('.');
+      let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
+  console.log(newname);
+  const command=  cmd.runSync(`
+     bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/upload/${newname}
 
     `,
      async (err, data, stderr) => {
