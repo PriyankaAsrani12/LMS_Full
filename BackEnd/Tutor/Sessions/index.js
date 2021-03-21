@@ -678,15 +678,10 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
         { type: db.QueryTypes.SELECT }
       );
 
-      const cmd =require("node-cmd");
-      var file = "jitul.txt";
-      var asd = "bnycdn cp -s zone1 ./upload/"+file+" ./teststoragezone123/upload/"+file
-      const com= cmd.runSync(asd);
-      
-      console.log(asd);
+     
 
   const command=  cmd.runSync(`
-     bnycdn cp -s ${bData[0].customer_storage_zone_user_key}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}
+     bnycdn cp -s zone1  ./upload/${file.name}  ./teststoragezone123/thumbnails/upload/${file.name}
     `,
      async (err, data, stderr) => {
         if (err) console.log(err,"upload error");
