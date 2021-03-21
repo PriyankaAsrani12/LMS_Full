@@ -679,9 +679,9 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
       );
 
       
-    // console.log(`bnycdn cp -s ${bData[0].customer_storage_zone_user_key}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}`);
+    console.log(`${bData[0].customer_storage_zone_user_key}`,"Jitulteron");
   const command=  cmd.runSync(`
-     bnycdn cp -s ${bData[0].customer_storage_zone_user_key}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}
+     bnycdn cp -s ${bData[0].customer_storage_zone_user_key}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/upload/${file.name}
     `,
      async (err, data, stderr) => {
         if (err) console.log(err,"upload error");
