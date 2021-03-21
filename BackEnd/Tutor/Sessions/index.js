@@ -677,16 +677,14 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
         `SELECT customer_storage_zone_user_key,customer_storage_zone_name FROM customer_tables WHERE customer_id=${req.user.customer_id} `,
         { type: db.QueryTypes.SELECT }
       );
-
-
+console.log(`${bData[0].customer_storage_zone_user_key} and ${bData[0].customer_storage_zone_name}`)
   const command=  cmd.runSync(`
-     bnycdn cp -s ${bData[0].customer_storage_zone_user_key}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/upload/${file.name}
+     bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/upload/${file.name}
     `,
      async (err, data, stderr) => {
         if (err) console.log(err,"upload error");
         else {
         console.log("data is ",data);
-        
         }
       })
 
