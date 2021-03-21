@@ -701,7 +701,10 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
         }
       })
 
-      console.log(command,"jitulteron");
+      
+      
+      const removeIt=cmd.runSync(`rm ./upload/${file.name}`);
+      console.log(removeIt,"jitulteron",file.name);
     return res.status(200).json({
       success: 1,
     });
