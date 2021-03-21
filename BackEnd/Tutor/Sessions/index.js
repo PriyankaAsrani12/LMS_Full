@@ -678,10 +678,9 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
         { type: db.QueryTypes.SELECT }
       );
 
-     
 
   const command=  cmd.runSync(`
-     bnycdn cp -s zone1  ./upload/${file.name}  ./teststoragezone123/thumbnails/upload/${file.name}
+     bnycdn cp -s ${bData[0].customer_storage_zone_user_key}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/upload/${file.name}
     `,
      async (err, data, stderr) => {
         if (err) console.log(err,"upload error");
