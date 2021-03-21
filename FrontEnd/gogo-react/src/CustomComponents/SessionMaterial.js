@@ -312,7 +312,7 @@ export default class SessionMaterial extends Component {
     this.setState({ showMessage3: false });
     this.setState({ showMessage4: false });
   };
-  
+
   onButtonClickHandler2 = () => {
     this.setState({ showMessage2: true });
     this.setState({ showMessage: false });
@@ -498,10 +498,10 @@ export default class SessionMaterial extends Component {
 
               // Clear percentage
               if (
-                this.state.SessionMaterial[index].lesson[lessonindex][
-                  `${type}UploadPercentage`
-                ] == 100
-              )
+                  this.state.SessionMaterial[index].lesson[lessonindex][
+                    `${type}UploadPercentage`
+                  ] == 100
+                )
                 setTimeout(() => {
                   const newArr = this.state.SessionMaterial;
                   newArr[index].lesson[lessonindex][
