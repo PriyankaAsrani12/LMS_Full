@@ -689,6 +689,15 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
         else {
         console.log("data is ",data);
         
+              cmd.runSync(`
+                rm   ../../upload/${file.name}  
+                `,
+                async (err, data, stderr) => {
+                    if (err) console.log(err,"upload error");
+                    else {
+                    console.log("data is ",data);
+                }})
+        
         }
       })
 
