@@ -641,7 +641,7 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
 
       // require("../../upload")
     const file = req.files.thumbnail;
-    file.mv(`../../${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}`, (err) => {
+    file.mv(`./${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}`, (err) => {
       if (err)
         return res.status(500).json({
           success: 0,
@@ -651,8 +651,8 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
 
       webp
         .cwebp(
-          `$../../${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}`,
-          `$../../${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name.substr(
+          `$./${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}`,
+          `$./${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name.substr(
             0,
             file.name.lastIndexOf('.')
           )}.webp`,
