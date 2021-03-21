@@ -428,6 +428,7 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
         error: 'Please Provide Some Attachment',
       });
 
+      console.log("Body",req.body);
     if (!req.body.session_id)
       return res.status(400).json({
         success: 0,
@@ -454,18 +455,51 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
 
       let nameis=file.name.split('.').slice(0, -1).join('.');
       let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
+      
     console.log(newname);
-  const command=  cmd.runSync(`
-     bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/recordedvideos/upload/${newname}
-    `,
-     async (err, data, stderr) => {
-        if (err) console.log(err,"upload error");
-        else {
-        console.log("data is ",data);
-        
-        }
-      })
-  console.log(command);
+
+    if(path.parse(file.name).ext=='.pdf'||path.parse(file.name).ext=='.word'){
+                if(req.body.fileType=="assignment"){
+                      const command=  cmd.runSync(`
+                  bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/assignments/upload/${newname}
+                  `,
+                  async (err, data, stderr) => {
+                      if (err) console.log(err,"upload error");
+                      else {
+                      console.log("data is ",data);
+                      
+                      }
+                    })
+                }
+                if(req.body.fileType=="handouts"){
+                  const command=  cmd.runSync(`
+              bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/handouts/upload/${newname}
+              `,
+              async (err, data, stderr) => {
+                  if (err) console.log(err,"upload error");
+                  else {
+                  console.log("data is ",data);
+                  
+                  }
+                })
+              }
+    }
+
+
+      if(req.body.fileType=="video"){
+        const command=  cmd.runSync(`
+        bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/recordedvideos/upload/${newname}
+        `,
+        async (err, data, stderr) => {
+            if (err) console.log(err,"upload error");
+            else {
+            console.log("data is ",data);
+            
+            }
+          })
+      console.log(command);
+      }
+
     });
 
     const savedItem = await LibraryItem.create({
