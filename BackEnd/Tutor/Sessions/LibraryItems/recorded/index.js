@@ -1,3 +1,4 @@
+
 const Router = require('express').Router();
 const auth = require('../../../middleware/deepakAuth');
 const { db } = require('../../../../common/db/sql');
@@ -456,6 +457,7 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
       let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
       
     console.log(newname);
+
     if(path.parse(file.name).ext=='.pdf'||path.parse(file.name).ext=='.word'){
                 if(req.body.fileType=="assignment"){
                       const command=  cmd.runSync(`
@@ -497,6 +499,7 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
           })
       console.log(command);
       }
+
     });
 
     const savedItem = await LibraryItem.create({

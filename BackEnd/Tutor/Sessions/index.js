@@ -683,22 +683,20 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
     console.log(newname);
   const command=  cmd.runSync(`
      bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/upload/${newname}
+
     `,
      async (err, data, stderr) => {
         if (err) console.log(err,"upload error");
         else {
         console.log("data is ",data);
-              // cmd.runSync(`
-              //   rm   ./upload/${file.name}  
-              //   `,
-              //   async (err, data, stderr) => {
-              //       if (err) console.log(err,"upload error");
-              //       else {
-              //       console.log("data is ",data);
-              //   }})
+
+        
         
         }
       })
+                      
+    
+
 
       console.log(command,"jitulteron");
     return res.status(200).json({
