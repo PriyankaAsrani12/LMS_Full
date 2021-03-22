@@ -78,7 +78,7 @@ const BlankPage = ({ intl, match }) => {
     var d;
     var month;
     var year;
-    for (var i = 2; i > 0; i -= 1) {
+    for (var i = 29; i > 0; i -= 1) {
       d = new Date(today.getFullYear(), today.getMonth() - i, 1);
       month = d.getMonth() + 1;
       year = d.getFullYear();
@@ -108,8 +108,8 @@ const BlankPage = ({ intl, match }) => {
     const getData = async () => {
       try {
         const result = await axiosInstance.get('/tutor/dashboard');
-        console.log(result.data.success);
-        if (result.data.success) {
+        console.log(result.data,"from database");
+        if (result.data.GraphData[0][0]) {
           setTotalCourses(result.data.totalCourses[0].totalCourses);
           setEnrollments(result.data.enrollments[0].enrollments);
           const GraphData = result.data.GraphData;
@@ -119,6 +119,7 @@ const BlankPage = ({ intl, match }) => {
           let d1 = { labels: Last7Days(), datasets: [] };
           const checkLabels = Last7Days(true);
           const a = [0, 0, 0, 0, 0, 0, 0];
+
 
           //registration  weekwise
           GraphData[0][0].forEach((doc) => {
@@ -289,6 +290,7 @@ const BlankPage = ({ intl, match }) => {
           setData2(d2);
 
           // last 3 months
+
           const findMonthIndex = (monthLabels, y, m) => {
             for (let i = 0; i < monthLabels.length; i++)
               if (monthLabels[i] == `${m}/${y}`) return i;

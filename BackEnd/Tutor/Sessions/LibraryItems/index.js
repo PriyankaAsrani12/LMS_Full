@@ -2,7 +2,7 @@ const router = require('express').Router();
 const auth = require('../../middleware/deepakAuth');
 const { LibraryItem } = require('./model');
 const recordedSessionRouter = require('./recorded');
-
+const path=require("path");
 router.use('/recorded', recordedSessionRouter);
 
 const isValidFileFormat = (ext) => {
@@ -50,7 +50,7 @@ router.post('/upload', auth, async (req, res) => {
         error: 'error while saving to database',
       });
 
-    file.mv(`${process.env.FILE_UPLOAD_PATH_CLIENT}${file.name}`, (err) => {
+    file.mv(`./${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}`, (err) => {
       if (err) {
         console.error(err);
         return res.status(500).josn({
@@ -59,7 +59,22 @@ router.post('/upload', auth, async (req, res) => {
           errorReturned: JSON.stringify(err),
         });
       }
-
+      let nameis=file.name.split('.').slice(0, -1).join('.');
+      let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
+      
+        const command=  cmd.runSync(`
+        bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/sessionMaterials/upload/${newname}
+        `,
+        async (err, data, stderr) => {
+            if (err) console.log(err,"upload error");
+            else {
+            console.log("data is ",data);
+            
+            }
+          })
+          
+      console.log(command);
+      
       res.status(200).json({
         success: 1,
         fileName: file.name,

@@ -19,8 +19,8 @@ router.get('/', auth, async (req, res) => {
 
     // student_tables week,month,day wise data taking registrations
     const first = [];
-    const finalSql = `
-    SELECT  DATE(createdAt) as  label, COUNT(student_id) as  totalCount FROM  student_tables WHERE  createdAt >= date_sub(curdate(), interval 6 day) AND customer_id=${req.user.customer_id} GROUP   BY  DATE(createdAt);
+    const finalSql =`
+    SELECT  DATE(createdAt) as  label, COUNT(student_id) as  totalCount FROM  student_tables WHERE  createdAt >= date_sub(curdate(),interval 6 day) AND customer_id=${req.user.customer_id} GROUP   BY  DATE(createdAt);
     SELECT WEEK(createdAt) AS weekNo,  YEAR(createdAt) as year, COUNT(student_id) as totalCount1 FROM student_tables  WHERE createdAt >= (NOW() - INTERVAL 1 MONTH) AND customer_id=${req.user.customer_id} GROUP BY weekNo;
     SELECT YEAR(createdAt) AS y, MONTH(createdAt) AS m, COUNT(student_id) as totalCount2 FROM student_tables wHERE createdAt >= (NOW()- INTERVAL 3 MONTH) AND customer_id=${req.user.customer_id} GROUP BY y, m;
     `;
@@ -67,13 +67,15 @@ router.get('/', auth, async (req, res) => {
 
     // affiliate_tables week,month,day wise data...taking revenue
     const third = [];
-    const finalSql3 = `
+    const finalSql3 =`
     SELECT  DATE(created_at) as  label, SUM(affiliate_rewards_given) as  totalCount FROM  affiliate_tables WHERE  created_at >= date_sub(curdate(), interval 6 day) AND customer_id=${req.user.customer_id} GROUP   BY  DATE(created_at);
     SELECT  SUM(affiliate_rewards_given) as totalCount1,WEEK(created_at) AS weekNo ,YEAR(created_at) as year FROM affiliate_tables  WHERE created_at >= (NOW() - INTERVAL 1 MONTH) AND customer_id=${req.user.customer_id} GROUP BY weekNo;
     SELECT YEAR(created_at) AS y, MONTH(created_at) AS m, SUM(affiliate_rewards_given) as totalCount2 FROM affiliate_tables wHERE created_at >= (NOW()- INTERVAL 3 MONTH) AND customer_id=${req.user.customer_id} GROUP BY y, m;
     `;
     const result11 = await db.query(finalSql3, { type: db.QueryTypes.SELECT });
 
+
+    console.log("data from the back",result11);
     const b2 = [];
     for (const [key, value] of Object.entries(result11[0])) b2.push(value);
 
