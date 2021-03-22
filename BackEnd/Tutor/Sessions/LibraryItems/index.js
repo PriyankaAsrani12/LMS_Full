@@ -4,6 +4,9 @@ const { LibraryItem } = require('./model');
 const recordedSessionRouter = require('./recorded');
 const path=require("path");
 const cmd=require("node-cmd");
+const { db } = require('../../../common/db/sql');
+
+
 router.use('/recorded', recordedSessionRouter);
 
 const isValidFileFormat = (ext) => {
