@@ -680,7 +680,7 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
 
       let nameis=file.name.split('.').slice(0, -1).join('.');
       let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
-    console.log(newname);
+    console.log(newname,"teststst");
 
 
     const command=  cmd.runSync(`
