@@ -479,7 +479,7 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
                       customer_id: req.user.customer_id,
                       item_name: req.files.file.name,
                       item_type: req.body.fileType,
-                      item_url: `https://${bData[0].customer_storage_zone_name}/assignments/${newname}`,
+                      item_url: `https://${bData[0].customer_storage_zone_name}.b-cdn.net/assignments/${newname}`,
                       item_size: req.files.file.size,
                     };
           
@@ -503,7 +503,7 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
                   customer_id: req.user.customer_id,
                   item_name: req.files.file.name,
                   item_type: req.body.fileType,
-                  item_url: `https://${bData[0].customer_storage_zone_name}/handouts/${newname}`,
+                  item_url: `https://${bData[0].customer_storage_zone_name}.b-cdn.net/handouts/${newname}`,
                   item_size: req.files.file.size,
                 };
       
@@ -533,7 +533,7 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
             customer_id: req.user.customer_id,
             item_name: req.files.file.name,
             item_type: req.body.fileType,
-            item_url: `https://${bData[0].customer_storage_zone_name}/recordedvideos/${newname}`,
+            item_url: `https://${bData[0].customer_storage_zone_name}.b-cdn.net/recordedvideos/${newname}`,
             item_size: req.files.file.size,
           };
 
