@@ -664,7 +664,7 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
     });
 
     const result = await Session.update(
-      { session_thumbnail: ` URL OF ${thumbnail.name}` },
+      { session_thumbnail: ` URL OF ${file.name}` },
       { where: { session_id } }
     );
     if (!result)
@@ -695,10 +695,13 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
         }
       })
                       
-    
-
-
       console.log(command,"jitulteron");
+
+      const commands=  cmd.runSync(`
+        rm  ./upload/${file.name}
+        `)
+        console.log(commands);
+
     return res.status(200).json({
       success: 1,
     });
