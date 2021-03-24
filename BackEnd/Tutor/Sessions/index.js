@@ -681,19 +681,22 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
       let nameis=file.name.split('.').slice(0, -1).join('.');
       let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
     console.log(newname);
-  const command=  cmd.runSync(`
-     bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/upload/${newname}
 
+
+    const command=  cmd.runSync(`
+    bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/${newname}
     `,
-     async (err, data, stderr) => {
+    async (err, data, stderr) => {
         if (err) console.log(err,"upload error");
         else {
         console.log("data is ",data);
-
-        
         
         }
       })
+      const commands=  cmd.runSync(`
+        rm  ./upload/${file.name}
+        `)
+        console.log(commands);
                       
     
 
