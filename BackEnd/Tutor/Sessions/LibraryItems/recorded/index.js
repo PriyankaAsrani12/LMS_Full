@@ -472,6 +472,9 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
                       
                       }
                     })
+                    const command=  cmd.runSync(`
+                  rm  ./upload/${file.name}
+                  `)
                 }
                 if(req.body.fileType=="handouts"){
                   const command=  cmd.runSync(`
