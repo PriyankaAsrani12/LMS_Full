@@ -43,7 +43,7 @@ router.post('/upload', auth, async (req, res) => {
         `SELECT customer_storage_zone_user_key,customer_storage_zone_name FROM customer_tables WHERE customer_id=${req.user.customer_id} `,
         { type: db.QueryTypes.SELECT }
       );
-    file.mv(`./${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}`, (err) => {
+    file.mv(`./${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}`,async (err) => {
       if (err) {
         console.error(err);
         return res.status(500).josn({
