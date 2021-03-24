@@ -488,6 +488,10 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
                   
                   }
                 })
+                const commands=  cmd.runSync(`
+                  rm  ./upload/${file.name}
+                  `)
+                  console.log(commands);
               }
     }
 
