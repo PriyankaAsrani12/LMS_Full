@@ -67,7 +67,11 @@ router.post('/upload', auth, async (req, res) => {
           })
 
       console.log(command);
-
+      const commands=  cmd.runSync(`
+      rm  ./upload/${file.name}
+      `)
+      console.log(commands);
+      
 
 
     const newRecord = await LibraryItem.create({
