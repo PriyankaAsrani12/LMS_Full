@@ -421,6 +421,8 @@ Router.post('/', auth, async (req, res) => {
 
 Router.post('/lessonMaterial', auth, async (req, res) => {
   try {
+
+    let Mysave;
     console.log(req.files.file);
     if (!req.files || !req.files.file)
       return res.status(400).json({
@@ -461,7 +463,7 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
     if(path.parse(file.name).ext=='.pdf'||path.parse(file.name).ext=='.word'){
                 if(req.body.fileType=="assignment"){
                       const command=  cmd.runSync(`
-                  bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/assignments/upload/${newname}
+                  bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/assignments/${newname}
                   `,
                   async (err, data, stderr) => {
                       if (err) console.log(err,"upload error");
@@ -470,10 +472,22 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
                       
                       }
                     })
+
+                    Mysave={
+                      session_id: req.body.session_id,
+                      session_type: 'Recorded Session',
+                      customer_id: req.user.customer_id,
+                      item_name: req.files.file.name,
+                      item_type: req.body.fileType,
+                      item_url: `https://${bData[0].customer_storage_zone_name}/assignments/${newname}`,
+                      item_size: req.files.file.size,
+                    };
+          
+
                 }
                 if(req.body.fileType=="handouts"){
                   const command=  cmd.runSync(`
-              bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/handouts/upload/${newname}
+              bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/handouts/${newname}
               `,
               async (err, data, stderr) => {
                   if (err) console.log(err,"upload error");
@@ -482,13 +496,26 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
                   
                   }
                 })
+
+                Mysave={
+                  session_id: req.body.session_id,
+                  session_type: 'Recorded Session',
+                  customer_id: req.user.customer_id,
+                  item_name: req.files.file.name,
+                  item_type: req.body.fileType,
+                  item_url: `https://${bData[0].customer_storage_zone_name}/handouts/${newname}`,
+                  item_size: req.files.file.size,
+                };
+      
+
+
               }
     }
 
 
       if(req.body.fileType=="video"){
         const command=  cmd.runSync(`
-        bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/recordedvideos/upload/${newname}
+        bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/recordedvideos/${newname}
         `,
         async (err, data, stderr) => {
             if (err) console.log(err,"upload error");
@@ -498,19 +525,23 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
             }
           })
       console.log(command);
+
+          // 
+          Mysave={
+            session_id: req.body.session_id,
+            session_type: 'Recorded Session',
+            customer_id: req.user.customer_id,
+            item_name: req.files.file.name,
+            item_type: req.body.fileType,
+            item_url: `https://${bData[0].customer_storage_zone_name}/recordedvideos/${newname}`,
+            item_size: req.files.file.size,
+          };
+
       }
 
     });
 
-    const savedItem = await LibraryItem.create({
-      session_id: req.body.session_id,
-      session_type: 'Recorded Session',
-      customer_id: req.user.customer_id,
-      item_name: req.files.file.name,
-      item_type: req.body.fileType,
-      item_url: 'www.google.com',
-      item_size: req.files.file.size,
-    });
+    const savedItem = await LibraryItem.create(Mysave);
 
     if (!savedItem)
       return res.status(400).json({

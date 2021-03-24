@@ -664,7 +664,7 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
     });
 
     const result = await Session.update(
-      { session_thumbnail: ` URL OF ${thumbnail}` },
+      { session_thumbnail: ` URL OF ${thumbnail.name}` },
       { where: { session_id } }
     );
     if (!result)
@@ -682,7 +682,7 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
       let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
     console.log(newname);
   const command=  cmd.runSync(`
-     bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/upload/${newname}
+     bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/${newname}
 
     `,
      async (err, data, stderr) => {

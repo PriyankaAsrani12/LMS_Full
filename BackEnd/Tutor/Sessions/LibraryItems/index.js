@@ -38,21 +38,7 @@ router.post('/upload', auth, async (req, res) => {
         error: 'only pdf and word formats are allowed',
       });
 
-    const newRecord = await LibraryItem.create({
-      session_id,
-      session_type,
-      customer_id: req.user.customer_id,
-      item_name: file.name,
-      item_type,
-      item_url: 'https://www.google.com',
-      item_size: file.size,
-    });
 
-    if (!newRecord)
-      return res.status(400).json({
-        success: 0,
-        error: 'error while saving to database',
-      });
       const bData = await db.query(
         `SELECT customer_storage_zone_user_key,customer_storage_zone_name FROM customer_tables WHERE customer_id=${req.user.customer_id} `,
         { type: db.QueryTypes.SELECT }
@@ -70,7 +56,7 @@ router.post('/upload', auth, async (req, res) => {
       let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
       
         const command=  cmd.runSync(`
-        bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/sessionMaterials/upload/${newname}
+        bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/sessionMaterials/${newname}
         `,
         async (err, data, stderr) => {
             if (err) console.log(err,"upload error");
@@ -81,6 +67,25 @@ router.post('/upload', auth, async (req, res) => {
           })
 
       console.log(command);
+
+
+
+    const newRecord = await LibraryItem.create({
+      session_id,
+      session_type,
+      customer_id: req.user.customer_id,
+      item_name: file.name,
+      item_type,
+      item_url: `https://${bData[0].customer_storage_zone_name}/sessionMaterials/${newname}`,
+      item_size: file.size,
+    });
+
+    if (!newRecord)
+      return res.status(400).json({
+        success: 0,
+        error: 'error while saving to database',
+      });
+     
       
       res.status(200).json({
         success: 1,
