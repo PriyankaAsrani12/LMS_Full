@@ -421,8 +421,6 @@ Router.post('/', auth, async (req, res) => {
 
 Router.post('/lessonMaterial', auth, async (req, res) => {
   try {
-
-    let Mysave;
     console.log(req.files.file);
     if (!req.files || !req.files.file)
       return res.status(400).json({
@@ -472,18 +470,6 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
                       
                       }
                     })
-
-                    Mysave={
-                      session_id: req.body.session_id,
-                      session_type: 'Recorded Session',
-                      customer_id: req.user.customer_id,
-                      item_name: req.files.file.name,
-                      item_type: req.body.fileType,
-                      item_url: `https://${bData[0].customer_storage_zone_name}.b-cdn.net/assignments/${newname}`,
-                      item_size: req.files.file.size,
-                    };
-          
-
                 }
                 if(req.body.fileType=="handouts"){
                   const command=  cmd.runSync(`
@@ -496,19 +482,6 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
                   
                   }
                 })
-
-                Mysave={
-                  session_id: req.body.session_id,
-                  session_type: 'Recorded Session',
-                  customer_id: req.user.customer_id,
-                  item_name: req.files.file.name,
-                  item_type: req.body.fileType,
-                  item_url: `https://${bData[0].customer_storage_zone_name}.b-cdn.net/handouts/${newname}`,
-                  item_size: req.files.file.size,
-                };
-      
-
-
               }
     }
 
@@ -525,23 +498,22 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
             }
           })
       console.log(command);
-
-          // 
-          Mysave={
-            session_id: req.body.session_id,
-            session_type: 'Recorded Session',
-            customer_id: req.user.customer_id,
-            item_name: req.files.file.name,
-            item_type: req.body.fileType,
-            item_url: `https://${bData[0].customer_storage_zone_name}.b-cdn.net/recordedvideos/${newname}`,
-            item_size: req.files.file.size,
-          };
-
       }
 
     });
 
-    const savedItem = await LibraryItem.create(Mysave);
+    let nameis=file.name.split('.').slice(0, -1).join('.');
+    let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
+
+    const savedItem = await LibraryItem.create({
+      session_id: req.body.session_id,
+      session_type: 'Recorded Session',
+      customer_id: req.user.customer_id,
+      item_name: req.files.file.name,
+      item_type: req.body.fileType,
+      item_url: req.body.fileType=="video"?`https://${bData[0].customer_storage_zone_name}.b-cdn.net/recordedvideos/${newname}`:req.body.fileType=="handouts"?`https://${bData[0].customer_storage_zone_name}.b-cdn.net/handouts/${newname}`:`https://${bData[0].customer_storage_zone_name}.b-cdn.net/assignments/${newname}`,
+      item_size: req.files.file.size,
+    });
 
     if (!savedItem)
       return res.status(400).json({
