@@ -442,6 +442,9 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
     console.log(bData);
     const file = req.files.file;
 
+    let nameis=file.name.split('.').slice(0, -1).join('.');
+    let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
+
     file.mv(`./${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}`, (err) => {
       if (err) {
         console.error(err);
@@ -453,8 +456,7 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
       }
       console.log('saved ');
 
-      let nameis=file.name.split('.').slice(0, -1).join('.');
-      let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
+      
       
     console.log(newname);
 
@@ -502,8 +504,7 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
 
     });
 
-    let nameis=file.name.split('.').slice(0, -1).join('.');
-    let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
+    
 
     const savedItem = await LibraryItem.create({
       session_id: req.body.session_id,
