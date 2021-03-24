@@ -664,7 +664,7 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
     });
 
     const result = await Session.update(
-      { session_thumbnail: ` URL OF ${file.name}` },
+      { session_thumbnail: ` URL OF ${thumbnail}` },
       { where: { session_id } }
     );
     if (!result)
@@ -682,7 +682,7 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
       let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
     console.log(newname);
   const command=  cmd.runSync(`
-     bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/${newname}
+     bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/upload/${newname}
 
     `,
      async (err, data, stderr) => {
@@ -695,13 +695,10 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
         }
       })
                       
+    
+
+
       console.log(command,"jitulteron");
-
-      const commands=  cmd.runSync(`
-        rm  ./upload/${file.name}
-        `)
-        console.log(commands);
-
     return res.status(200).json({
       success: 1,
     });
