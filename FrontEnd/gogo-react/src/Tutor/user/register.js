@@ -28,6 +28,8 @@ import { registerUserError } from '../../redux/auth/actions';
 import axiosInstance from '../../helpers/axiosInstance';
 
 const queryString = require('query-string');
+
+// initialising the user state
 const initialValues = {
   customer_first_name: '',
   customer_email: '',
@@ -40,6 +42,8 @@ const initialValues = {
   acceptTerms: false,
 };
 
+
+  // creating a validation oject
 const validation = Yup.object().shape({
   customer_institute_name: Yup.string()
     .min(2, 'please enter correct insitute')
@@ -76,11 +80,8 @@ const validation = Yup.object().shape({
   customer_password_confirm: Yup.string()
     .oneOf([Yup.ref('customer_password'), null], 'Passwords must match')
     .required('Please Confirm password'),
-  // institutename: Yup.string()
-  //  .min(2, "please enter correct insitute")
-  //  .max(50, "please enter correct institute")
-  //   .required("insitute name is required")
 });
+
 
 const Register = ({ loading, error, registerUserAction, ...props }) => {
   const history = useHistory();
@@ -94,6 +95,8 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
     console.log('in toggle click');
     setIsClicked(!clicked);
   };
+
+
   const onSubmit = async (values) => {
     console.log(values);
     setIsClicked(true);
@@ -204,7 +207,6 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
   }, [registerTrainerSuccess]);
 
   useEffect(() => {
-    const string = props.location.search;
     console.log(props.location.search, '\n\n', props.location.query);
     var parsed = queryString.parse(props.location.search);
     // console.log(parsed.email, parsed.first_name);
@@ -263,10 +265,6 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
               validationSchema={validation}
             >
               {({
-                handleSubmit,
-                setFieldValue,
-                setFieldTouched,
-                values,
                 errors,
                 touched,
                 isSubmitting,
@@ -279,7 +277,7 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
                     <Label>Firstname</Label>
                     <Field
                       className="form-control"
-                      name="customer_first_name" /*  value="firstname" onChange={(e) => setFirstname(e.target.value)} */
+                      name="customer_first_name"
                     />
                     {errors.customer_first_name &&
                     touched.customer_first_name ? (
@@ -292,7 +290,7 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
                     <Label>Lastname</Label>
                     <Field
                       className="form-control"
-                      name="customer_last_name" /* value="lastname" onChange={(e) => setLastname(e.target.value)} */
+                      name="customer_last_name"
                     />
                     {errors.customer_last_name && touched.customer_last_name ? (
                       <div className="invalid-feedback d-block">
@@ -304,7 +302,7 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
                     <Label>Email</Label>
                     <Field
                       className="form-control"
-                      name="customer_email" /* value="email" onChange={(e) => setEmail(e.target.value)} */
+                      name="customer_email"
                     />
                     {errors.customer_email && touched.customer_email ? (
                       <div className="invalid-feedback d-block">
@@ -316,7 +314,7 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
                     <Label>Mobile</Label>
                     <Field
                       className="form-control"
-                      name="customer_phone_number" /* value="mobile" onChange={(e) => setMobile(e.target.value)} */
+                      name="customer_phone_number"
                     />
                     {errors.customer_phone_number &&
                     touched.customer_phone_number ? (
@@ -330,7 +328,7 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
                     <Field
                       className="form-control"
                       name="customer_password"
-                      type="password" /*  value="password" onChange={(e) => setPassword(e.target.value)} */
+                      type="password"
                     />
                     {errors.customer_password && touched.customer_password ? (
                       <div className="invalid-feedback d-block">
@@ -422,9 +420,7 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
                     <NavLink to="/Tutor/user/login">
                       Already Registered?
                     </NavLink>
-                    {/* <Button color="primary" type="submit" className="register">
-                      Register
-                    </Button> */}{' '}
+                    {' '}
                     {console.log(isSubmitting)}
                     <Button
                       color="primary"
@@ -455,18 +451,9 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
                   onClick={signIn}
                   className="mb-2 d-flex align-items-center p-3 registerug"
                 >
-                  {/*<div className={`glyph-icon ${simplelineicons[176]} mr-2 `} />*/}
                   <img src={Google} className="logo" />
                   <span>Continue with Google</span>
                 </Button>
-                {/* <Button
-                  outline
-                  color="secondary"
-                  className="mb-2 d-flex align-items-center p-3 registerug"
-                >
-                  <img src={Apple} className="logo2" />
-                  <span>Continue with Apple</span>
-                </Button> */}
               </div>{' '}
             </Row>
           </div>
@@ -475,7 +462,6 @@ const Register = ({ loading, error, registerUserAction, ...props }) => {
     </Row>
   );
 };
-// const mapStateToProps = () => {};
 
 const mapStateToProps = ({ authUser }) => {
   const { loading, error } = authUser;

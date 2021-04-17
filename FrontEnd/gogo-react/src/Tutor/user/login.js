@@ -16,11 +16,14 @@ import { useGoogleLogin } from 'react-google-login';
 import { refreshTokenSetup } from './utils/refreshTokenSetup';
 import { loginUserError } from '../../redux/auth/actions';
 
+
+// initalising the user state
 const initialvalue = {
   customer_email: '',
   customer_password: '',
 };
 
+// creating a validation oject
 const validation = Yup.object().shape({
   customer_password: Yup.string()
     .min(8, 'Password should have min 8 characters')
@@ -29,6 +32,8 @@ const validation = Yup.object().shape({
     .min(6, 'Email should have min 7 characters')
     .required('Email is required'),
 });
+
+
 const Login = ({ loading, error, loginUserAction }) => {
   // const [email] = useState('demo@gogo.com');
   // const [password] = useState('gogo123');
@@ -52,20 +57,10 @@ const Login = ({ loading, error, loginUserAction }) => {
       setIsClicked(true);
 
       loginUserAction({ history, values, toggleClick });
-      // setSubmitting(false);
-
-      // axios.post("http://localhost:5000/users/login" , {
-      //   values
-      // })
-      // .then(response => {
-      //   console.log(response);
-      // })
-      // .catch(err => console.log(err))
-
-      // history.push('/app/mydashboard')
     }
   };
 
+  // fetching user object
   const onSuccess = (res) => {
     console.log('login success', res.profileObj);
     refreshTokenSetup(res);
@@ -74,6 +69,8 @@ const Login = ({ loading, error, loginUserAction }) => {
       res.profileObj.email,
       res.profileObj.imageUrl
     );
+
+    // setting the username and email of fetched user
     const values = {
       customer_name: res.profileObj.name,
       customer_email: res.profileObj.email,
@@ -81,10 +78,13 @@ const Login = ({ loading, error, loginUserAction }) => {
     };
     loginUserAction({ history, values, toggleClick });
   };
+  // dispatching a failed to login action
   const onFailure = (err) => {
     dispatch(loginUserError(err.error || 'unable to register'));
     console.log(err);
   };
+
+  // Signing it with Google
   const { signIn } = useGoogleLogin({
     onSuccess,
     onFailure,
@@ -92,18 +92,6 @@ const Login = ({ loading, error, loginUserAction }) => {
     isSignedIn: false,
     accessType: 'offline',
   });
-
-  // const onUserLogin = (values, { setSubmitting }) => {
-  //   const payload = {
-  //     ...values,
-  //     reactSelect: values.reactSelect.map((t) => t.value),
-  //   };
-  //   setTimeout(() => {
-  //     console.log(JSON.stringify(payload, null, 2));
-  //     setSubmitting(false);
-  //   }, 1000);
-  // };
-  // const initialValues = { email, password };
 
   return (
     <Row className="h-100">
@@ -135,13 +123,8 @@ const Login = ({ loading, error, loginUserAction }) => {
               validationSchema={validation}
             >
               {({
-                handleSubmit,
-                setFieldValue,
-                setFieldTouched,
-                values,
                 errors,
-                touched,
-                isSubmitting,
+                touched
               }) => (
                 <Form className="av-tooltip tooltip-label-bottom">
                   <FormGroup className="form-group has-float-label">
@@ -198,18 +181,9 @@ const Login = ({ loading, error, loginUserAction }) => {
                   onClick={signIn}
                   className="mb-2 d-flex align-items-center p-3 registerug"
                 >
-                  {/*<div className={`glyph-icon ${simplelineicons[176]} mr-2 `} />*/}
                   <img src={Google} className="logo" />
                   <span id="text">Continue with Google</span>
                 </Button>
-                {/* <Button
-                  outline
-                  color="secondary"
-                  className="mb-2 d-flex align-items-center p-3 registerug"
-                >
-                  <img src={Apple} className="logo2" />
-                  <span id="text">Continue with Apple</span>
-                </Button> */}
               </div>{' '}
             </Row>
           </div>
@@ -218,6 +192,9 @@ const Login = ({ loading, error, loginUserAction }) => {
     </Row>
   );
 };
+
+
+
 const mapStateToProps = ({ authUser }) => {
   const { loading, error } = authUser;
   return { loading, error };

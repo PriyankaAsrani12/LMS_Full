@@ -39,7 +39,7 @@ const ResetPassword = ({
         null,
         ''
       );
-    } else if (!loading && checkSuccess === 'success')
+    } else if (!loading && checkSuccess === 'success'){
       NotificationManager.success(
         'Please login with your new password.',
         'Reset Password Success',
@@ -48,6 +48,7 @@ const ResetPassword = ({
         null,
         ''
       );
+    }
   }, [error, loading, newPassword]);
 
   const onResetPassword = (values) => {
