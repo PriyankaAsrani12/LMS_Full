@@ -44,7 +44,7 @@ const Cart=db.define("cart_table",{
         }
     },
     session_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       references: {
           model: 'session_tables',
           key:'session_id'
