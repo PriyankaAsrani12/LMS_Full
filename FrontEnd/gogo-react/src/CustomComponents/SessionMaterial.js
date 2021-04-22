@@ -71,7 +71,7 @@ export default class SessionMaterial extends Component {
               id: 'theid',
               name: 'xyz',
               video: '',
-              videoUrl:"",
+              videoUrl: '',
               assignment: '',
               handouts: '',
               thumbnail: '',
@@ -160,10 +160,10 @@ export default class SessionMaterial extends Component {
   }
   componentDidMount() {
     try {
-      console.log(this.props.location.state,"tyooyoyoy");
+      console.log(this.props.location.state, 'tyooyoyoy');
       if (isNaN(this.props.location.state.uniquesessionid))
         // this.props.history.push('/app/dashboard/default');
-        console.log("no1 ");
+        console.log('no1 ');
 
       let { uniquesessionid, trainer_id } = this.props.location.state;
       if (trainer_id == 'customer_id') trainer_id = 999;
@@ -176,12 +176,12 @@ export default class SessionMaterial extends Component {
           if (response.data.success) {
             const session = response.data.sessionData;
             const trainer = response.data.trainerData;
-            const sessionMaterial = response.data.SessionMaterial
+            const sessionMaterial = response.data.SessionMaterial;
             console.log(trainer);
-            console.log(session)
+            console.log(session);
             this.setState({
               ...this.state,
-              data:{
+              data: {
                 name: session.session_name,
                 type: session.session_type,
                 date: session.session_start_date,
@@ -203,18 +203,18 @@ export default class SessionMaterial extends Component {
                   trainer_occupation: trainer.trainer_occupation,
                 },
               },
-              SessionMaterial: {...response.data.SessionMaterial},
+              SessionMaterial: response.data.SessionMaterial,
             });
           }
         })
         .catch((err) => {
           console.log(err);
           this.props.history.push('/app/dashboard/default');
-          console.log("no2");
+          console.log('no2');
         });
     } catch (e) {
       this.props.history.push('/app/dashboard/default');
-      console.log("no3");
+      console.log('no3');
     }
   }
   createMarkup = (data) => {
@@ -501,10 +501,10 @@ export default class SessionMaterial extends Component {
 
               // Clear percentage
               if (
-                  this.state.SessionMaterial[index].lesson[lessonindex][
-                    `${type}UploadPercentage`
-                  ] == 100
-                )
+                this.state.SessionMaterial[index].lesson[lessonindex][
+                  `${type}UploadPercentage`
+                ] == 100
+              )
                 setTimeout(() => {
                   const newArr = this.state.SessionMaterial;
                   newArr[index].lesson[lessonindex][
@@ -1034,7 +1034,7 @@ export default class SessionMaterial extends Component {
 
           <Card className="p-4">
             <CardBody>
-              {this.state.map((item, index) => {
+              {this.state.SessionMaterial.map((item, index) => {
                 const togglerId = `toggle${index + 1}`;
                 return (
                   <div
