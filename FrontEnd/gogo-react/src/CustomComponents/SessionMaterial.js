@@ -71,6 +71,7 @@ export default class SessionMaterial extends Component {
               id: 'theid',
               name: 'xyz',
               video: '',
+              videoUrl:"",
               assignment: '',
               handouts: '',
               thumbnail: '',
@@ -175,7 +176,9 @@ export default class SessionMaterial extends Component {
           if (response.data.success) {
             const session = response.data.sessionData;
             const trainer = response.data.trainerData;
+            const sessionMaterial = response.data.SessionMaterial
             console.log(trainer);
+            console.log(session)
             this.setState({
               ...this.state,
               data:{
@@ -200,7 +203,7 @@ export default class SessionMaterial extends Component {
                   trainer_occupation: trainer.trainer_occupation,
                 },
               },
-              SessionMaterial: response.data.SessionMaterial,
+              SessionMaterial: {...response.data.SessionMaterial},
             });
           }
         })
@@ -1031,7 +1034,7 @@ export default class SessionMaterial extends Component {
 
           <Card className="p-4">
             <CardBody>
-              {this.state.SessionMaterial.map((item, index) => {
+              {this.state.map((item, index) => {
                 const togglerId = `toggle${index + 1}`;
                 return (
                   <div
