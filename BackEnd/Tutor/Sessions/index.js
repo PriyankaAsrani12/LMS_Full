@@ -11,6 +11,8 @@ const { LessonTable } = require('./LibraryItems/recorded/lesson_table_model');
 const Communication = require('../communication/model');
 const cmd = require('node-cmd');
 const path=require('path');
+const fetch = require('node-fetch');
+var fs = require('fs');
 router.post('/createLiveSession', auth, async (req, res) => {
   console.log('❓', req.body);
   // return res.status(200).json({ success: 1 });
@@ -663,8 +665,14 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
       console.log('Thumbnail updated');
     });
 
+    const bData = await db.query(
+      `SELECT customer_storage_zone_user_key,customer_storage_zone_password,customer_storage_zone_name FROM customer_tables WHERE customer_id=${req.user.customer_id} `,
+      { type: db.QueryTypes.SELECT }
+  );
+
+    
     const result = await Session.update(
-      { session_thumbnail: ` URL OF ${thumbnail}` },
+      { session_thumbnail: `https://${bData[0].customer_storage_zone_name}.b-cdn.net/thumbnail/${file.name}` },
       { where: { session_id } }
     );
     if (!result)
@@ -673,35 +681,49 @@ router.post('/upload/thumbnail', auth, async (req, res) => {
         error: 'unable to upload thumbnail',
       });
 
-      const bData = await db.query(
-        `SELECT customer_storage_zone_user_key,customer_storage_zone_name FROM customer_tables WHERE customer_id=${req.user.customer_id} `,
-        { type: db.QueryTypes.SELECT }
-      );
-
-      let nameis=file.name.split('.').slice(0, -1).join('.');
-      let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
+    let nameis=file.name.split('.').slice(0, -1).join('.');
+    let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
     console.log(newname,"teststst");
 
 
-    const command=  cmd.runSync(`
-    bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/${newname}
-    `,
-    async (err, data, stderr) => {
-        if (err) console.log(err,"upload error");
-        else {
-        console.log("data is ",data);
+    // const command=  cmd.runSync(`
+    // bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/thumbnails/${newname}
+    // `,
+    // async (err, data, stderr) => {
+    //     if (err) console.log(err,"upload error");
+    //     else {
+    //     console.log("data is ",data);
         
-        }
-      })
-      const commands=  cmd.runSync(`
-        rm  ./upload/${file.name}
-        `)
-        console.log(commands);
+    //     }
+    //   })
+    //   const commands=  cmd.runSync(`
+    //     rm  ./upload/${file.name}
+    //     `)
+    //     console.log(commands);
+
+    console.log(bData)
                       
-    
+    newpath=`./upload/${file.name}`
+    // const url =  `https://storage.bunnycdn.com/oye-vedant-1/test/${file.name}`;
+    const url = `https://storage.bunnycdn.com/${bData[0].customer_storage_zone_name}/thumbnail/${file.name}`;
+
+    const options = {
+      method: 'PUT', 
+      headers: {'Content-Type': 'application/octet-stream', 'AccessKey': bData[0].customer_storage_zone_password},
+      body: fs.createReadStream(newpath)
+    };
+
+    fetch(url, options)
+    .then(res => res.json())
+    .then(json => {console.log(json)
+    const commands=  cmd.runSync(`
+    sudo rm -r ./upload/${file.name}
+    `)
+    console.log(commands);
+    })
+    .catch(err => console.error('error:' + err));
 
 
-      console.log(command,"jitulteron");
     return res.status(200).json({
       success: 1,
     });

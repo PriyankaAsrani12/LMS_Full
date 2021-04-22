@@ -7,6 +7,7 @@ const request = require('request');
 const axios = require('axios').default;
 require('json-circular-stringify');
 const cmd = require('node-cmd');
+const fetch = require('node-fetch');
 
 const auth = require('../../middleware/deepakAuth');
 const {
@@ -113,6 +114,56 @@ router.post('/users', async (req, res) => {
       const result = await sendsms(customer_phone_number, 'test');
       console.log(result);
     }
+
+
+    let vl_library_id=''
+    let vl_access_id=''
+
+    //create video library here
+    const videoLibraryName = `oye-${customer_first_name}-${user.customer_id}`
+    const url = 'https://api.bunny.net/videolibrary';
+
+    // const vldata = {ReplicationRegions: ['NY'], Name: videoLibraryName}
+
+    // const vlheaders = {
+    //   Accept: 'application/json',
+    //   'Content-Type': 'application/json',
+    //   AccessKey: process.env.BUNNYCDN_ACCESS_KEY,
+    // }
+
+    // const vlresponse = await axios.post(
+    //   vlurl,
+    //   vldata,
+    //   {vlheaders} 
+    // );
+
+    // console.log(vlresponse.data)
+    // req.body.values.customer_stream_library_id = vlresponse.data.Id;
+    // req.body.values.customer_stream_library_access_key = vlresponse.data.ApiKey;
+    const options = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        AccessKey: process.env.BUNNYCDN_ACCESS_KEY,
+      },
+      body: JSON.stringify({ReplicationRegions: ['NY'], Name: videoLibraryName})
+    };
+
+    fetch(url, options)
+      .then(res => res.json())
+      .then(json => 
+        { 
+          console.log(json);
+          vl_library_id=json.Id;
+          vl_access_id=json.ApiKey
+        })
+      .catch(err => console.error('error:' + err));
+
+
+    
+    req.body.values.customer_stream_library_id = vl_library_id;
+    req.body.values.customer_stream_library_access_key = vl_access_id;
 
     //create storage zone ,pull zone here
     const storageZoneName = `oye-${customer_first_name}-${user.customer_id}`;

@@ -7,6 +7,10 @@ const { ChapterTable } = require('./chapter_table_model');
 const { LessonTable } = require('./lesson_table_model');
 const cmd = require('node-cmd');
 const path =require("path");
+const fetch = require('node-fetch');
+var fs = require('fs');
+
+
 Router.get('/:id/trainer/:trainer_id', auth, async (req, res) => {
   try {
     if (!req.params.id)
@@ -436,7 +440,7 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
       });
 
     const bData = await db.query(
-      `SELECT customer_storage_zone_user_key,customer_storage_zone_name FROM customer_tables WHERE customer_id=${req.user.customer_id} `,
+      `SELECT customer_storage_zone_user_key,customer_storage_zone_password,customer_storage_zone_name,customer_stream_library_id,customer_stream_library_access_key FROM customer_tables WHERE customer_id=${req.user.customer_id} `,
       { type: db.QueryTypes.SELECT }
     );
     console.log(bData);
@@ -444,6 +448,9 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
 
     let nameis=file.name.split('.').slice(0, -1).join('.');
     let newname=`${nameis}-${Date.now()}${path.parse(file.name).ext}`;
+
+
+    let videoid='';
 
     file.mv(`./${process.env.FILE_UPLOAD_PATH_CLIENT}/${file.name}`, (err) => {
       if (err) {
@@ -462,57 +469,150 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
 
     if(path.parse(file.name).ext=='.pdf'||path.parse(file.name).ext=='.word'){
                 if(req.body.fileType=="assignment"){
-                      const command=  cmd.runSync(`
-                  bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/assignments/${newname}
-                  `,
-                  async (err, data, stderr) => {
-                      if (err) console.log(err,"upload error");
-                      else {
-                      console.log("data is ",data);
+                  //     const command=  cmd.runSync(`
+                  // bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/assignments/${newname}
+                  // `,
+                  // async (err, data, stderr) => {
+                  //     if (err) console.log(err,"upload error");
+                  //     else {
+                  //     console.log("data is ",data);
                       
-                      }
+                  //     }
+                  //   })
+                  //   const commands=  cmd.runSync(`
+                  // rm  ./upload/${file.name}
+                  // `)
+                  // console.log(commands);
+                  newpath=`./upload/${file.name}`
+                  const url =  `https://storage.bunnycdn.com/${bData[0].customer_storage_zone_name}/assignment/${file.name}`;
+
+                  console.log(url)
+                  const options = {
+                    method: 'PUT', 
+                    headers: {'Content-Type': 'application/octet-stream', 'AccessKey': bData[0].customer_storage_zone_password},
+                    body: fs.createReadStream(newpath)
+                  };
+
+                  fetch(url, options)
+                    .then(res => res.json())
+                    .then(json =>{
+                      console.log(json)
+                      const commands=  cmd.runSync(`
+                        sudo rm -r ./upload/${file.name}
+                        `)
+                        console.log(commands);
                     })
-                    const commands=  cmd.runSync(`
-                  rm  ./upload/${file.name}
-                  `)
-                  console.log(commands);
+                    .catch(err => console.error('error:' + err));
+
                 }
                 if(req.body.fileType=="handouts"){
-                  const command=  cmd.runSync(`
-              bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/handouts/${newname}
-              `,
-              async (err, data, stderr) => {
-                  if (err) console.log(err,"upload error");
-                  else {
-                  console.log("data is ",data);
+              //     const command=  cmd.runSync(`
+              // bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/handouts/${newname}
+              // `,
+              // async (err, data, stderr) => {
+              //     if (err) console.log(err,"upload error");
+              //     else {
+              //     console.log("data is ",data);
                   
-                  }
-                })
-                const commands=  cmd.runSync(`
-                  rm  ./upload/${file.name}
-                  `)
-                  console.log(commands);
+              //     }
+              //   })
+              
+              newpath=`./upload/${file.name}`
+                  const url = `https://storage.bunnycdn.com/${bData[0].customer_storage_zone_name}/handouts/${file.name}`;
+
+                  const options = {
+                    method: 'PUT', 
+                    headers: {'Content-Type': 'application/octet-stream', 'AccessKey': bData[0].customer_storage_zone_password},
+                    body: fs.createReadStream(newpath)
+                  };
+
+                  fetch(url, options)
+                    .then(res => res.json())
+                    .then(json => {
+                      console.log(json)
+                        const commands=  cmd.runSync(`
+                        sudo rm -r ./upload/${file.name}
+                        `)
+                        console.log(commands);
+                    })
+                    .catch(err => console.error('error:' + err));
               }
     }
 
 
       if(req.body.fileType=="video"){
-        const command=  cmd.runSync(`
-        bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/recordedvideos/${newname}
-        `,
-        async (err, data, stderr) => {
-            if (err) console.log(err,"upload error");
-            else {
-            console.log("data is ",data);
+        newpath=`./upload/${file.name}`
+      //   const command=  cmd.runSync(`
+      //   bnycdn cp -s ${bData[0].customer_storage_zone_name}  ./upload/${file.name}  ./${bData[0].customer_storage_zone_name}/recordedvideos/${newname}
+      //   `,
+      //   async (err, data, stderr) => {
+      //       if (err) console.log(err,"upload error");
+      //       else {
+      //       console.log("data is ",data);
             
-            }
+      //       }
+      //     })
+      // console.log(command);
+
+
+      const url = `http://video.bunnycdn.com/library/${bData[0].customer_stream_library_id}/videos`;
+
+      const options = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/*+json', 'AccessKey': bData[0].customer_stream_library_access_key},
+        body: JSON.stringify({
+          title:`${file.name}`
+      })
+      };
+      
+      fetch(url, options)
+        .then(res => res.json())
+        .then(async(json) => {
+
+          console.log(json)
+        
+          const savedItem = await LibraryItem.create({
+            session_id: req.body.session_id,
+            session_type: 'Recorded Session',
+            customer_id: req.user.customer_id,
+            item_name: req.files.file.name,
+            item_type: req.body.fileType,
+            item_url: `https://vz-d032639d-6d5.b-cdn.net/${json.guid}/playlist.m3u8`,
+            item_size: req.files.file.size,
+          });
+      
+          if (!savedItem)
+            return res.status(400).json({
+              success: 0,
+              error: 'Unable to upload video',
+            });
+             
+        const url = `http://video.bunnycdn.com/library/${bData[0].customer_stream_library_id}/videos/${json.guid}`;
+        
+        const options = {
+          method: 'PUT',
+          headers: {'Content-Type': 'application/octet-stream', 'AccessKey': bData[0].customer_stream_library_access_key},
+          body: fs.createReadStream(newpath)
+        };
+        
+        fetch(url, options)
+          .then(res => res.json())
+          .then(json => {
+            console.log(json)
+          const commands=  cmd.runSync(`
+          sudo rm -r ./upload/${file.name}
+          `)
+          console.log(commands);
           })
-      console.log(command);
+          .catch(err => console.error('error:' + err));
+        
+        
+        })
+        .catch(err => console.error('error:' + err));
       }
 
     });
 
-    
 
     const savedItem = await LibraryItem.create({
       session_id: req.body.session_id,
@@ -520,7 +620,7 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
       customer_id: req.user.customer_id,
       item_name: req.files.file.name,
       item_type: req.body.fileType,
-      item_url: req.body.fileType=="video"?`https://${bData[0].customer_storage_zone_name}.b-cdn.net/recordedvideos/${newname}`:req.body.fileType=="handouts"?`https://${bData[0].customer_storage_zone_name}.b-cdn.net/handouts/${newname}`:`https://${bData[0].customer_storage_zone_name}.b-cdn.net/assignments/${newname}`,
+      item_url: req.body.fileType=="handouts"?`https://${bData[0].customer_storage_zone_name}.b-cdn.net/handouts/${file.name}`:`https://${bData[0].customer_storage_zone_name}.b-cdn.net/assignment/${file.name}`,
       item_size: req.files.file.size,
     });
 
