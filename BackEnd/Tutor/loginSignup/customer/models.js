@@ -27,7 +27,7 @@ const User = db.define('customer_table', {
     allowNull: true,
   },
   customer_phone_number: {
-    type: DataTypes.INTEGER(15),
+    type: DataTypes.STRING,
     // allowNull: false
     allowNull: true,
   },
@@ -81,32 +81,16 @@ const User = db.define('customer_table', {
     allowNull: true,
   },
   customer_short_introduction: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT('long'),
     allowNull: true,
   },
   customer_skills: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT('long'),
     allowNull: true,
   },
   customer_subscription: {
     type: DataTypes.STRING,
     defaultValue:"Trial"
-  },
-  customer_facebook_id: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  customer_facebook_id: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  customer_linkedin_id: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  customer_twitter_id: {
-    type: DataTypes.STRING,
-    allowNull: true,
   },
   customer_email_verified: {
     type: DataTypes.BOOLEAN,
@@ -141,7 +125,7 @@ const User = db.define('customer_table', {
     allowNull: true,
   },
   customer_payment_bank_address: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT('long'),
     allowNull: true,
   },
   customer_storage_zone_name: {
@@ -155,6 +139,34 @@ const User = db.define('customer_table', {
   customer_cdn_url: {
     type: DataTypes.STRING,
     allowNull: false,
+  },
+  customer_storage_zone_id: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  customer_pull_zone_id: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  customer_storage_zone_user_key: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  customer_storage_zone_password: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  customer_pull_zone_hostname: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  customer_stream_library_id: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  customer_stream_library_access_key: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
   communication_email_signup: {
     type: DataTypes.BOOLEAN,
@@ -216,27 +228,15 @@ const User = db.define('customer_table', {
     type: DataTypes.STRING,
     defaultValue: null,
   },
-  customer_storage_zone_id: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  customer_pull_zone_id: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  customer_storage_zone_user_key: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  customer_storage_zone_password: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  customer_pull_zone_hostname: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
   customer_url_token_authentication_key: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  customer_institute_logo_url:{
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  customer_institute_logo_favicon_icon_url:{
     type: DataTypes.STRING,
     allowNull: true,
   },
