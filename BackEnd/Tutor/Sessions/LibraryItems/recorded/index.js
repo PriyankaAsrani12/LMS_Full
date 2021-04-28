@@ -554,6 +554,7 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
       //     })
       // console.log(command);
 
+      console.log(bData)
 
       const url = `http://video.bunnycdn.com/library/${bData[0].customer_stream_library_id}/videos`;
 
@@ -577,7 +578,8 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
             customer_id: req.user.customer_id,
             item_name: req.files.file.name,
             item_type: req.body.fileType,
-            item_url: `https://vz-d032639d-6d5.b-cdn.net/${json.guid}/playlist.m3u8`,
+            item_url: `https://iframe.mediadelivery.net/embed/${bData[0].customer_stream_library_id}/${json.guid}`,
+            // item_url: `https://vz-d032639d-6d5.b-cdn.net/${json.guid}/playlist.m3u8`,
             item_size: req.files.file.size,
           });
       
@@ -598,11 +600,11 @@ Router.post('/lessonMaterial', auth, async (req, res) => {
         fetch(url, options)
           .then(res => res.json())
           .then(json => {
-            console.log(json)
-          const commands=  cmd.runSync(`
-          sudo rm -r ./upload/${file.name}
-          `)
-          console.log(commands);
+              console.log(json)
+          // const commands=  cmd.runSync(`
+          // sudo rm -r ./upload/${file.name}
+          // `)
+          // console.log(commands);
           })
           .catch(err => console.error('error:' + err));
         
